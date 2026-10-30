@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-cream: #FFF6EE;
+  --color-blush: #FFE5D4;
+  --color-peach-soft: #FFC9A8;
+  --color-peach-deep: #F9A57B;
+  --color-coral-warm: #E8795A;
+  --color-cocoa-dark: #3B2A24;
+  --color-cocoa-muted: #725447;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-cocoa-dark);
+  font-family: var(--font-tajawal), var(--font-inter), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* RTL Typography Enhancements */
+[dir="rtl"] {
+  font-family: var(--font-tajawal), sans-serif;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6 {
+  font-family: var(--font-cairo), sans-serif;
+  line-height: 1.45;
+}
+
+[dir="ltr"] h1,
+[dir="ltr"] h2,
+[dir="ltr"] h3,
+[dir="ltr"] h4,
+[dir="ltr"] h5,
+[dir="ltr"] h6 {
+  font-family: var(--font-playfair), serif;
+  line-height: 1.25;
+}
+
+/* Subtle henna watermark and fabric texture classes */
+.bg-fabric-pattern {
+  background-color: #FFF6EE;
+  background-image: radial-gradient(#FFC9A8 0.75px, transparent 0.75px);
+  background-size: 16px 16px;
+}
+
+.henna-border {
+  border-image: linear-gradient(to right, transparent, #F9A57B, transparent) 1;
+}
