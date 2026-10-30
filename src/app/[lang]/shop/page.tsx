@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { products } from '@/data/products';
 import { filterProducts, searchProducts } from '@/lib/catalog-utils';
@@ -11,7 +11,7 @@ import { Language, getDictionary } from '@/lib/i18n';
 import { Sparkles, SlidersHorizontal, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
-export default function ShopPage() {
+function ShopContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const lang = (params?.lang === 'en' ? 'en' : 'ar') as Language;
@@ -205,5 +205,13 @@ export default function ShopPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-cream p-12 text-center text-xs text-cocoa-muted">Loading catalog...</div>}>
+      <ShopContent />
+    </Suspense>
   );
 }

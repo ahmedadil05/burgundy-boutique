@@ -14,7 +14,8 @@ export interface ProductItem {
   title: { ar: string; en: string };
   priceQAR: number;
   originalPriceQAR?: number;
-  image: string;
+  image?: string;
+  images?: string[];
   secondaryImage?: string;
   category: string;
   badge?: 'new' | 'sale' | 'soldout' | 'heritage';
@@ -37,6 +38,7 @@ export function ProductCard({
 }: ProductCardProps) {
   const { isInWishlist, toggleWishlist, addToCart } = useStore();
   const isWishlisted = isInWishlist(product.id);
+  const displayImage = product.image || (product.images && product.images[0]) || '';
 
   const discountPercentage =
     product.originalPriceQAR && product.originalPriceQAR > product.priceQAR
@@ -53,7 +55,7 @@ export function ProductCard({
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-blush-surface/30">
         <Link href={`/${lang}/products/${product.slug}`} className="block w-full h-full">
           <img
-            src={product.image}
+            src={displayImage}
             alt={product.title[lang]}
             className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
@@ -117,7 +119,7 @@ export function ProductCard({
                   slug: product.slug,
                   title: product.title,
                   priceQAR: product.priceQAR,
-                  image: product.image,
+                  image: displayImage,
                   size: 'Free Size',
                   color: 'Original',
                 })

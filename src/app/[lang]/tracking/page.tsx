@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useSearchParams, useParams } from 'next/navigation';
 import { Language } from '@/lib/i18n';
 import { Input } from '@/components/ui/Input';
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Package, Truck, CheckCircle2, Clock, MapPin, Search } from 'lucide-react';
 import Link from 'next/link';
 
-export default function TrackingPage() {
+function TrackingContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const lang = (params?.lang === 'en' ? 'en' : 'ar') as Language;
@@ -158,5 +158,13 @@ export default function TrackingPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function TrackingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-cream p-12 text-center text-xs text-cocoa-muted">Loading tracking...</div>}>
+      <TrackingContent />
+    </Suspense>
   );
 }

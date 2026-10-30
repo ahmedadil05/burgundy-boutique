@@ -74,7 +74,7 @@ export function HeroBanner({ lang = 'ar' }: { lang?: Language }) {
                 src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=85"
                 alt="Sudanese Model in Luxury Kandaka Toub"
                 className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                priority="true"
+                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-cocoa-dark/70 via-transparent to-transparent flex flex-col justify-end p-6 text-white">
                 <span className="text-xs font-bold text-peach-soft uppercase tracking-wider">
