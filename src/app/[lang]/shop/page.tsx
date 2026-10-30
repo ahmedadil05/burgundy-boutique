@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import { products } from '@/data/products';
+import { useCatalogStore } from '@/lib/catalog-store';
 import { filterProducts, searchProducts } from '@/lib/catalog-utils';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { FilterSidebar } from '@/components/shop/FilterSidebar';
@@ -28,6 +28,8 @@ function ShopContent() {
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'newest'>('featured');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
+
+  const { products } = useCatalogStore();
 
   // Compute filtered list
   const filteredProducts = useMemo(() => {
@@ -55,7 +57,7 @@ function ShopContent() {
       inStockOnly,
       sortBy,
     });
-  }, [category, fabric, priceRange, inStockOnly, sortBy, searchQuery]);
+  }, [category, fabric, priceRange, inStockOnly, sortBy, searchQuery, products]);
 
   const resetAll = () => {
     setCategory('all');
