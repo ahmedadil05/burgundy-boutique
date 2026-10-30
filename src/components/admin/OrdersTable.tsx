@@ -8,10 +8,31 @@ import { Package, Truck, CheckCircle2, Clock } from 'lucide-react';
 export interface OrderRow {
   orderId: string;
   orderDate: string;
-  customer: { name: string; phone: string };
-  totals: { total: number };
+  customer: {
+    name: string;
+    phone: string;
+    email?: string;
+    shippingAddress?: {
+      zone: string;
+      street: string;
+      building: string;
+      municipality: string;
+      notes?: string;
+    };
+  };
+  totals: { total: number; subtotal?: number; shipping?: number };
   paymentMethod: 'card' | 'qpay' | 'fawran' | 'cod';
   status: 'confirmed' | 'processing' | 'shipped' | 'delivered';
+  items?: Array<{
+    id: string;
+    slug: string;
+    title: { ar: string; en: string };
+    priceQAR: number;
+    quantity: number;
+    size: string;
+    color: string;
+    image: string;
+  }>;
 }
 
 export function OrdersTable({
