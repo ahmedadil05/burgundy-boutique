@@ -82,7 +82,7 @@ export function CategoryGrid({ lang = 'ar' }: { lang?: Language }) {
                   {cat.title}
                 </h3>
                 <span className="p-2 rounded-full bg-white/20 group-hover:bg-coral-warm transition-colors">
-                  <ArrowUpRight className="w-4 h-4 text-white" />
+                  <ArrowUpRight className="w-4 h-4 text-white rtl-flip" />
                 </span>
               </div>
               <p className="text-[11px] text-cream-light/80 mt-1 line-clamp-1">

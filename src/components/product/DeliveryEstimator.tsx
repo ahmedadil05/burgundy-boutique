@@ -12,7 +12,7 @@ export function DeliveryEstimator({ lang = 'ar' }: { lang?: Language }) {
     <div className="p-4 bg-blush-surface/50 rounded-2xl border border-peach-soft space-y-3 text-xs">
       <div className="flex items-center justify-between font-bold text-cocoa-dark">
         <span className="flex items-center gap-1.5">
-          <Truck className="w-4 h-4 text-coral-warm" />
+          <Truck className="w-4 h-4 text-coral-warm rtl-flip" />
           <span>{isAr ? 'الشحن والتوصيل السريع' : 'Express Delivery Information'}</span>
         </span>
         <span className="text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-full text-[10px] font-semibold">

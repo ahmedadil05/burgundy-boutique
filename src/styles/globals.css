@@ -55,3 +55,9 @@ body {
 .henna-border {
   border-image: linear-gradient(to right, transparent, #F9A57B, transparent) 1;
 }
+
+/* RTL Icon Mirroring for directional symbols (trucks, arrows, progress) */
+[dir="rtl"] .rtl-flip,
+[dir="rtl"] .icon-directional {
+  transform: scaleX(-1);
+}

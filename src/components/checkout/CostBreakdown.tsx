@@ -38,7 +38,7 @@ export function CostBreakdown({
 
         <div className="flex items-center justify-between text-cocoa-muted">
           <span className="flex items-center gap-1.5">
-            <Truck className="w-3.5 h-3.5 text-coral-warm" />
+            <Truck className="w-3.5 h-3.5 text-coral-warm rtl-flip" />
             <span>{isAr ? 'رسوم التوصيل والشحن' : 'Delivery & Courier Fee'}</span>
           </span>
           <span className="font-bold">
@@ -56,7 +56,7 @@ export function CostBreakdown({
 
         <div className="flex items-center justify-between text-cocoa-muted">
           <span>{isAr ? 'الضرائب والرسوم الإضافية' : 'Taxes & Hidden Fees'}</span>
-          <span className="font-bold text-emerald-700">0.00 ر.ق</span>
+          <span className="font-bold text-emerald-700">{formatPrice(0, currency, lang)}</span>
         </div>
       </div>
 

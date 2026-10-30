@@ -8,7 +8,7 @@ import { formatPrice } from '@/lib/currency';
 import { Language, getDictionary } from '@/lib/i18n';
 import { complianceConfig } from '@/config/compliance';
 import { Button } from '@/components/ui/Button';
-import { ShoppingBag, Trash2, ArrowRight, ArrowLeft, Truck, ShieldCheck } from 'lucide-react';
+import { ShoppingBag, Trash2, Truck } from 'lucide-react';
 
 export default function CartPage() {
   const params = useParams();
@@ -73,7 +73,7 @@ export default function CartPage() {
               <div className="p-4 bg-blush-surface/60 rounded-2xl border border-peach-soft space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold text-cocoa-dark">
                   <span className="flex items-center gap-1.5">
-                    <Truck className="w-4 h-4 text-coral-warm" />
+                    <Truck className="w-4 h-4 text-coral-warm rtl-flip" />
                     <span>
                       {amountNeededForFree === 0
                         ? isAr

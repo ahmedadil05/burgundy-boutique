@@ -77,4 +77,21 @@ describe('Qatar Compliant Checkout & Payment Rails', () => {
     expect(invoice.legalEntityName.ar).toBe(complianceConfig.legalEntityName.ar);
     expect(invoice.totals.total).toBe(1450);
   });
+
+  it('validates required Qatar domestic address fields', () => {
+    const isAddressValid = (addr: {
+      destination: string;
+      zone?: string;
+      street?: string;
+      building?: string;
+    }) => {
+      if (addr.destination === 'qatar') {
+        return !!(addr.zone?.trim() && addr.street?.trim() && addr.building?.trim());
+      }
+      return true;
+    };
+
+    expect(isAddressValid({ destination: 'qatar', zone: '', street: '840', building: '12' })).toBe(false);
+    expect(isAddressValid({ destination: 'qatar', zone: '55', street: '840', building: '12' })).toBe(true);
+  });
 });

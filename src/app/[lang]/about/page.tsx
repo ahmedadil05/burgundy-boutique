@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Language } from '@/lib/i18n';
-import { Sparkles, Heart, Crown, ShieldCheck, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Sparkles, Heart, Crown, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export function generateStaticParams() {

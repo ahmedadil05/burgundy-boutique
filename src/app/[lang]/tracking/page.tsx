@@ -58,7 +58,7 @@ function TrackingContent() {
       <div className="max-w-2xl mx-auto space-y-8">
         <div className="text-center">
           <div className="w-12 h-12 bg-blush-surface text-coral-warm rounded-full flex items-center justify-center mx-auto mb-3 border border-peach-soft">
-            <Truck className="w-6 h-6" />
+            <Truck className="w-6 h-6 rtl-flip" />
           </div>
           <h1 className="text-3xl font-extrabold text-cocoa-dark font-cairo">
             {isAr ? 'تتبع مسار شحنتكِ' : 'Track Your Order'}

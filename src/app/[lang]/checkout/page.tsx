@@ -29,9 +29,9 @@ export default function CheckoutPage() {
     email: '',
     destination: 'qatar',
     municipality: 'Doha',
-    zone: '55',
-    street: '840',
-    building: '12',
+    zone: '',
+    street: '',
+    building: '',
     notes: '',
   });
 
@@ -54,6 +54,18 @@ export default function CheckoutPage() {
 
     if (!formData.fullName.trim() || !formData.phone.trim() || !formData.email.trim()) {
       setErrorMessage(isAr ? 'يرجى استكمال جميع بيانات الاتصال الإلزامية' : 'Please fill all required contact fields');
+      return;
+    }
+
+    if (
+      formData.destination === 'qatar' &&
+      (!formData.zone.trim() || !formData.street.trim() || !formData.building.trim())
+    ) {
+      setErrorMessage(
+        isAr
+          ? 'يرجى إدخال تفاصيل العنوان في قطر: رقم المنطقة والشارع ورقم المبنى/الفيلا.'
+          : 'Please provide complete Qatar address details: Zone, Street, and Building numbers.'
+      );
       return;
     }
 
