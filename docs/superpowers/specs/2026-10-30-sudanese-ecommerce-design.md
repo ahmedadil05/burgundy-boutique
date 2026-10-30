@@ -24,8 +24,8 @@ The goal is to build an e-commerce platform under the brand **Kandaka Boutique (
 - **Full Qatar Regulatory Compliance (Decision No. 25 of 2026):**
   - Persistent footer with CR Number (`[CR_NUMBER]`), E-Commerce License (`[ECOM_LICENSE_NUMBER]`), legal business name, contact info, and customer service operating hours.
   - Dedicated bilingual legal pages: Return & Exchange Policy, Shipping & Delivery, Privacy Policy, Terms & Conditions, and a Consumer Complaint page with ticketed submission.
-  - Default QAR currency with multi-currency toggle (SDG, USD), explicit delivery fee breakdown, and zero hidden checkout costs.
-  - Swappable Qatar payment gateway architecture (QPay/CBQ/SkipCash/Tap/Stripe simulator + live adapter) + Cash on Delivery + Bank Transfer (Qatar local IBAN & Bank of Khartoum / Bankak reference).
+  - Default QAR currency (prime currency) with multi-currency toggle (USD, SDG display), explicit delivery fee breakdown, and zero hidden checkout costs.
+  - Swappable Qatar payment gateway architecture: Online Card (Visa/Mastercard), QPay/NAPS debit cards, Fawran (فوران - Qatar Central Bank mobile instant payment), and Cash on Delivery (COD) as an optional extra for domestic Qatar.
   - Official tax/commercial invoice generation on order confirmation showing legal details.
   - Minimal data collection and explicit privacy consent checkbox at checkout.
   - Domain configurable for `.qa` / `.com.qa`.
@@ -49,12 +49,17 @@ Following the builder review, the following key engineering calls have been reso
 1. **Geographic Delivery Scope (Domestic Qatar + GCC Tier):**
    - *Domestic Qatar:* Native Qatar address standard (Zone, Street, Building, Municipality/City) with domestic flat-rate delivery (e.g. 25 QAR, free on orders over 350 QAR) and 24-48 hr delivery estimation.
    - *GCC / International:* Secondary destination support with transparent international tiered shipping (65 QAR flat for GCC) so diaspora customers can order seamlessly.
-2. **SDG Currency & Bank Transfer Flow:**
-   - SDG is available in the currency selector for immediate real-time conversion display.
-   - For payment methods: Checkout supports **Credit/Debit Card** (Qatar payment gateway), **Cash on Delivery** (Qatar domestic only), and **Bank Transfer**. The Bank Transfer option provides dual bank details (Qatar National Bank IBAN and Bank of Khartoum / Bankak account details) with a transaction reference number field and receipt confirmation.
+2. **Prime Currency (QAR) & Qatar Payment Rails (Card, QPay/NAPS, Fawran, COD):**
+   - The primary store currency is **QAR** (Qatari Riyal). Currency toggle provides secondary informational conversions.
+   - For payment methods: Checkout supports:
+     1. **Online Card Payment** (Credit/Debit via Visa, Mastercard).
+     2. **QPay / NAPS** (Qatar national debit card switch).
+     3. **Fawran (فوران)** (Qatar Central Bank instant mobile payment using alias/mobile number).
+     4. **Cash on Delivery (COD)** (optional extra for domestic Qatar orders).
+     *No offline Sudanese bank transfer is required.*
 3. **Payment Gateway Architecture:**
-   - Implemented via a modular `PaymentGatewayAdapter` interface.
-   - Includes an interactive Qatar Gateway Simulator (supporting instant 1-click test cards for Visa, Mastercard, and NAPS/QPay) that can be seamlessly toggled to live SkipCash / Tap / QPay endpoints by configuring API keys in `.env`.
+   - Implemented via a modular `PaymentGatewayAdapter` interface with support for Card, QPay/NAPS, Fawran, and COD.
+   - Includes an interactive Qatar Gateway Simulator (supporting instant 1-click test flows for Card, QPay/NAPS, and Fawran mobile QR/Alias) that can be seamlessly toggled to live SkipCash / Tap / QPay endpoints by configuring API keys in `.env`.
 
 ---
 
