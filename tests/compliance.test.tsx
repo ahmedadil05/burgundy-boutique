@@ -2,20 +2,21 @@ import { describe, it, expect } from 'vitest';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { LegalFooter } from '../src/components/layout/LegalFooter';
+import { complianceConfig } from '../src/config/compliance';
 import { policies } from '../src/data/policies';
 import { generateComplaintTicket } from '../src/app/[lang]/complaints/complaint-utils';
 
 describe('Qatar Compliance Components and Legal Policies', () => {
   it('renders LegalFooter with mandatory Decision No. 25 of 2026 data points', () => {
     const htmlAr = renderToString(<LegalFooter lang="ar" />);
-    expect(htmlAr).toContain('[CR_NUMBER]');
-    expect(htmlAr).toContain('[ECOM_LICENSE_NUMBER]');
-    expect(htmlAr).toContain('شركة كنداكة للتجارة الإلكترونية');
+    expect(htmlAr).toContain(complianceConfig.crNumber);
+    expect(htmlAr).toContain(complianceConfig.licenseNumber);
+    expect(htmlAr).toContain('بيرغندي');
 
     const htmlEn = renderToString(<LegalFooter lang="en" />);
-    expect(htmlEn).toContain('[CR_NUMBER]');
-    expect(htmlEn).toContain('[ECOM_LICENSE_NUMBER]');
-    expect(htmlEn).toContain('Kandaka E-Commerce');
+    expect(htmlEn).toContain(complianceConfig.crNumber);
+    expect(htmlEn).toContain(complianceConfig.licenseNumber);
+    expect(htmlEn).toContain('BURGUNDY');
   });
 
   it('contains comprehensive bilingual policy content for returns, shipping, privacy, terms', () => {

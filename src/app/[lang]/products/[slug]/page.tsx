@@ -108,7 +108,7 @@ export default async function ProductDetailPage({
             href={`/${currentLang}/shop?category=${product.category}`}
             className="hover:text-coral-warm"
           >
-            {dict.nav[product.category] || product.category}
+            {(dict.nav as Record<string, string>)[product.category] || product.category}
           </Link>
           <span>/</span>
           <span className="text-cocoa-dark font-semibold line-clamp-1">

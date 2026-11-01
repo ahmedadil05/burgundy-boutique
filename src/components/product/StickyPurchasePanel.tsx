@@ -9,6 +9,7 @@ import { SizeGuideModal } from './SizeGuideModal';
 import { formatPrice, Currency } from '../../lib/currency';
 import { Language, getDictionary } from '../../lib/i18n';
 import { useStore } from '../../lib/store';
+import { useStoreSettings } from '../../lib/settings-store';
 import {
   ShoppingBag,
   Zap,
@@ -17,8 +18,9 @@ import {
   ShieldCheck,
   Check,
   Heart,
+  Clock,
+  Sparkles,
 } from 'lucide-react';
-import { siteConfig } from '../../config/site';
 
 export interface StickyPurchasePanelProps {
   product: Product;
@@ -32,12 +34,13 @@ export function StickyPurchasePanel({
   currency = 'QAR',
 }: StickyPurchasePanelProps) {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.id || '');
-  const [selectedSize, setSelectedSize] = useState(product.sizes[0]?.label || 'Free Size');
+  const [selectedSize, setSelectedSize] = useState(product.sizes[0]?.label || 'Free Size (4.5m x 1.15m)');
   const [quantity, setQuantity] = useState(1);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
   const { addToCart, isInWishlist, toggleWishlist } = useStore();
+  const { settings } = useStoreSettings();
   const router = useRouter();
   const dict = getDictionary(lang);
   const isAr = lang === 'ar';
@@ -50,7 +53,7 @@ export function StickyPurchasePanel({
         slug: product.slug,
         title: product.title,
         priceQAR: product.priceQAR,
-        image: product.images[0],
+        image: product.images[0] || '/brand/teaser-clean.jpg',
         size: selectedSize,
         color: selectedColor,
       },
@@ -67,7 +70,7 @@ export function StickyPurchasePanel({
         slug: product.slug,
         title: product.title,
         priceQAR: product.priceQAR,
-        image: product.images[0],
+        image: product.images[0] || '/brand/teaser-clean.jpg',
         size: selectedSize,
         color: selectedColor,
       },
@@ -78,26 +81,32 @@ export function StickyPurchasePanel({
 
   const whatsappMessage = encodeURIComponent(
     isAr
-      ? `مرحباً، أود الاستفسار عن تفاصيل ومقاسات ${product.title.ar} (السعر: ${formatPrice(product.priceQAR, 'QAR', 'ar')}) المعروض في بوتيك كنداكة.`
-      : `Hello, I'd like to ask about ${product.title.en} (Price: ${formatPrice(product.priceQAR, 'QAR', 'en')}) on Kandaka Boutique.`
+      ? `مرحباً دار بيرغندي (@burgundy974_)، أود الاستفسار عن تفاصيل ومقاسات ${product.title.ar} (السعر: ${formatPrice(product.priceQAR, 'QAR', 'ar')}).`
+      : `Hello BURGUNDY (@burgundy974_), I would like to inquire about ${product.title.en} (Price: ${formatPrice(product.priceQAR, 'QAR', 'en')}).`
   );
-  const whatsappUrl = `https://wa.me/${siteConfig.support.whatsappNumber.replace(/[^0-9]/g, '')}?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/${settings.whatsappNumber.replace(/[^0-9]/g, '')}?text=${whatsappMessage}`;
 
   return (
-    <div className="bg-white/85 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-peach-soft shadow-warm sticky top-28 space-y-6">
+    <div className="bg-white rounded-2xl p-6 sm:p-8 border border-gold-hairline shadow-luxury sticky top-28 space-y-6">
       {/* Category & Title */}
       <div>
         <div className="flex items-center justify-between gap-2 mb-2">
-          <span className="text-xs font-bold text-coral-warm uppercase tracking-wider">
+          <span className="text-xs font-bold text-gold-shimmer uppercase tracking-wider">
             {product.fabric[lang]}
           </span>
           <div className="flex items-center gap-1.5">
-            {product.stockCount <= 5 && product.stockCount > 0 ? (
-              <span className="text-[11px] font-bold text-amber-700 bg-amber-100/70 px-2.5 py-0.5 rounded-full">
-                {isAr ? `متبقي ${product.stockCount} قطع فقط` : `Only ${product.stockCount} left`}
+            {product.isSample && (
+              <span className="text-[10px] font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300">
+                {isAr ? 'عينة تجريبية' : 'Demo Sample'}
+              </span>
+            )}
+            {product.isMadeToOrder ? (
+              <span className="text-[10px] font-bold text-burgundy bg-surface-peachSoft/50 px-2.5 py-0.5 rounded-full border border-gold-hairline flex items-center gap-1">
+                <Clock className="w-3 h-3 text-burgundy" />
+                <span>{isAr ? `تنفيذ: ${product.leadTimeDays || 7} أيام` : `Lead time: ${product.leadTimeDays || 7}d`}</span>
               </span>
             ) : product.inStock ? (
-              <span className="text-[11px] font-bold text-emerald-700 bg-emerald-100/70 px-2.5 py-0.5 rounded-full">
+              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
                 {isAr ? 'متوفر للتسليم الفوري' : 'In Stock'}
               </span>
             ) : (
@@ -106,36 +115,36 @@ export function StickyPurchasePanel({
           </div>
         </div>
 
-        <h1 className="text-xl sm:text-2xl font-extrabold text-cocoa-dark font-cairo leading-snug">
+        <h1 className="text-xl sm:text-2xl font-extrabold text-burgundy font-cairo leading-snug">
           {product.title[lang]}
         </h1>
-        <p className="text-xs text-cocoa-muted mt-1 leading-relaxed">
+        <p className="text-xs text-slateText-secondary mt-1 leading-relaxed">
           {product.subtitle[lang]}
         </p>
       </div>
 
       {/* Pricing with QAR Primary + Clear Delivery Statement */}
-      <div className="pb-5 border-b border-peach-soft/60">
+      <div className="pb-5 border-b border-gold-hairline/60">
         <div className="flex items-baseline gap-3">
-          <span className="text-3xl font-black text-coral-warm">
+          <span className="text-3xl font-black text-burgundy font-mono">
             {formatPrice(product.priceQAR, currency, lang)}
           </span>
           {product.originalPriceQAR && product.originalPriceQAR > product.priceQAR && (
-            <span className="text-base text-cocoa-muted line-through opacity-70">
+            <span className="text-base text-slateText-secondary line-through opacity-70 font-mono">
               {formatPrice(product.originalPriceQAR, currency, lang)}
             </span>
           )}
         </div>
-        <p className="text-[11px] text-cocoa-muted mt-1 flex items-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+        <p className="text-[11px] text-slateText-secondary mt-1 flex items-center gap-1.5">
+          <ShieldCheck className="w-3.5 h-3.5 text-gold-line shrink-0" />
           <span>
-            {product.priceQAR >= 350
+            {product.priceQAR >= 500
               ? isAr
                 ? 'شامل التوصيل المجاني داخل دولة قطر'
-                : 'Eligible for FREE Express Delivery in Qatar'
+                : 'Eligible for FREE Express Courier in Qatar'
               : isAr
               ? 'تضاف رسوم توصيل ثابتة 25 ر.ق عند إتمام الشراء'
-              : 'Flat 25 QAR courier delivery calculated at checkout'}
+              : 'Flat 25 QAR courier fee calculated at checkout'}
           </span>
         </p>
       </div>
@@ -143,9 +152,9 @@ export function StickyPurchasePanel({
       {/* Color Selection */}
       {product.colors.length > 0 && (
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs font-semibold text-cocoa-dark">
+          <div className="flex items-center justify-between text-xs font-semibold text-slateText-body">
             <span>{isAr ? 'اللون المختار:' : 'Selected Color:'}</span>
-            <span className="text-coral-warm font-bold">
+            <span className="text-burgundy font-bold">
               {product.colors.find((c) => c.id === selectedColor)?.name[lang]}
             </span>
           </div>
@@ -157,15 +166,15 @@ export function StickyPurchasePanel({
                 onClick={() => setSelectedColor(c.id)}
                 className={`w-8 h-8 rounded-full border-2 transition-transform duration-150 relative flex items-center justify-center ${
                   selectedColor === c.id
-                    ? 'border-coral-warm scale-110 shadow-md ring-2 ring-coral-warm/20'
-                    : 'border-peach-soft hover:scale-105'
+                    ? 'border-burgundy scale-110 shadow-md ring-2 ring-burgundy/20'
+                    : 'border-gold-hairline hover:scale-105'
                 }`}
                 style={{ backgroundColor: c.hex }}
                 title={c.name[lang]}
                 aria-label={c.name[lang]}
               >
                 {selectedColor === c.id && (
-                  <Check className="w-3.5 h-3.5 text-cocoa-dark stroke-[3]" />
+                  <Check className="w-3.5 h-3.5 text-white stroke-[3] drop-shadow" />
                 )}
               </button>
             ))}
@@ -173,17 +182,17 @@ export function StickyPurchasePanel({
         </div>
       )}
 
-      {/* Size Selection & Size Guide Trigger */}
+      {/* Size Selection & Measurements Guide */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs font-semibold text-cocoa-dark">
-          <span>{isAr ? 'المقاس:' : 'Size:'}</span>
+        <div className="flex items-center justify-between text-xs font-semibold text-slateText-body">
+          <span>{isAr ? 'المقاس والقياسات:' : 'Size & Drape:'}</span>
           <button
             type="button"
             onClick={() => setIsSizeGuideOpen(true)}
-            className="text-coral-warm hover:underline inline-flex items-center gap-1 font-bold text-[11px]"
+            className="text-burgundy hover:underline inline-flex items-center gap-1 font-bold text-[11px]"
           >
-            <Ruler className="w-3 h-3" />
-            <span>{isAr ? 'جدول المقاسات' : 'Size Guide'}</span>
+            <Ruler className="w-3 h-3 text-gold-line" />
+            <span>{isAr ? 'دليل القياسات' : 'Measurements Guide'}</span>
           </button>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -195,99 +204,108 @@ export function StickyPurchasePanel({
               disabled={!s.available}
               className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
                 selectedSize === s.label
-                  ? 'bg-coral-warm text-white shadow-sm'
-                  : 'bg-cream border border-peach-soft text-cocoa-dark hover:border-peach-deep'
+                  ? 'bg-burgundy text-white shadow-sm'
+                  : 'bg-canvas border border-gold-hairline text-slateText-body hover:border-burgundy/50'
               } disabled:opacity-40 disabled:cursor-not-allowed`}
             >
               {s.label}
             </button>
           ))}
         </div>
+        <p className="text-[11px] text-slateText-secondary pt-1">
+          {isAr
+            ? 'معظم الثياب السودانية تأتي بمقاس حر (4.5 متر طول × 1.15 متر عرض) لتمكين اللفة السودانية التقليدية بانسيابية تامة.'
+            : 'Standard Sudanese Toubs feature a generous 4.5m length by 1.15m width designed for traditional draping.'}
+        </p>
       </div>
 
-      {/* Quantity & CTA Actions */}
-      <div className="space-y-3 pt-2">
-        <div className="flex items-center gap-3">
-          {/* Quantity Selector */}
-          <div className="flex items-center border border-peach-soft rounded-full bg-cream p-1">
-            <button
-              type="button"
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="w-7 h-7 flex items-center justify-center rounded-full text-cocoa-dark hover:bg-blush-surface text-base font-bold"
-              aria-label="Decrease quantity"
-            >
-              -
-            </button>
-            <span className="w-8 text-center text-xs font-bold text-cocoa-dark">
-              {quantity}
-            </span>
-            <button
-              type="button"
-              onClick={() => setQuantity((q) => Math.min(product.stockCount, q + 1))}
-              className="w-7 h-7 flex items-center justify-center rounded-full text-cocoa-dark hover:bg-blush-surface text-base font-bold"
-              aria-label="Increase quantity"
-            >
-              +
-            </button>
-          </div>
-
-          {/* Add to Bag Primary Button */}
-          <Button
-            variant="primary"
-            size="lg"
-            className="flex-1 shadow-warm hover:shadow-warm-lg"
-            onClick={handleAddToCart}
-            disabled={!product.inStock}
-            icon={isAdded ? <Check className="w-4 h-4" /> : <ShoppingBag className="w-4 h-4" />}
+      {/* Quantity Selector */}
+      <div className="flex items-center justify-between pt-2">
+        <span className="text-xs font-semibold text-slateText-body">
+          {isAr ? 'الكمية المطلوبة:' : 'Quantity:'}
+        </span>
+        <div className="flex items-center gap-2 border border-gold-hairline rounded-xl px-2 py-1 bg-canvas">
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            className="w-7 h-7 flex items-center justify-center font-bold text-slateText-body hover:text-burgundy"
+            aria-label="Decrease quantity"
           >
-            {isAdded
-              ? dict.common.addedToCart
-              : product.inStock
-              ? dict.common.addToCart
-              : dict.common.outOfStock}
-          </Button>
+            -
+          </button>
+          <span className="w-6 text-center text-xs font-bold font-mono">{quantity}</span>
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => q + 1)}
+            className="w-7 h-7 flex items-center justify-center font-bold text-slateText-body hover:text-burgundy"
+            aria-label="Increase quantity"
+          >
+            +
+          </button>
+        </div>
+      </div>
 
-          {/* Wishlist toggle */}
+      {/* Purchase CTAs */}
+      <div className="space-y-3 pt-2">
+        <Button
+          type="button"
+          variant="primary"
+          size="lg"
+          className="w-full bg-burgundy hover:bg-burgundy-hover text-white shadow-luxury py-3.5 flex items-center justify-center gap-2"
+          onClick={handleAddToCart}
+        >
+          {isAdded ? (
+            <>
+              <Check className="w-4 h-4 text-gold-line" />
+              <span>{dict.common.addedToCart}</span>
+            </>
+          ) : (
+            <>
+              <ShoppingBag className="w-4 h-4" />
+              <span>{dict.common.addToCart}</span>
+            </>
+          )}
+        </Button>
+
+        <Button
+          type="button"
+          variant="secondary"
+          size="lg"
+          className="w-full border-gold-hairline text-burgundy hover:bg-surface-peachSoft/30 py-3.5 flex items-center justify-center gap-2"
+          onClick={handleBuyNow}
+        >
+          <Zap className="w-4 h-4 text-gold-line" />
+          <span>{dict.common.buyNow}</span>
+        </Button>
+
+        {/* WhatsApp Inquiry & Wishlist */}
+        <div className="flex items-center gap-2 pt-1">
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 py-2.5 px-3 rounded-xl border border-gold-hairline bg-white hover:bg-surface-peachSoft/20 text-slateText-body text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+          >
+            <MessageCircle className="w-4 h-4 text-[#25D366]" />
+            <span>{dict.common.askWhatsApp}</span>
+          </a>
+
           <button
             type="button"
             onClick={() => toggleWishlist(product.id)}
-            className={`p-3 rounded-full border border-peach-soft transition-colors ${
+            className={`p-2.5 rounded-xl border transition-colors ${
               isWishlisted
-                ? 'bg-coral-warm text-white'
-                : 'bg-cream text-cocoa-dark hover:text-coral-warm'
+                ? 'bg-burgundy text-white border-burgundy'
+                : 'border-gold-hairline bg-white text-slateText-body hover:text-burgundy'
             }`}
-            aria-label="Save to wishlist"
+            aria-label="Toggle Wishlist"
           >
             <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
           </button>
         </div>
-
-        {/* Buy Now Direct Button */}
-        {product.inStock && (
-          <Button
-            variant="secondary"
-            size="md"
-            className="w-full font-bold"
-            onClick={handleBuyNow}
-            icon={<Zap className="w-4 h-4" />}
-          >
-            {dict.common.buyNow}
-          </Button>
-        )}
-
-        {/* WhatsApp Inquiry Button (Compliant with Qatar - asking about this item) */}
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border-2 border-[#25D366] text-[#128C7E] hover:bg-[#25D366]/10 text-xs font-bold transition-all"
-        >
-          <MessageCircle className="w-4 h-4 text-[#25D366]" />
-          <span>{dict.common.askWhatsApp}</span>
-        </a>
       </div>
 
-      {/* Sizing Modal */}
+      {/* Size Guide Modal */}
       <SizeGuideModal
         isOpen={isSizeGuideOpen}
         onClose={() => setIsSizeGuideOpen(false)}

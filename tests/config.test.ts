@@ -4,8 +4,8 @@ import { complianceConfig } from '../src/config/compliance';
 
 describe('Configuration & Qatar Compliance Tokens', () => {
   it('exports correct siteConfig with brand, .qa domain and primary currency', () => {
-    expect(siteConfig.name.ar).toBe('كنداكة بوتيك');
-    expect(siteConfig.name.en).toBe('Kandaka Boutique');
+    expect(siteConfig.name.ar).toBe('بيرغندي');
+    expect(siteConfig.name.en).toBe('BURGUNDY');
     expect(siteConfig.defaultCurrency).toBe('QAR');
     expect(siteConfig.domain).toContain('.qa');
     expect(siteConfig.currencies).toContain('QAR');

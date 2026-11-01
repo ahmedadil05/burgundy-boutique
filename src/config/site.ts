@@ -18,6 +18,7 @@ export interface SiteConfig {
   languages: Array<'ar' | 'en'>;
   socials: {
     instagram: string;
+    instagramHandle: string;
     whatsapp: string;
     tiktok: string;
   };
@@ -25,35 +26,38 @@ export interface SiteConfig {
     phone: string;
     email: string;
     whatsappNumber: string;
+    address: string;
   };
 }
 
 export const siteConfig: SiteConfig = {
   name: {
-    ar: 'كنداكة بوتيك',
-    en: 'Kandaka Boutique',
+    ar: 'بيرغندي',
+    en: 'BURGUNDY',
   },
   tagline: {
-    ar: 'أناقة الثوب السوداني والزي التراثي المعاصر في قطر',
-    en: 'Sudanese Heritage & Modern Elegance in Qatar',
+    ar: 'أزياء سودانية راقية مشغولة يدوياً بأنامل فنية في قطر',
+    en: 'Hand-painted Sudanese Luxury Women’s Wear in Qatar',
   },
   description: {
-    ar: 'متجر كنداكة المتخصص في أرقى وأفخم الأزياء النسائية السودانية من الثياب، الجلابيات، والدراعات المصنوعة بحرفية عالية.',
-    en: 'Curated boutique offering authentic Sudanese Toubs, Jalabiyas, Dara’as, and contemporary modest dresses.',
+    ar: 'دار بيرغندي للأزياء النسائية السودانية الراقية في الدوحة: ثياب، جلابيات، وشيلان مشغولة يدوياً بأرقى خامات الحرير والفوال السويسري الفاخر.',
+    en: 'BURGUNDY (@burgundy974_) - Curated Qatar-based boutique specializing in exquisite hand-painted Sudanese toubs, jalabiyas, and silk scarves.',
   },
-  domain: 'https://kandaka.com.qa',
+  domain: 'https://burgundy.com.qa',
   defaultCurrency: 'QAR',
   currencies: ['QAR', 'USD', 'SDG'],
   defaultLanguage: 'ar',
   languages: ['ar', 'en'],
   socials: {
-    instagram: 'https://kandaka.com.qa/links/instagram',
-    whatsapp: 'https://wa.me/97450000000',
-    tiktok: 'https://kandaka.com.qa/links/tiktok',
+    instagram: 'https://www.instagram.com/burgundy974_',
+    instagramHandle: '@burgundy974_',
+    whatsapp: 'https://wa.me/97450000974',
+    tiktok: 'https://www.tiktok.com/@burgundy974_',
   },
   support: {
-    phone: '+974 4400 0000',
-    email: 'care@kandaka.com.qa',
-    whatsappNumber: '+974 5000 0000',
+    phone: '+974 5000 0974',
+    email: 'care@burgundy.com.qa',
+    whatsappNumber: '+974 5000 0974',
+    address: 'Doha, Qatar',
   },
 };

@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useStore } from '@/lib/store';
+import { useStoreSettings } from '@/lib/settings-store';
+import { useCRM } from '@/lib/crm-store';
 import { calculateCheckoutTotals, createOrderInvoice } from '@/lib/order-utils';
 import { processPayment, PaymentMethod } from '@/lib/payment-gateway';
 import { AddressFormQatar, AddressFormData } from '@/components/checkout/AddressFormQatar';
@@ -11,7 +13,7 @@ import { CostBreakdown } from '@/components/checkout/CostBreakdown';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { Button } from '@/components/ui/Button';
 import { Language, getDictionary } from '@/lib/i18n';
-import { ShieldCheck, Lock, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Lock, CheckCircle2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CheckoutPage() {
@@ -21,7 +23,9 @@ export default function CheckoutPage() {
   const dict = getDictionary(lang);
   const router = useRouter();
 
-  const { cart, cartTotalQAR, clearCart, currency } = useStore();
+  const { cart, cartTotalQAR, clearCart } = useStore();
+  const { settings } = useStoreSettings();
+  const { addLead } = useCRM();
 
   const [formData, setFormData] = useState<AddressFormData>({
     fullName: '',
@@ -37,11 +41,13 @@ export default function CheckoutPage() {
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('fawran');
   const [fawranAlias, setFawranAlias] = useState('');
+  const [receiptImage, setReceiptImage] = useState<string>('');
   const [agreedToPolicy, setAgreedToPolicy] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const totals = calculateCheckoutTotals(cartTotalQAR, formData.destination);
+  const taxRate = settings.taxEnabled ? settings.taxRatePercent : 0;
+  const totals = calculateCheckoutTotals(cartTotalQAR, formData.destination, taxRate);
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,6 +75,15 @@ export default function CheckoutPage() {
       return;
     }
 
+    if (paymentMethod === 'bank_transfer' && !receiptImage) {
+      setErrorMessage(
+        isAr
+          ? 'يرجى رفع صورة إشعار التحويل البنكي لتأكيد الطلب.'
+          : 'Please upload your bank transfer receipt slip to confirm the order.'
+      );
+      return;
+    }
+
     if (!agreedToPolicy) {
       setErrorMessage(
         isAr
@@ -83,11 +98,12 @@ export default function CheckoutPage() {
     try {
       const orderId = `QA-${Math.floor(100000 + Math.random() * 900000)}`;
 
-      // 1. Process payment through Qatar gateway simulator
+      // 1. Process payment via swappable gateway adapter
       const paymentResult = await processPayment({
         method: paymentMethod,
         amountQAR: totals.total,
         orderId,
+        receiptImageUrl: receiptImage,
         fawranAlias: paymentMethod === 'fawran' ? fawranAlias : undefined,
       });
 
@@ -106,6 +122,7 @@ export default function CheckoutPage() {
           street: formData.street,
           building: formData.building,
           municipality: formData.municipality,
+          notes: formData.notes,
         },
         items: cart.map((i) => ({
           id: i.id,
@@ -116,16 +133,30 @@ export default function CheckoutPage() {
         })),
         paymentMethod,
         totals,
+        receiptImageUrl: receiptImage,
       });
 
-      // 3. Persist order in local storage for order confirmation & tracking & admin
+      // 3. Persist order in local storage for order confirmation & admin
       try {
-        const existingOrders = JSON.parse(localStorage.getItem('kandaka_orders') || '[]');
+        const existingOrders = JSON.parse(localStorage.getItem('burgundy_orders') || '[]');
         existingOrders.unshift(invoice);
+        localStorage.setItem('burgundy_orders', JSON.stringify(existingOrders));
+        // Also keep fallback key for backward compatibility
         localStorage.setItem('kandaka_orders', JSON.stringify(existingOrders));
       } catch {}
 
-      // 4. Clear cart and navigate to official invoice
+      // 4. Save lead in CRM automatically
+      try {
+        addLead({
+          type: 'general_contact',
+          name: formData.fullName,
+          phone: formData.phone,
+          email: formData.email,
+          details: `Order ${orderId} placed for ${totals.total} QAR via ${paymentMethod}`,
+        });
+      } catch {}
+
+      // 5. Clear cart and navigate to official order invoice
       clearCart();
       router.push(`/${lang}/orders/${orderId}`);
     } catch (err: any) {
@@ -135,124 +166,106 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-cream py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-canvas py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
-        <div className="text-center max-w-xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-blush-surface text-coral-warm mb-2 border border-peach-soft">
-            <Lock className="w-3.5 h-3.5" />
+        <div className="text-center max-w-xl mx-auto space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-white text-burgundy border border-gold-hairline shadow-soft">
+            <Lock className="w-3.5 h-3.5 text-gold-line" />
             <span>{isAr ? 'دفع آمن ومشفر 100%' : '100% Encrypted Qatar Checkout'}</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-cocoa-dark font-cairo">
+          <h1 className="text-3xl font-extrabold text-burgundy font-cairo">
             {dict.checkout.title}
           </h1>
-          <p className="mt-1 text-xs text-cocoa-muted">
+          <p className="text-xs text-slateText-secondary">
             {isAr
-              ? 'إتمام الشراء السريع كزائرة مع إصدار فاتورة ضريبية رسمية.'
-              : 'Guest checkout with official commercial invoice generation.'}
+              ? 'شراء مباشر كضيف دون الحاجة لإنشاء حساب | متوافق مع قرار وزارة التجارة والصناعة رقم 25 لسنة 2026'
+              : 'Guest checkout with zero registration required | Qatar MOCI Compliant'}
           </p>
         </div>
 
-        {cart.length === 0 ? (
-          <div className="bg-white/80 rounded-3xl p-12 text-center border border-peach-soft max-w-md mx-auto space-y-4">
-            <p className="text-sm font-bold text-cocoa-dark">{dict.common.emptyCart}</p>
-            <Link href={`/${lang}/shop`}>
-              <Button variant="primary">{dict.common.shopNow}</Button>
-            </Link>
+        {errorMessage && (
+          <div className="max-w-xl mx-auto p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+            <span>{errorMessage}</span>
           </div>
-        ) : (
-          <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left Column: Delivery Address & Payment Method (7 cols) */}
-            <div className="lg:col-span-7 space-y-6">
-              <AddressFormQatar
-                formData={formData}
-                onChange={setFormData}
-                lang={lang}
-              />
+        )}
 
-              <PaymentMethodSelector
-                selectedMethod={paymentMethod}
-                onChange={setPaymentMethod}
-                fawranAlias={fawranAlias}
-                onFawranAliasChange={setFawranAlias}
-                lang={lang}
-                allowCOD={formData.destination === 'qatar'}
-              />
-            </div>
+        <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left: Contact, Address, and Payment Method (Cols 7) */}
+          <div className="lg:col-span-7 space-y-6">
+            <AddressFormQatar
+              formData={formData}
+              onChange={(data) => setFormData(data)}
+              lang={lang}
+            />
 
-            {/* Right Column: Order Summary, Cost Breakdown & Policy Consent (5 cols) */}
-            <div className="lg:col-span-5 space-y-6">
-              <CostBreakdown
-                totals={totals}
-                currency={currency}
-                lang={lang}
-              />
+            <PaymentMethodSelector
+              selectedMethod={paymentMethod}
+              onChange={(method) => setPaymentMethod(method)}
+              fawranAlias={fawranAlias}
+              onFawranAliasChange={(alias) => setFawranAlias(alias)}
+              receiptImage={receiptImage}
+              onReceiptImageChange={(img) => setReceiptImage(img)}
+              lang={lang}
+              allowCOD={formData.destination === 'qatar'}
+            />
+          </div>
 
-              {/* Mandatory Policy Consent Checkbox (Qatar Decision No. 25 of 2026) */}
-              <div className="bg-white/85 rounded-3xl p-6 border border-peach-soft shadow-sm space-y-4">
+          {/* Right: Order Summary & Review (Cols 5) */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="bg-white rounded-2xl p-6 border border-gold-hairline shadow-soft space-y-4">
+              <h3 className="font-bold text-sm text-burgundy font-cairo border-b border-gold-hairline/60 pb-3">
+                {isAr ? 'ملخص المنتجات في الحقيبة' : 'Items Summary'} ({cart.length})
+              </h3>
+
+              <div className="space-y-3 max-h-60 overflow-y-auto divide-y divide-gold-hairline/40">
+                {cart.map((item) => (
+                  <div key={`${item.id}-${item.size}`} className="pt-2 flex items-center justify-between text-xs">
+                    <div>
+                      <p className="font-bold text-slateText-body">{item.title[lang]}</p>
+                      <p className="text-[11px] text-slateText-secondary">
+                        {item.size} • {isAr ? 'الكمية:' : 'Qty:'} {item.quantity}
+                      </p>
+                    </div>
+                    <span className="font-mono font-semibold text-burgundy">
+                      {item.priceQAR * item.quantity} QAR
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Cost breakdown */}
+              <CostBreakdown totals={totals} lang={lang} />
+
+              {/* Qatar MOCI Mandatory Consumer Agreement */}
+              <div className="pt-4 border-t border-gold-hairline/60">
                 <Checkbox
-                  id="checkout-privacy-consent"
+                  id="checkout-policy-agreement"
+                  label={dict.checkout.privacyConsent}
                   checked={agreedToPolicy}
                   onChange={(e) => setAgreedToPolicy(e.target.checked)}
-                  label={
-                    <span className="text-xs text-cocoa-dark font-medium leading-relaxed block">
-                      {isAr ? (
-                        <>
-                          أقر بالموافقة على{' '}
-                          <Link href={`/${lang}/policies/terms`} target="_blank" className="text-coral-warm font-bold underline">
-                            الشروط والأحكام
-                          </Link>{' '}
-                          و{' '}
-                          <Link href={`/${lang}/policies/privacy`} target="_blank" className="text-coral-warm font-bold underline">
-                            سياسة الخصوصية
-                          </Link>{' '}
-                          وفقاً للقرار الوزاري لوزارة التجارة والصناعة بقطر رقم 25 لسنة 2026.
-                        </>
-                      ) : (
-                        <>
-                          I agree to the{' '}
-                          <Link href={`/${lang}/policies/terms`} target="_blank" className="text-coral-warm font-bold underline">
-                            Terms & Conditions
-                          </Link>{' '}
-                          and{' '}
-                          <Link href={`/${lang}/policies/privacy`} target="_blank" className="text-coral-warm font-bold underline">
-                            Privacy Policy
-                          </Link>{' '}
-                          under Qatar MOCI Ministerial Decision No. 25 of 2026.
-                        </>
-                      )}
-                    </span>
-                  }
+                  required
                 />
+              </div>
 
-                {errorMessage && (
-                  <p className="text-xs text-red-600 bg-red-50 p-2.5 rounded-xl border border-red-200">
-                    {errorMessage}
-                  </p>
-                )}
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                className="w-full bg-burgundy hover:bg-burgundy-hover text-white shadow-luxury text-xs tracking-wider uppercase font-bold py-3.5"
+                disabled={isProcessing}
+              >
+                {isProcessing ? dict.checkout.processing : dict.checkout.placeOrder}
+              </Button>
 
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="lg"
-                  className="w-full font-bold shadow-warm"
-                  isLoading={isProcessing}
-                >
-                  {isProcessing ? dict.checkout.processing : dict.checkout.placeOrder}
-                </Button>
-
-                <p className="text-[10px] text-cocoa-muted text-center flex items-center justify-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>
-                    {isAr
-                      ? 'البيانات محمية بموجب قانون حماية البيانات الشخصية القطري'
-                      : 'Protected under Qatar Personal Data Privacy Law'}
-                  </span>
-                </p>
+              <div className="pt-2 text-center text-[10px] text-slateText-secondary flex items-center justify-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-gold-line" />
+                <span>{isAr ? 'معاملتك محمية ومشفرة وفق أعلى معايير الأمان المصرفي' : 'Bank-grade SSL Encrypted Transaction'}</span>
               </div>
             </div>
-          </form>
-        )}
+          </div>
+        </form>
       </div>
     </div>
   );

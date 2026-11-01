@@ -1,18 +1,18 @@
 import { describe, it, expect } from 'vitest';
-import { calculateCheckoutTotals, createOrderInvoice } from '../src/lib/order-utils';
+import { calculateCheckoutTotals, createOrderInvoice, generateSequentialInvoiceNumber } from '../src/lib/order-utils';
 import { processPayment } from '../src/lib/payment-gateway';
 import { complianceConfig } from '../src/config/compliance';
 
 describe('Qatar Compliant Checkout & Payment Rails', () => {
   it('accurately calculates subtotal, delivery fee, and total according to Qatar thresholds', () => {
-    // Under 350 QAR threshold -> 25 QAR flat delivery
+    // Under 500 QAR threshold -> 25 QAR flat delivery
     const under = calculateCheckoutTotals(250, 'qatar');
     expect(under.subtotal).toBe(250);
     expect(under.deliveryFee).toBe(25);
     expect(under.total).toBe(275);
     expect(under.isFreeDelivery).toBe(false);
 
-    // Over 350 QAR threshold -> FREE delivery
+    // Over 500 QAR threshold -> FREE delivery
     const over = calculateCheckoutTotals(1450, 'qatar');
     expect(over.subtotal).toBe(1450);
     expect(over.deliveryFee).toBe(0);
@@ -20,7 +20,7 @@ describe('Qatar Compliant Checkout & Payment Rails', () => {
     expect(over.isFreeDelivery).toBe(true);
   });
 
-  it('supports Qatar payment rails: Card, QPay/NAPS, Fawran, COD', async () => {
+  it('supports Qatar payment rails: Card, QPay/NAPS, Fawran, COD, Bank Wire Transfer', async () => {
     const cardRes = await processPayment({
       method: 'card',
       amountQAR: 1450,
@@ -45,9 +45,19 @@ describe('Qatar Compliant Checkout & Payment Rails', () => {
     });
     expect(qpayRes.success).toBe(true);
     expect(qpayRes.method).toBe('qpay');
+
+    const wireRes = await processPayment({
+      method: 'bank_transfer',
+      amountQAR: 1650,
+      orderId: 'ORD-104',
+      receiptImageUrl: 'data:image/jpeg;base64,mockReceipt',
+    });
+    expect(wireRes.success).toBe(true);
+    expect(wireRes.method).toBe('bank_transfer');
+    expect(wireRes.isPendingVerification).toBe(true);
   });
 
-  it('generates compliant order invoice with CR number and legal entity name', () => {
+  it('generates sequential compliant order invoice with CR number and legal entity name', () => {
     const invoice = createOrderInvoice({
       orderId: 'ORD-2026-999',
       customer: {
@@ -76,6 +86,7 @@ describe('Qatar Compliant Checkout & Payment Rails', () => {
     expect(invoice.licenseNumber).toBe(complianceConfig.licenseNumber);
     expect(invoice.legalEntityName.ar).toBe(complianceConfig.legalEntityName.ar);
     expect(invoice.totals.total).toBe(1450);
+    expect(invoice.invoiceNumber).toMatch(/^INV-2026-/);
   });
 
   it('validates required Qatar domestic address fields', () => {

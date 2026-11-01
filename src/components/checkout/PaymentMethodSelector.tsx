@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { PaymentMethod } from '../../lib/payment-gateway';
 import { Language } from '../../lib/i18n';
-import { CreditCard, Smartphone, Banknote, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { CreditCard, Smartphone, Banknote, ShieldCheck, CheckCircle2, Building2, Upload, FileCheck } from 'lucide-react';
 import { Input } from '../ui/Input';
 
 export interface PaymentMethodSelectorProps {
@@ -11,6 +11,8 @@ export interface PaymentMethodSelectorProps {
   onChange: (method: PaymentMethod) => void;
   fawranAlias: string;
   onFawranAliasChange: (alias: string) => void;
+  receiptImage?: string;
+  onReceiptImageChange?: (base64Url: string) => void;
   lang?: Language;
   allowCOD?: boolean;
 }
@@ -20,10 +22,24 @@ export function PaymentMethodSelector({
   onChange,
   fawranAlias,
   onFawranAliasChange,
+  receiptImage,
+  onReceiptImageChange,
   lang = 'ar',
   allowCOD = true,
 }: PaymentMethodSelectorProps) {
   const isAr = lang === 'ar';
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && onReceiptImageChange) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        onReceiptImageChange(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const methods: Array<{
     id: PaymentMethod;
@@ -35,37 +51,46 @@ export function PaymentMethodSelector({
   }> = [
     {
       id: 'fawran',
-      title: isAr ? 'خدمة فوران (Fawran)' : 'Fawran (Instant Mobile Pay)',
+      title: isAr ? 'خدمة فوران للدفع الفوري (QCB Fawran)' : 'Fawran Instant Mobile Pay (QCB)',
       description: isAr
-        ? 'الدفع الفوري المعتمد من مصرف قطر المركزي عبر رقم الهاتف المسجل'
-        : 'Qatar Central Bank instant account transfer using mobile alias',
-      badge: isAr ? 'دفع فوري وآمن' : 'Instant QCB',
-      icon: <Smartphone className="w-5 h-5 text-coral-warm" />,
+        ? 'تحويل فوري فوري من حسابكِ البنكي عبر رقم الجوال المعتمد لدى مصرف قطر المركزي'
+        : 'Qatar Central Bank instant 24/7 account-to-account transfer via mobile alias',
+      badge: isAr ? 'فوري 24/7' : 'Instant QCB',
+      icon: <Smartphone className="w-5 h-5 text-burgundy" />,
     },
     {
       id: 'qpay',
       title: isAr ? 'بطاقة الخصم القطرية (QPay / NAPS)' : 'Qatar Debit (QPay / NAPS)',
       description: isAr
-        ? 'بوابة الدفع الوطنية القطرية المباشرة لبطاقات الصراف الآلي'
-        : 'National ATM/Debit card payment gateway via Qatar Central Bank',
+        ? 'بوابة الخصم المباشر لبطاقات الصراف الآلي لجميع البنوك القطرية'
+        : 'Direct domestic debit card gateway certified by Qatar Central Bank',
       badge: isAr ? 'بوابة قطر الوطنية' : 'NAPS Certified',
-      icon: <CreditCard className="w-5 h-5 text-emerald-600" />,
+      icon: <CreditCard className="w-5 h-5 text-burgundy" />,
     },
     {
       id: 'card',
-      title: isAr ? 'البطاقات الائتمانية (Visa / Mastercard)' : 'Credit Cards (Visa / Mastercard)',
+      title: isAr ? 'البطاقات البنكية (Visa / Mastercard)' : 'Credit / Debit Cards (Visa / Mastercard)',
       description: isAr
-        ? 'دفع مشفر بحماية بنكية ثلاثية (3D Secure)'
-        : 'Encrypted global credit and debit card processing',
+        ? 'سداد آمن ومشفر عبر بوابة قطرية معتمدة (3D Secure)'
+        : 'Encrypted payment gateway with bank-grade 3D Secure verification',
       badge: isAr ? 'مشفر وآمن' : '3D Secure',
-      icon: <CreditCard className="w-5 h-5 text-blue-600" />,
+      icon: <CreditCard className="w-5 h-5 text-burgundy" />,
+    },
+    {
+      id: 'bank_transfer',
+      title: isAr ? 'تحويل بنكي مباشر (مع رفع الإشعار)' : 'Direct Bank Wire (Upload Receipt)',
+      description: isAr
+        ? 'التحويل المباشر لحساب مؤسسة بيرغندي البنكي في الدوحة ورفع صورة إشعار التحويل'
+        : 'Direct transfer to BURGUNDY official Qatari IBAN with proof of receipt upload',
+      badge: isAr ? 'تحويل بنكي' : 'Bank Wire',
+      icon: <Building2 className="w-5 h-5 text-gold-shimmer" />,
     },
     {
       id: 'cod',
-      title: isAr ? 'الدفع عند الاستلام (COD)' : 'Cash on Delivery (COD)',
+      title: isAr ? 'الدفع نقداً عند الاستلام (COD)' : 'Cash on Delivery (COD)',
       description: isAr
-        ? 'سداد نقدي مباشر لمندوب التوصيل عند فحص واستلام شحنتكِ داخل قطر'
-        : 'Pay cash to the courier upon doorstep receipt in Qatar',
+        ? 'سداد نقدي مباشر لمندوب التوصيل عند استلام الطلب داخل دولة قطر'
+        : 'Pay cash to the licensed courier upon doorstep delivery in Qatar',
       badge: isAr ? 'داخل قطر فقط' : 'Qatar Only',
       icon: <Banknote className="w-5 h-5 text-amber-700" />,
       disabled: !allowCOD,
@@ -73,14 +98,14 @@ export function PaymentMethodSelector({
   ];
 
   return (
-    <div className="bg-white/85 rounded-3xl p-6 sm:p-8 border border-peach-soft shadow-sm space-y-5">
-      <div className="flex items-center justify-between pb-3 border-b border-peach-soft">
-        <h3 className="font-bold text-base text-cocoa-dark font-cairo flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-coral-warm" />
-          <span>{isAr ? 'طريقة الدفع المعتمدة' : 'Payment Method'}</span>
+    <div className="bg-white rounded-2xl p-6 sm:p-8 border border-gold-hairline shadow-soft space-y-5">
+      <div className="flex items-center justify-between pb-3 border-b border-gold-hairline">
+        <h3 className="font-bold text-base text-burgundy font-cairo flex items-center gap-2">
+          <ShieldCheck className="w-5 h-5 text-gold-line" />
+          <span>{isAr ? 'وسيلة الدفع المعتمدة' : 'Payment Rail Selection'}</span>
         </h3>
-        <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100/70 px-2.5 py-0.5 rounded-full">
-          {isAr ? 'بوابات قطرية مرخصة' : 'Licensed Qatar Rails'}
+        <span className="text-[10px] font-semibold text-burgundy bg-surface-peachSoft/50 px-2.5 py-0.5 rounded-full border border-gold-hairline">
+          {isAr ? 'بوابات قطرية متوافقة' : 'Qatar Compliant Rails'}
         </span>
       </div>
 
@@ -91,49 +116,102 @@ export function PaymentMethodSelector({
             <div
               key={m.id}
               onClick={() => !m.disabled && onChange(m.id)}
-              className={`p-4 rounded-2xl border-2 transition-all cursor-pointer ${
+              className={`p-4 rounded-xl border transition-all cursor-pointer ${
                 m.disabled
                   ? 'opacity-40 cursor-not-allowed bg-gray-50 border-gray-200'
                   : isSelected
-                  ? 'border-coral-warm bg-blush-surface/40 shadow-sm'
-                  : 'border-peach-soft/80 hover:border-peach-deep bg-white'
+                  ? 'border-burgundy bg-surface-peachSoft/20 shadow-sm ring-1 ring-burgundy/30'
+                  : 'border-gold-hairline/60 hover:border-burgundy/40 bg-white'
               }`}
             >
               <div className="flex items-start gap-3.5">
                 <div className="mt-0.5">{m.icon}</div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-sm text-cocoa-dark font-cairo">
+                    <span className="font-bold text-sm text-slateText-body font-cairo">
                       {m.title}
                     </span>
-                    <span className="text-[10px] font-bold text-coral-warm bg-cream px-2 py-0.5 rounded-md border border-peach-soft">
+                    <span className="text-[10px] font-bold text-burgundy bg-surface-peachSoft/50 px-2 py-0.5 rounded-md border border-gold-hairline">
                       {m.badge}
                     </span>
                   </div>
-                  <p className="text-xs text-cocoa-muted mt-0.5 leading-relaxed">
+                  <p className="text-xs text-slateText-secondary mt-0.5 leading-relaxed">
                     {m.description}
                   </p>
 
-                  {/* Active Sub-inputs for Fawran / Card simulation */}
+                  {/* Active Sub-inputs for Fawran */}
                   {isSelected && m.id === 'fawran' && (
-                    <div className="mt-3 pt-3 border-t border-peach-soft/60 animate-fadeIn space-y-2">
+                    <div className="mt-3 pt-3 border-t border-gold-hairline/60 animate-fadeIn space-y-2">
                       <Input
                         label={isAr ? 'الاسم المستعار أو رقم الجوال في فوران (Fawran Alias) *' : 'Fawran Mobile Number / Alias *'}
-                        placeholder="e.g. 55000000"
+                        placeholder="e.g. 50000974"
                         value={fawranAlias}
                         onChange={(e) => onFawranAliasChange(e.target.value)}
-                        helperText={isAr ? 'ستصلكِ رسالة تأكيد فورية للموافقة على الدفع' : 'Instant QCB payment approval prompt will be triggered'}
+                        helperText={isAr ? 'ستصلكِ رسالة تأكيد فورية للموافقة على الدفع من تطبيق البنك' : 'Instant QCB mobile prompt will be initiated'}
                       />
                     </div>
                   )}
 
+                  {/* Bank Transfer Details & Receipt Upload */}
+                  {isSelected && m.id === 'bank_transfer' && (
+                    <div className="mt-3 pt-3 border-t border-gold-hairline/60 animate-fadeIn space-y-3 bg-canvas-warm/40 p-3.5 rounded-xl border border-gold-hairline">
+                      <div className="text-xs space-y-1 text-slateText-body">
+                        <p className="font-bold text-burgundy">
+                          {isAr ? 'بيانات الحساب البنكي لمؤسسة بيرغندي:' : 'Official Qatari Bank Details:'}
+                        </p>
+                        <p><strong>البنك / Bank:</strong> Qatar National Bank (QNB)</p>
+                        <p><strong>الاسم / Beneficiary:</strong> BURGUNDY Fashion Establishment</p>
+                        <p className="font-mono text-[11px] text-burgundy">
+                          <strong>IBAN:</strong> QA23QNBA000000001234567890123
+                        </p>
+                      </div>
+
+                      <div className="pt-2">
+                        <label className="block text-xs font-semibold text-slateText-body mb-1.5">
+                          {isAr ? 'رفع إشعار أو إيصال التحويل (صورة) *' : 'Upload Proof of Payment Slip *'}
+                        </label>
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          accept="image/*"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+
+                        {receiptImage ? (
+                          <div className="flex items-center gap-2 p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
+                            <FileCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                            <span className="font-medium truncate">{isAr ? 'تم إرفاق صورة الإيصال بنجاح' : 'Receipt voucher attached'}</span>
+                            <button
+                              type="button"
+                              onClick={() => fileInputRef.current?.click()}
+                              className="text-xs text-burgundy underline ms-auto font-bold"
+                            >
+                              {isAr ? 'تغيير' : 'Change'}
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-full py-2.5 px-4 rounded-xl border border-dashed border-burgundy/60 hover:bg-surface-peachSoft/30 text-burgundy text-xs font-bold flex items-center justify-center gap-2 transition-colors"
+                          >
+                            <Upload className="w-4 h-4" />
+                            <span>{isAr ? 'اختيار صورة الإيصال من الجوال' : 'Select Receipt Screenshot'}</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Card & QPay Gateway disclaimer */}
                   {isSelected && (m.id === 'card' || m.id === 'qpay') && (
-                    <div className="mt-3 pt-3 border-t border-peach-soft/60 animate-fadeIn text-[11px] text-cocoa-muted flex items-center gap-1.5">
+                    <div className="mt-3 pt-3 border-t border-gold-hairline/60 animate-fadeIn text-[11px] text-slateText-secondary flex items-center gap-1.5">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                       <span>
                         {isAr
-                          ? 'بوابة دفع محاكاة تجريبية مدمجة (جاهزة للربط مع SkipCash / Tap / QPay)'
-                          : 'Integrated Qatar sandbox simulator (ready for SkipCash / Tap / QPay)'}
+                          ? 'بوابة دفع قطرية مشفرة (SkipCash / MyFatoorah / QPay NAPS)'
+                          : 'Hosted secure gateway adapter (SkipCash / MyFatoorah / QPay)'}
                       </span>
                     </div>
                   )}

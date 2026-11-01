@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { Language, isRTL, getDirection } from '@/lib/i18n';
 import { StoreProvider } from '@/lib/store';
 import { CatalogProvider } from '@/lib/catalog-store';
+import { AdsProvider } from '@/lib/ads-store';
+import { CRMProvider } from '@/lib/crm-store';
 import { AnnouncementBar } from '@/components/layout/AnnouncementBar';
 import { Header } from '@/components/layout/Header';
 import { LegalFooter } from '@/components/layout/LegalFooter';
@@ -32,21 +34,25 @@ export default async function LanguageLayout({
     <div lang={currentLang} dir={dir} className="flex flex-col min-h-screen">
       <StoreProvider initialLang={currentLang}>
         <CatalogProvider>
-          {/* Top Announcement Ribbon */}
-          <AnnouncementBar lang={currentLang} />
+          <AdsProvider>
+            <CRMProvider>
+              {/* Top Announcement Ribbon */}
+              <AnnouncementBar lang={currentLang} />
 
-          {/* Sticky Header */}
-          <Header lang={currentLang} />
+              {/* Sticky Header */}
+              <Header lang={currentLang} />
 
-          {/* Main Content Area */}
-          <main className="flex-1">{children}</main>
+              {/* Main Content Area */}
+              <main className="flex-1">{children}</main>
 
-          {/* Qatar Compliance Legal Footer */}
-          <LegalFooter lang={currentLang} />
+              {/* Qatar Compliance Legal Footer */}
+              <LegalFooter lang={currentLang} />
 
-          {/* Global Compliance & Support Floaters */}
-          <CookieBanner lang={currentLang} />
-          <WhatsAppFloat lang={currentLang} />
+              {/* Global Compliance & Support Floaters */}
+              <CookieBanner lang={currentLang} />
+              <WhatsAppFloat lang={currentLang} />
+            </CRMProvider>
+          </AdsProvider>
         </CatalogProvider>
       </StoreProvider>
     </div>

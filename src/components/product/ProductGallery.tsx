@@ -8,7 +8,7 @@ import { Language } from '../../lib/i18n';
 export interface ProductGalleryProps {
   images: string[];
   title: string;
-  badge?: 'new' | 'sale' | 'soldout' | 'heritage';
+  badge?: 'new' | 'sale' | 'soldout' | 'heritage' | 'sample' | 'madeToOrder' | string;
   lang?: Language;
 }
 
@@ -77,6 +77,16 @@ export function ProductGallery({
           {badge === 'sale' && (
             <Badge variant="sale" size="md">
               {isAr ? 'تخفيض' : 'Sale'}
+            </Badge>
+          )}
+          {badge === 'sample' && (
+            <Badge variant="sample" size="md">
+              {isAr ? 'عينة تجريبية' : 'Sample Demo'}
+            </Badge>
+          )}
+          {badge === 'madeToOrder' && (
+            <Badge variant="madeToOrder" size="md">
+              {isAr ? 'تفصيل يدوي بالطلب' : 'Made to Order'}
             </Badge>
           )}
         </div>

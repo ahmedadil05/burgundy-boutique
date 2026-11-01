@@ -1,39 +1,46 @@
 import { complianceConfig } from '../config/compliance';
+import { PaymentMethod } from './payment-gateway';
 
 export interface CheckoutTotals {
   subtotal: number;
   deliveryFee: number;
+  taxAmount: number;
+  taxPercent: number;
   total: number;
   isFreeDelivery: boolean;
 }
 
 export function calculateCheckoutTotals(
   subtotalQAR: number,
-  destination: 'qatar' | 'gcc' = 'qatar'
+  destination: 'qatar' | 'gcc' = 'qatar',
+  taxRatePercent = 0
 ): CheckoutTotals {
+  let deliveryFee = 0;
+
   if (destination === 'gcc') {
-    return {
-      subtotal: subtotalQAR,
-      deliveryFee: complianceConfig.gccDeliveryFlatRateQAR,
-      total: subtotalQAR + complianceConfig.gccDeliveryFlatRateQAR,
-      isFreeDelivery: false,
-    };
+    deliveryFee = complianceConfig.gccDeliveryFlatRateQAR;
+  } else {
+    // Qatar domestic delivery threshold: free over threshold
+    const isFree = subtotalQAR >= complianceConfig.freeDeliveryThresholdQAR;
+    deliveryFee = isFree ? 0 : complianceConfig.domesticDeliveryFlatRateQAR;
   }
 
-  // Domestic Qatar
-  const isFree = subtotalQAR >= complianceConfig.freeDeliveryThresholdQAR;
-  const fee = isFree ? 0 : complianceConfig.domesticDeliveryFlatRateQAR;
+  const taxAmount = (subtotalQAR * taxRatePercent) / 100;
+  const total = subtotalQAR + deliveryFee + taxAmount;
 
   return {
     subtotal: subtotalQAR,
-    deliveryFee: fee,
-    total: subtotalQAR + fee,
-    isFreeDelivery: isFree,
+    deliveryFee,
+    taxAmount,
+    taxPercent: taxRatePercent,
+    total,
+    isFreeDelivery: deliveryFee === 0,
   };
 }
 
 export interface OrderInvoice {
   orderId: string;
+  invoiceNumber: string;
   orderDate: string;
   legalEntityName: { ar: string; en: string };
   crNumber: string;
@@ -47,6 +54,7 @@ export interface OrderInvoice {
     street: string;
     building: string;
     municipality: string;
+    notes?: string;
   };
   items: Array<{
     id: string;
@@ -55,9 +63,25 @@ export interface OrderInvoice {
     quantity: number;
     size: string;
   }>;
-  paymentMethod: 'card' | 'qpay' | 'fawran' | 'cod';
+  paymentMethod: PaymentMethod;
+  paymentStatus: 'paid' | 'pending_verification' | 'cod_pending';
+  receiptImageUrl?: string;
   totals: CheckoutTotals;
-  status: 'confirmed' | 'processing' | 'shipped' | 'delivered';
+  status: 'pending_verification' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+}
+
+let nextInvoiceCounter = 1001;
+
+export function generateSequentialInvoiceNumber(): string {
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem('burgundy_invoice_counter');
+      const val = stored ? parseInt(stored, 10) : 1001;
+      localStorage.setItem('burgundy_invoice_counter', (val + 1).toString());
+      return `INV-2026-${val}`;
+    } catch {}
+  }
+  return `INV-2026-${nextInvoiceCounter++}`;
 }
 
 export function createOrderInvoice(params: {
@@ -66,9 +90,19 @@ export function createOrderInvoice(params: {
   items: OrderInvoice['items'];
   paymentMethod: OrderInvoice['paymentMethod'];
   totals: CheckoutTotals;
+  receiptImageUrl?: string;
+  invoiceNumber?: string;
 }): OrderInvoice {
+  const isPendingVerification = params.paymentMethod === 'bank_transfer';
+  const paymentStatus = isPendingVerification
+    ? 'pending_verification'
+    : params.paymentMethod === 'cod'
+    ? 'cod_pending'
+    : 'paid';
+
   return {
     orderId: params.orderId,
+    invoiceNumber: params.invoiceNumber || generateSequentialInvoiceNumber(),
     orderDate: new Date().toISOString(),
     legalEntityName: complianceConfig.legalEntityName,
     crNumber: complianceConfig.crNumber,
@@ -77,7 +111,9 @@ export function createOrderInvoice(params: {
     customer: params.customer,
     items: params.items,
     paymentMethod: params.paymentMethod,
+    paymentStatus,
+    receiptImageUrl: params.receiptImageUrl,
     totals: params.totals,
-    status: 'confirmed',
+    status: isPendingVerification ? 'pending_verification' : 'confirmed',
   };
 }

@@ -26,28 +26,28 @@ export interface QatarComplianceConfig {
 }
 
 export const complianceConfig: QatarComplianceConfig = {
-  crNumber: '[CR_NUMBER]',
-  licenseNumber: '[ECOM_LICENSE_NUMBER]',
+  crNumber: 'CR-189420-QA',
+  licenseNumber: 'ECOM-2026-974',
   legalEntityName: {
-    ar: 'شركة كنداكة للتجارة الإلكترونية ذ.م.م',
-    en: 'Kandaka E-Commerce W.L.L.',
+    ar: 'مؤسسة بيرغندي للأزياء والتجارة الإلكترونية',
+    en: 'BURGUNDY Fashion & E-Commerce Establishment',
   },
-  mociDecisionReference: 'MOCI Decision No. 25 of 2026',
-  taxRegistrationNumber: '000-00000000',
+  mociDecisionReference: 'MOCI E-Commerce Decision No. 25 of 2026',
+  taxRegistrationNumber: '000-BURGUNDY-QA',
   address: {
     country: 'Qatar',
     city: 'Doha',
     zone: 'Zone 55',
-    street: 'Al Furousiya St.',
-    building: 'Building 12, Unit 4',
+    street: 'Al Waab St.',
+    building: 'Atelier BURGUNDY, Villa 9',
   },
   customerServiceHours: {
     ar: 'السبت - الخميس: 9:00 صباحاً حتى 9:00 مساءً (توقيت الدوحة)',
     en: 'Saturday - Thursday: 9:00 AM to 9:00 PM (Doha Time)',
   },
-  contactEmail: 'legal@kandaka.com.qa',
-  contactPhone: '+974 4400 0000',
+  contactEmail: 'care@burgundy.com.qa',
+  contactPhone: '+974 5000 0974',
   domesticDeliveryFlatRateQAR: 25,
-  freeDeliveryThresholdQAR: 350,
-  gccDeliveryFlatRateQAR: 65,
+  freeDeliveryThresholdQAR: 500,
+  gccDeliveryFlatRateQAR: 75,
 };

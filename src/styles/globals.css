@@ -3,21 +3,33 @@
 @tailwind utilities;
 
 :root {
-  --color-cream: #FFF6EE;
-  --color-blush: #FFE5D4;
-  --color-peach-soft: #FFC9A8;
-  --color-peach-deep: #F9A57B;
-  --color-coral-warm: #E8795A;
-  --color-cocoa-dark: #3B2A24;
-  --color-cocoa-muted: #725447;
+  /* BURGUNDY Design Tokens */
+  --bg-primary: #FBFEFB;
+  --bg-white: #FFFFFF;
+  --bg-warm: #EFE5DC;
+  --surface-peach-soft: #F3D8C7;
+  --surface-peach-muted: #D0B8AC;
+  --text-primary: #4E5166;
+  --text-secondary: #495867;
+  --brand-burgundy: #5F0F40;
+  --brand-burgundy-deep: #421417;
+  --accent-peach-sorbet: #FFC9A8;
+  --accent-peach-glow: #F9A57B;
+  --accent-coral: #E8795A;
+  --accent-gold-line: #D9B97A;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--color-cream);
-  color: var(--color-cocoa-dark);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: var(--font-tajawal), var(--font-inter), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 /* RTL Typography Enhancements */
@@ -32,7 +44,7 @@ body {
 [dir="rtl"] h5,
 [dir="rtl"] h6 {
   font-family: var(--font-cairo), sans-serif;
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 [dir="ltr"] h1,
@@ -45,18 +57,58 @@ body {
   line-height: 1.25;
 }
 
-/* Subtle henna watermark and fabric texture classes */
-.bg-fabric-pattern {
-  background-color: #FFF6EE;
-  background-image: radial-gradient(#FFC9A8 0.75px, transparent 0.75px);
-  background-size: 16px 16px;
+/* Luxury Wordmark Typography */
+.brand-wordmark {
+  font-family: var(--font-playfair), 'Bodoni Moda', serif;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
-.henna-border {
-  border-image: linear-gradient(to right, transparent, #F9A57B, transparent) 1;
+/* Hairline Luxury Borders */
+.border-gold-hairline {
+  border: 1px solid rgba(217, 185, 122, 0.45);
 }
 
-/* RTL Icon Mirroring for directional symbols (trucks, arrows, progress) */
+.border-b-gold-hairline {
+  border-bottom: 1px solid rgba(217, 185, 122, 0.35);
+}
+
+/* Leaf-Shadow Ambient Backdrop */
+.leaf-shadow-bg {
+  background: 
+    radial-gradient(ellipse 60% 50% at 75% 20%, rgba(208, 184, 172, 0.18), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 20% 80%, rgba(243, 216, 199, 0.25), transparent 60%),
+    #FBFEFB;
+}
+
+/* Subtle Fabric Drape Texture */
+.fabric-drape-texture {
+  background-image: radial-gradient(rgba(217, 185, 122, 0.12) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Mobile-Safe Transform-Based Parallax Layers */
+@media (prefers-reduced-motion: no-preference) {
+  .parallax-layer-slow {
+    will-change: transform;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .parallax-layer-medium {
+    will-change: transform;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parallax-layer-slow,
+  .parallax-layer-medium {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* RTL Icon Mirroring */
 [dir="rtl"] .rtl-flip,
 [dir="rtl"] .icon-directional {
   transform: scaleX(-1);

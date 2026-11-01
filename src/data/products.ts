@@ -6,15 +6,18 @@ export interface Product {
   description: { ar: string; en: string };
   priceQAR: number;
   originalPriceQAR?: number;
-  category: 'toubs' | 'jalabiyas' | 'daraas' | 'dresses' | 'accessories';
-  badge?: 'new' | 'sale' | 'soldout' | 'heritage';
+  category: 'toubs' | 'jalabiyas' | 'scarves' | 'accessories' | 'daraas' | 'dresses';
+  badge?: 'sample' | 'new' | 'sale' | 'soldout' | 'heritage' | 'madeToOrder';
+  isSample?: boolean;
   inStock: boolean;
   stockCount: number;
+  isMadeToOrder?: boolean;
+  leadTimeDays?: number;
   fabric: { ar: string; en: string };
   origin: { ar: string; en: string };
   careInstructions: { ar: string; en: string };
   colors: Array<{ id: string; name: { ar: string; en: string }; hex: string }>;
-  sizes: Array<{ id: string; label: string; available: boolean }>;
+  sizes: Array<{ id: string; label: string; available: boolean; measurements?: string }>;
   images: string[];
   features: Array<{ ar: string; en: string }>;
 }
@@ -24,12 +27,12 @@ export const products: Product[] = [
     id: 'prod-001',
     slug: 'royal-swiss-voile-toub',
     title: {
-      ar: 'ثوب سويسري ملكي مطرز بالذهب',
+      ar: 'ثوب سويسري ملكي مطرز بالذهب والبيرغندي',
       en: 'Royal Swiss Voile Toub with Gold Work',
     },
     subtitle: {
-      ar: 'فوال سويسري قطن 100% مطرز يدوياً بتطريزات الكنداكة الملكية',
-      en: '100% pure Swiss cotton voile with regal hand-guided embroidery',
+      ar: 'عينة تجريبية: فوال سويسري قطن 100% مطرز ومرسوم يدوياً',
+      en: 'Demo Sample: 100% pure Swiss cotton voile with regal hand-guided embroidery',
     },
     description: {
       ar: 'تحفة فنية سودانية أصيلة. صُنع من أجود خيوط الفوال السويسري الفاخر بملمس ناعم كالحرير، وطُرزت حواشيه وأطرافه يدوياً في ورشاتنا بالسودان بخيوط مذهبة تدوم طويلاً دون أن تفقد بريقها.',
@@ -38,9 +41,12 @@ export const products: Product[] = [
     priceQAR: 1450,
     originalPriceQAR: 1750,
     category: 'toubs',
-    badge: 'heritage',
+    badge: 'sample',
+    isSample: true,
     inStock: true,
     stockCount: 8,
+    isMadeToOrder: false,
+    leadTimeDays: 2,
     fabric: {
       ar: 'فوال سويسري قطني 100%',
       en: '100% Pure Swiss Cotton Voile',
@@ -54,285 +60,283 @@ export const products: Product[] = [
       en: 'Dry clean only. Steam or iron on medium setting from reverse side to preserve embroidery.',
     },
     colors: [
+      { id: 'burgundy', name: { ar: 'بيرغندي ملكي', en: 'Royal Burgundy' }, hex: '#5F0F40' },
       { id: 'peach', name: { ar: 'دراق ناعم', en: 'Soft Peach' }, hex: '#FFC9A8' },
-      { id: 'coral', name: { ar: 'مرجاني دافئ', en: 'Warm Coral' }, hex: '#E8795A' },
-      { id: 'cream', name: { ar: 'كريمي عاجي', en: 'Ivory Cream' }, hex: '#FFF6EE' },
+      { id: 'cream', name: { ar: 'عاجي كريمي', en: 'Ivory Cream' }, hex: '#FBFEFB' },
     ],
     sizes: [
-      { id: 'free-size', label: 'المقاس الموحد (4.5 متر)', available: true },
+      { id: 'free', label: 'Free Size (4.5m x 1.15m)', available: true, measurements: 'الطول: 4.5 متر | العرض: 1.15 متر' },
     ],
     images: [
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85',
+      '/brand/teaser-clean.jpg',
+      '/brand/burgundy-avatar.jpg',
+      '/brand/teaser-post.jpg',
     ],
     features: [
-      { ar: 'طول كامل 4.5 أمتار وعرض 110 سم', en: 'Full 4.5m traditional length, 110cm width' },
-      { ar: 'خيوط تطريز ذهبية مقاومة للتلاشي', en: 'Non-tarnishing gold needlework' },
-      { ar: 'يشمل حقيبة حفظ قماشية فاخرة', en: 'Includes protective luxury travel pouch' },
+      { ar: 'رسم يدوي متفرد لا يتكرر في أي قطعة أخرى', en: 'Unique one-of-a-kind brushwork' },
+      { ar: 'خامات معتمدة ومقاومة لبهتان اللون', en: 'High durability tested pigments' },
+      { ar: 'مرفق بحقيبة حفظ قماشية فاخرة تحمل شعار الدار', en: 'Delivered in signature dust bag' },
     ],
   },
   {
-    id: 'prod-002',
-    slug: 'handcrafted-silk-jacquard-toub',
+    id: 'sample-002',
+    slug: 'burgundy-hand-painted-silk-toub',
     title: {
-      ar: 'ثوب حرير جاكار مشغول بنقوش نوبية',
-      en: 'Handcrafted Silk Jacquard Toub with Nubian Motifs',
+      ar: 'ثوب حرير مرسوم يدوياً بتدرجات البيرغندي',
+      en: 'Hand-Painted Royal Silk Toub in Burgundy Sunset',
     },
     subtitle: {
-      ar: 'حرير طبيعي منسوج بنقوش الجاكار الهندسية المستوحاة من حضارة مروي',
-      en: 'Pure jacquard woven silk featuring geometric Meroitic heritage patterns',
+      ar: 'عينة تجريبية: حرير طبيعي 100% برسم يدوي وتطريز أطراف خفيف',
+      en: 'Demo Sample: 100% Pure Silk with artisanal hand brushwork',
     },
     description: {
-      ar: 'ثوب استثنائي مخصص للأعراس والمناسبات الكبرى. يجمع بين ثراء الحرير الطبيعي والتصميم المستلهم من نقوش التيجان المروية، مما يمنحكِ حضوراً ملكياً مهيباً.',
-      en: 'A statement toub reserved for weddings and high celebrations. Blending the richness of genuine silk with Meroitic royal crown motifs.',
+      ar: 'نموذج تجريبي استعراضي للوحة الإدارة. ثوب سوداني مشغول يدوياً بخيوط حرير طبيعي وأصباغ فنية ثابتة، تم تصميمه ليتناغم مع الذوق القطري الرفيع في المناسبات والاستقبالات.',
+      en: 'Demonstration sample for admin catalog preview. Hand-painted Sudanese silk toub with organic permanent pigments, crafted for celebrations in Doha.',
     },
     priceQAR: 1650,
+    originalPriceQAR: 1950,
     category: 'toubs',
-    badge: 'new',
+    badge: 'sample',
+    isSample: true,
     inStock: true,
-    stockCount: 5,
+    stockCount: 4,
+    isMadeToOrder: true,
+    leadTimeDays: 7,
     fabric: {
-      ar: 'حرير طبيعي 100% مع نسيج جاكار مذهب',
-      en: '100% Natural Silk with Jacquard Weaving',
+      ar: 'حرير طبيعي خالص 100%',
+      en: '100% Pure Natural Silk',
     },
     origin: {
-      ar: 'حياكة سودانية يدوية فاخرة',
-      en: 'Artisanal Sudanese craftsmanship',
+      ar: 'مرسم بيرغندي - الخرطوم والدوحة، السودان',
+      en: 'BURGUNDY Atelier - Khartoum, Sudan & Doha',
     },
     careInstructions: {
-      ar: 'تنظيف جاف حصراً. الحفظ في مكان جاف ومعتم لتفادي تأثر ألياف الحرير.',
-      en: 'Professional dry cleaning strictly recommended. Store in a cool, dark wardrobe.',
+      ar: 'غسيل جاف فقط لحماية الألوان اليدوية والخيوط الحريرية.',
+      en: 'Specialist dry clean only to preserve painted pigments and silk weave.',
     },
     colors: [
-      { id: 'gold-cream', name: { ar: 'عاجي مذهب', en: 'Gilded Ivory' }, hex: '#FFF0E6' },
-      { id: 'deep-peach', name: { ar: 'دراق عميق', en: 'Deep Peach' }, hex: '#F9A57B' },
+      { id: 'burgundy', name: { ar: 'بيرغندي ملكي', en: 'Royal Burgundy' }, hex: '#5F0F40' },
+      { id: 'cream', name: { ar: 'كريمي عاجي', en: 'Ivory Cream' }, hex: '#FBFEFB' },
+      { id: 'peach', name: { ar: 'دراق ناعم', en: 'Soft Peach' }, hex: '#FFC9A8' },
     ],
     sizes: [
-      { id: 'free-size', label: 'المقاس الموحد (4.5 متر)', available: true },
+      { id: 'free', label: 'Free Size (4.5m x 1.15m)', available: true, measurements: 'الطول: 4.5 متر | العرض: 1.15 متر' },
     ],
     images: [
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=85',
+      '/brand/teaser-clean.jpg',
+      '/brand/burgundy-avatar.jpg',
+      '/brand/teaser-post.jpg',
     ],
     features: [
-      { ar: 'حرير طبيعي بانسيابية وانعكاس ضوء خافت', en: 'Pure silk with soft ambient sheen' },
-      { ar: 'مناسب للأعراس والمناسبات الفخمة', en: 'Ideal for weddings and royal galas' },
+      { ar: 'رسم يدوي متفرد لا يتكرر في أي قطعة أخرى', en: 'Unique one-of-a-kind brushwork' },
+      { ar: 'خامات معتمدة ومقاومة لبهتان اللون', en: 'High durability tested pigments' },
     ],
   },
   {
-    id: 'prod-003',
-    slug: 'gezira-linen-daraa',
+    id: 'sample-003',
+    slug: 'bespoke-painted-linen-jalabiya',
     title: {
-      ar: 'درّاعة كتان الجزيرة مطرزة بنقوش الحناء',
-      en: 'Gezira Linen Dara’a with Henna Needlework',
+      ar: 'جلابية كتان سودانية راقية برسم يدوي ناعم',
+      en: 'Hand-Painted Pure Linen Sudanese Jalabiya',
     },
     subtitle: {
-      ar: 'كتان طبيعي بارد مع تطريز ناعم على الأكمام والياقة',
-      en: 'Cool breathable natural linen with delicate henna embroidery',
+      ar: 'عينة تجريبية: قصة مريحة بياقة مطرزة وأكمام واسعة',
+      en: 'Demo Sample: Relaxed silhouette with hand-painted cuffs',
     },
     description: {
-      ar: 'دراعة معاصرة مريحة وأنيقة مستوحاة من أزياء وادي النيل. خامة الكتان الباردة تمنحكِ انتعاشاً مثالياً في طقس قطر، مع تفاصيل تطريز متقنة تعكس فنون الحناء السودانية.',
-      en: 'A modern, graceful Dara’a inspired by Nile Valley casual luxury. Natural breathable linen provides comfort in Qatar summers with henna-style embellishments.',
+      ar: 'عينة تجريبية. جلابية سودانية معاصرة مصممة من الكتان الطبيعي الفاخر، مزينة برسم يدوي دقيق على الياقة والأكمام بألوان مستوحاة من ظلال أوراق الشجر ونغمات البيرغندي.',
+      en: 'Demo item. Contemporary Sudanese jalabiya in breathable natural linen, decorated with leaf-shadow motifs and burgundy undertones.',
     },
     priceQAR: 850,
-    originalPriceQAR: 980,
-    category: 'daraas',
-    badge: 'sale',
+    category: 'jalabiyas',
+    badge: 'sample',
+    isSample: true,
+    inStock: true,
+    stockCount: 3,
+    isMadeToOrder: true,
+    leadTimeDays: 5,
+    fabric: {
+      ar: 'كتان طبيعي بارد 100%',
+      en: '100% Pure Cooling Linen',
+    },
+    origin: {
+      ar: 'مرسم بيرغندي في الدوحة والسودان',
+      en: 'BURGUNDY Doha Atelier & Sudan',
+    },
+    careInstructions: {
+      ar: 'غسيل آلي على دورة الأقمشة الحساسة أو غسيل يدوي.',
+      en: 'Gentle cycle machine wash or hand wash cold.',
+    },
+    colors: [
+      { id: 'peach', name: { ar: 'خوخي باهت', en: 'Dusty Peach' }, hex: '#F3D8C7' },
+      { id: 'burgundy', name: { ar: 'بيرغندي دافئ', en: 'Warm Burgundy' }, hex: '#5F0F40' },
+    ],
+    sizes: [
+      { id: 'm', label: 'M (Length 56 in)', available: true, measurements: 'الطول: 56 إنش | الصدر: 40 إنش' },
+      { id: 'l', label: 'L (Length 58 in)', available: true, measurements: 'الطول: 58 إنش | الصدر: 44 إنش' },
+      { id: 'xl', label: 'XL (Length 60 in)', available: true, measurements: 'الطول: 60 إنش | الصدر: 48 إنش' },
+    ],
+    images: [
+      '/brand/teaser-clean.jpg',
+      '/brand/burgundy-avatar.jpg',
+    ],
+    features: [
+      { ar: 'قصة انسيابية مريحة للزيارات والاستقبال', en: 'Fluid drape ideal for home hosting' },
+    ],
+  },
+  {
+    id: 'sample-004',
+    slug: 'artisan-chiffon-painted-scarf',
+    title: {
+      ar: 'شال شيفون حريري مرسوم يدوياً',
+      en: 'Artisan Hand-Painted Silk Chiffon Scarf',
+    },
+    subtitle: {
+      ar: 'عينة تجريبية: لمسة فنية ناعمة للإطلالات اليومية والمناسبات',
+      en: 'Demo Sample: Featherlight silk chiffon with botanical brushwork',
+    },
+    description: {
+      ar: 'عينة تجريبية. شال حريري خفيف وناعم يتميز بانسيابية استثنائية ونقوش نباتية مرسومة يدوياً بدرجات الخوخ والبيرغندي والذهب.',
+      en: 'Demo item. Light and airy silk chiffon scarf featuring subtle leaf shadows and warm gold highlights.',
+    },
+    priceQAR: 450,
+    category: 'scarves',
+    badge: 'sample',
+    isSample: true,
     inStock: true,
     stockCount: 12,
+    isMadeToOrder: false,
+    leadTimeDays: 1,
     fabric: {
-      ar: 'كتان طبيعي 100%',
-      en: '100% Breathable Linen',
+      ar: 'شيفون حريري نقي',
+      en: 'Pure Silk Chiffon',
     },
     origin: {
-      ar: 'تصميم وتنفيذ سوداني أصيل',
-      en: 'Designed and stitched in Sudan',
+      ar: 'مشغول يدوياً - الدوحة والسودان',
+      en: 'Hand-painted in Doha & Sudan',
     },
     careInstructions: {
-      ar: 'غسيل يدوي بماء بارد أو غسيل لطيف في الغسالة. يكوى وهو رطب قليلاً.',
-      en: 'Hand wash in cold water or delicate cycle. Iron while slightly damp.',
+      ar: 'غسيل يدوي بماء بارد وتجفيف في الظل.',
+      en: 'Hand wash cold and shade dry.',
     },
     colors: [
-      { id: 'cream', name: { ar: 'كريمي', en: 'Cream' }, hex: '#FFF6EE' },
-      { id: 'terracotta', name: { ar: 'طوبي دافئ', en: 'Warm Terracotta' }, hex: '#E8795A' },
+      { id: 'burgundy', name: { ar: 'بيرغندي كلاسيكي', en: 'Classic Burgundy' }, hex: '#5F0F40' },
+      { id: 'peach', name: { ar: 'دراق شربات', en: 'Peach Sorbet' }, hex: '#FFC9A8' },
     ],
     sizes: [
-      { id: 's', label: 'S (38)', available: true },
-      { id: 'm', label: 'M (40)', available: true },
-      { id: 'l', label: 'L (42)', available: true },
-      { id: 'xl', label: 'XL (44)', available: true },
+      { id: 'standard', label: '200cm x 70cm', available: true, measurements: 'الطول: 200 سم | العرض: 70 سم' },
     ],
     images: [
-      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=85',
+      '/brand/teaser-clean.jpg',
+      '/brand/burgundy-avatar.jpg',
     ],
     features: [
-      { ar: 'قصة واسعة مريحة وانسيابية', en: 'Relaxed modest silhouette' },
-      { ar: 'تطريز يدوي على الصدر والأساور', en: 'Hand-stitched chest and cuff accents' },
+      { ar: 'حواف مبرومة ومحاكة يدوياً بدقة بالغة', en: 'Hand-rolled finished hem' },
     ],
   },
   {
-    id: 'prod-004',
-    slug: 'kandaka-nubian-festive-jalabiya',
+    id: 'sample-005',
+    slug: 'bridal-gold-painted-toub',
     title: {
-      ar: 'جلابية كنداكة ملكية مطرزة',
-      en: 'Kandaka Royal Festive Jalabiya',
+      ar: 'ثوب عروس سوداني مرسوم بالذهب الخالص',
+      en: 'Bridal Heritage Toub in Pure Gold Leaf',
     },
     subtitle: {
-      ar: 'جلابية راقية للضيافة والمناسبات الأسرية',
-      en: 'Festive luxury Jalabiya for home hospitality and Eid gatherings',
+      ar: 'عينة تجريبية: قطعة نادرة للأعراس والمناسبات الكبرى',
+      en: 'Demo Sample: Bespoke bridal toub with molten gold brushwork',
     },
     description: {
-      ar: 'جلابية سودانية نسائية فاخرة تجمع بين الاحتشام والأناقة الملكية. مصممة من الحرير الممزوج بالقطن المريح مع ياقة مطرزة بأدق التفاصيل.',
-      en: 'Elevated Sudanese Jalabiya celebrating festive elegance and hospitality. Soft cotton-silk blend with ornate neckline embroidery.',
+      ar: 'عينة تجريبية لثوب الزفاف السوداني المعاصر. حرير إيطالي طبيعي مشغول بنقوش يدوية ذهبية سائلة مع تطريز خرز دقيق عند الحواشي.',
+      en: 'Bespoke bridal heirloom toub hand-painted with pure liquid gold motifs.',
+    },
+    priceQAR: 2850,
+    category: 'toubs',
+    badge: 'sample',
+    isSample: true,
+    inStock: true,
+    stockCount: 2,
+    isMadeToOrder: true,
+    leadTimeDays: 14,
+    fabric: {
+      ar: 'حرير إيطالي طبيعي ثقيل',
+      en: 'Heavy Natural Italian Silk',
+    },
+    origin: {
+      ar: 'حياكة يدوية خاصة - الخرطوم والدوحة، السودان',
+      en: 'Bespoke Bridal Atelier - Sudan & Qatar',
+    },
+    careInstructions: {
+      ar: 'حفظ في كيس قطني وغسيل جاف تخصصي فقط.',
+      en: 'Specialist bridal preservation dry clean only.',
+    },
+    colors: [
+      { id: 'gold', name: { ar: 'ذهب عاجي', en: 'Ivory Gold' }, hex: '#D9B97A' },
+      { id: 'burgundy', name: { ar: 'بيرغندي ملكي', en: 'Royal Burgundy' }, hex: '#5F0F40' },
+    ],
+    sizes: [
+      { id: 'free', label: 'Free Size (4.7m)', available: true, measurements: 'الطول: 4.7 متر للعرائس' },
+    ],
+    images: [
+      '/brand/teaser-clean.jpg',
+      '/brand/burgundy-avatar.jpg',
+      '/brand/teaser-post.jpg',
+    ],
+    features: [
+      { ar: 'تطريز مذهب يدوي للأعراس', en: 'Bridal metallic thread and gold paint' },
+    ],
+  },
+  {
+    id: 'sample-006',
+    slug: 'embroidered-cotton-daraa',
+    title: {
+      ar: 'دراعة سودانية قطنية بتطريز تراثي',
+      en: 'Embroidered Cotton Sudanese Dara’a',
+    },
+    subtitle: {
+      ar: 'عينة تجريبية: قطن بارد بتطريزات سودانية كلاسيكية',
+      en: 'Demo Sample: Cooling cotton with heritage cross-stitch',
+    },
+    description: {
+      ar: 'عينة تجريبية. دراعة مريحة للاستقبال والزيارات العائلية في الدوحة، مصنوعة من قطن ناعم ومطرزة يدوياً.',
+      en: 'Comfortable cotton daraa with authentic Sudanese embroidery.',
     },
     priceQAR: 750,
-    category: 'jalabiyas',
-    badge: 'heritage',
+    category: 'daraas',
+    badge: 'sample',
+    isSample: true,
     inStock: true,
-    stockCount: 9,
+    stockCount: 5,
+    isMadeToOrder: false,
+    leadTimeDays: 2,
     fabric: {
-      ar: 'حرير وقطن ممزوج فائق النعومة',
-      en: 'Premium Silk-Cotton Blend',
+      ar: 'قطن طبيعي 100%',
+      en: '100% Pure Breathable Cotton',
     },
     origin: {
-      ar: 'صنع في السودان',
-      en: 'Made in Sudan',
+      ar: 'حياكة يدوية - السودان',
+      en: 'Hand-tailored in Sudan',
     },
     careInstructions: {
-      ar: 'غسيل يدوي لطيف أو تنظيف جاف.',
-      en: 'Gentle hand wash or dry clean.',
+      ar: 'غسيل يدوي أو آلي خفيف.',
+      en: 'Machine wash delicate or hand wash.',
     },
     colors: [
-      { id: 'peach-soft', name: { ar: 'دراق ناعم', en: 'Soft Peach' }, hex: '#FFC9A8' },
-      { id: 'cocoa-light', name: { ar: 'بني فاتح', en: 'Light Cocoa' }, hex: '#725447' },
+      { id: 'cream', name: { ar: 'كريمي', en: 'Cream' }, hex: '#FBFEFB' },
+      { id: 'burgundy', name: { ar: 'بيرغندي', en: 'Burgundy' }, hex: '#5F0F40' },
     ],
     sizes: [
-      { id: 's', label: 'S', available: true },
-      { id: 'm', label: 'M', available: true },
-      { id: 'l', label: 'L', available: true },
-      { id: 'xl', label: 'XL', available: true },
+      { id: 'free', label: 'Free Size', available: true },
     ],
     images: [
-      'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=85',
+      '/brand/teaser-clean.jpg',
+      '/brand/burgundy-avatar.jpg',
     ],
     features: [
-      { ar: 'ياقة كنداكة مطرزة يدوياً', en: 'Artisanal embroidered collar' },
-      { ar: 'جيوب جانبية مخفية وعملية', en: 'Discreet side pockets' },
-    ],
-  },
-  {
-    id: 'prod-005',
-    slug: 'khartoum-modern-silk-dress',
-    title: {
-      ar: 'فستان حرير سوداني عصري',
-      en: 'Khartoum Modern Silk Maxi Dress',
-    },
-    subtitle: {
-      ar: 'فستان محتشم بلمسات سودانية معاصرة',
-      en: 'Contemporary modest silhouette infused with Sudanese heritage lines',
-    },
-    description: {
-      ar: 'تصميم يجمع بين بساطة الموضة العالمية والروح السودانية العريقة. يتميز بقصة متهدلة مع حزام خصر اختياري وتفاصيل كشكشة ناعمة.',
-      en: 'Bridging international high fashion with deep Sudanese soul. Fluid drape with an optional cinched sash and subtle henna hem trim.',
-    },
-    priceQAR: 950,
-    category: 'dresses',
-    badge: 'new',
-    inStock: true,
-    stockCount: 6,
-    fabric: {
-      ar: 'حرير كريب إيطالي ناعم',
-      en: 'Italian Silk Crepe',
-    },
-    origin: {
-      ar: 'تصميم سوداني محاك بأعلى معايير الخياطة الراقية',
-      en: 'Sudanese designer atelier creation',
-    },
-    careInstructions: {
-      ar: 'غسيل جاف بالبخار لحماية انسيابية القماش.',
-      en: 'Dry clean only with steam pressing.',
-    },
-    colors: [
-      { id: 'coral', name: { ar: 'مرجان مشرق', en: 'Vibrant Coral' }, hex: '#E8795A' },
-      { id: 'cream', name: { ar: 'بيج ناعم', en: 'Soft Beige' }, hex: '#FFF6EE' },
-    ],
-    sizes: [
-      { id: 's', label: '38 (S)', available: true },
-      { id: 'm', label: '40 (M)', available: true },
-      { id: 'l', label: '42 (L)', available: true },
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=85',
-    ],
-    features: [
-      { ar: 'قصة ماكسي كاملة بطول أنيق', en: 'Full maxi length coverage' },
-      { ar: 'قماش غير شفاف ومريح', en: 'Opaque luxury fabric' },
-    ],
-  },
-  {
-    id: 'prod-006',
-    slug: 'kasala-artisanal-silk-scarf',
-    title: {
-      ar: 'شال كسلا الحريري التراثي',
-      en: 'Kasala Artisanal Silk Scarf & Shawl',
-    },
-    subtitle: {
-      ar: 'شال ناعم من الحرير الطبيعي مع أطراف مهدبة يدوياً',
-      en: 'Pure natural silk shawl with handcrafted fringe borders',
-    },
-    description: {
-      ar: 'إكسسوار متكامل يمكن ارتداؤه مع الثوب أو الفستان لإضافة لمسة أناقة فاخرة. صُنع بأيدي نساجين متمرسين من شرق السودان.',
-      en: 'The definitive luxury accessory to complement your toub or modern dress. Handwoven by master weavers in Eastern Sudan.',
-    },
-    priceQAR: 420,
-    category: 'accessories',
-    badge: 'heritage',
-    inStock: true,
-    stockCount: 15,
-    fabric: {
-      ar: 'حرير خالص 100%',
-      en: '100% Pure Raw Silk',
-    },
-    origin: {
-      ar: 'حياكة يدوية في كسلا، السودان',
-      en: 'Handmade in Kasala, Sudan',
-    },
-    careInstructions: {
-      ar: 'غسيل يدوي بماء فاتر وشامبو مخصص للحرير.',
-      en: 'Hand wash gently with mild silk detergent.',
-    },
-    colors: [
-      { id: 'peach-gold', name: { ar: 'دراق مذهب', en: 'Gilded Peach' }, hex: '#FFC9A8' },
-      { id: 'crimson', name: { ar: 'عنابي دافئ', en: 'Warm Crimson' }, hex: '#D96848' },
-    ],
-    sizes: [
-      { id: 'one-size', label: 'المقاس الموحد (200 × 70 سم)', available: true },
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=85',
-    ],
-    features: [
-      { ar: 'أبعاد مثالية: 200 سم × 70 سم', en: 'Dimensions: 200cm x 70cm' },
-      { ar: 'ختم الأصالة التراثي محفور باليد', en: 'Authenticity seal hand-finished' },
+      { ar: 'خفيفة ومثالية للأجواء الصيفية', en: 'Lightweight summer comfort' },
     ],
   },
 ];
 
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((p) => p.slug === slug);
-}
-
-export function getProductsByCategory(category: string): Product[] {
-  if (category === 'all') return products;
-  return products.filter((p) => p.category === category);
 }

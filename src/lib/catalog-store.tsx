@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Product, products as seedProducts } from '../data/products';
 
-export const CATALOG_STORAGE_KEY = 'kandaka_products';
+export const CATALOG_STORAGE_KEY = 'burgundy_catalog_products';
 
 export interface NewProductInput {
   title: { ar: string; en: string };
@@ -11,15 +11,18 @@ export interface NewProductInput {
   description: { ar: string; en: string };
   priceQAR: number;
   originalPriceQAR?: number;
-  category: 'toubs' | 'jalabiyas' | 'daraas' | 'dresses' | 'accessories';
-  badge?: 'new' | 'sale' | 'soldout' | 'heritage';
+  category: 'toubs' | 'jalabiyas' | 'scarves' | 'accessories' | 'daraas' | 'dresses';
+  badge?: 'sample' | 'new' | 'sale' | 'soldout' | 'heritage' | 'madeToOrder';
+  isSample?: boolean;
   inStock?: boolean;
   stockCount: number;
+  isMadeToOrder?: boolean;
+  leadTimeDays?: number;
   fabric: { ar: string; en: string };
   origin?: { ar: string; en: string };
   careInstructions?: { ar: string; en: string };
   colors: Array<{ id: string; name: { ar: string; en: string }; hex: string }>;
-  sizes: Array<{ id: string; label: string; available: boolean }>;
+  sizes: Array<{ id: string; label: string; available: boolean; measurements?: string }>;
   images: string[];
   features?: Array<{ ar: string; en: string }>;
   slug?: string;
@@ -118,30 +121,34 @@ export function createProductRecord(
     priceQAR: Number(input.priceQAR),
     originalPriceQAR: input.originalPriceQAR ? Number(input.originalPriceQAR) : undefined,
     category: input.category,
-    badge: input.badge || 'new',
-    inStock: input.inStock ?? input.stockCount > 0,
+    badge: input.badge || (input.isMadeToOrder ? 'madeToOrder' : 'new'),
+    isSample: input.isSample ?? false,
+    inStock: input.inStock ?? (input.isMadeToOrder ? true : input.stockCount > 0),
     stockCount: Math.max(0, Number(input.stockCount)),
+    isMadeToOrder: input.isMadeToOrder ?? false,
+    leadTimeDays: input.leadTimeDays ?? (input.isMadeToOrder ? 7 : 2),
     fabric: input.fabric,
     origin: input.origin || {
-      ar: 'صنع في السودان',
-      en: 'Crafted in Sudan',
+      ar: 'مرسم بيرغندي - قطر والسودان',
+      en: 'BURGUNDY Atelier - Qatar & Sudan',
     },
     careInstructions: input.careInstructions || {
-      ar: 'غسيل جاف أو يدوي لطيف بالماء البارد',
-      en: 'Dry clean or gentle cold hand wash',
+      ar: 'غسيل جاف فقط لحماية الألوان والتطريز اليدوي',
+      en: 'Specialist dry clean only to preserve painted pigments',
     },
     colors: input.colors.length > 0 ? input.colors : [
+      { id: 'burgundy', name: { ar: 'بيرغندي', en: 'Burgundy' }, hex: '#5F0F40' },
       { id: 'peach', name: { ar: 'دراق ناعم', en: 'Soft Peach' }, hex: '#FFC9A8' },
     ],
     sizes: input.sizes.length > 0 ? input.sizes : [
-      { id: 'free', label: 'Free Size (4.5m)', available: true },
+      { id: 'free', label: 'Free Size (4.5m x 1.15m)', available: true, measurements: 'الطول: 4.5 متر | العرض: 1.15 متر' },
     ],
     images: input.images.length > 0 ? input.images : [
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80',
+      '/brand/teaser-clean.jpg',
     ],
     features: input.features || [
-      { ar: 'خامات سودانية طبيعية ممتازة', en: 'Premium natural Sudanese fabrics' },
-      { ar: 'تطريز أصيل بجودة عالية', en: 'Authentic high-grade embroidery' },
+      { ar: 'رسم يدوي متفرد بأنامل فنانات سودانيات', en: 'Unique artisanal hand-brushwork' },
+      { ar: 'خامات طبيعية فاخرة وألوان ثابتة', en: 'Premium natural fabrics and durable pigments' },
     ],
   };
 
@@ -159,7 +166,7 @@ export function deleteProductRecord(
 }
 
 /**
- * Pure function to update stock for a product.
+ * Pure function to update stock count or status.
  */
 export function updateStockRecord(
   currentCatalog: Product[],
@@ -169,26 +176,24 @@ export function updateStockRecord(
 ): Product[] {
   return currentCatalog.map((product) => {
     if (product.id !== id) return product;
-
-    const newCount = isAbsolute
-      ? Math.max(0, deltaOrCount)
-      : Math.max(0, product.stockCount + deltaOrCount);
-
+    const newCount = isAbsolute ? deltaOrCount : product.stockCount + deltaOrCount;
+    const safeCount = Math.max(0, newCount);
     return {
       ...product,
-      stockCount: newCount,
-      inStock: newCount > 0,
+      stockCount: safeCount,
+      inStock: safeCount > 0,
     };
   });
 }
 
-// React Context Interface
 export interface CatalogContextType {
   products: Product[];
   addProduct: (input: NewProductInput) => Product;
   updateProduct: (id: string, updates: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
   updateStock: (id: string, deltaOrCount: number, isAbsolute?: boolean) => void;
+  reorderProducts: (newCatalog: Product[]) => void;
+  removeSampleProducts: () => void;
   resetCatalog: () => void;
   getProductBySlug: (slug: string) => Product | undefined;
 }
@@ -199,14 +204,12 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
   const [products, setProducts] = useState<Product[]>(seedProducts);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Hydrate from localStorage once on client
   useEffect(() => {
     const loaded = loadCatalogFromStorage();
     setProducts(loaded);
     setIsHydrated(true);
   }, []);
 
-  // Sync to storage on state change after hydration
   useEffect(() => {
     if (isHydrated) {
       saveCatalogToStorage(products);
@@ -237,6 +240,19 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
     setProducts((prev) => updateStockRecord(prev, id, deltaOrCount, isAbsolute));
   }, []);
 
+  const reorderProducts = useCallback((newCatalog: Product[]) => {
+    setProducts(newCatalog);
+    saveCatalogToStorage(newCatalog);
+  }, []);
+
+  const removeSampleProducts = useCallback(() => {
+    setProducts((prev) => {
+      const liveOnly = prev.filter((p) => !p.isSample);
+      saveCatalogToStorage(liveOnly);
+      return liveOnly;
+    });
+  }, []);
+
   const resetCatalog = useCallback(() => {
     setProducts(seedProducts);
     saveCatalogToStorage(seedProducts);
@@ -257,6 +273,8 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
         updateProduct,
         deleteProduct,
         updateStock,
+        reorderProducts,
+        removeSampleProducts,
         resetCatalog,
         getProductBySlug,
       }}
@@ -269,13 +287,14 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
 export function useCatalogStore(): CatalogContextType {
   const context = useContext(CatalogContext);
   if (!context) {
-    // If used outside provider, return default pure accessor
     return {
       products: seedProducts,
       addProduct: (input) => createProductRecord(seedProducts, input),
       updateProduct: () => {},
       deleteProduct: () => {},
       updateStock: () => {},
+      reorderProducts: () => {},
+      removeSampleProducts: () => {},
       resetCatalog: () => {},
       getProductBySlug: (slug) => seedProducts.find((p) => p.slug === slug),
     };

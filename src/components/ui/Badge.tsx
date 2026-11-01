@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: 'new' | 'sale' | 'soldout' | 'heritage' | 'neutral';
+  variant?: 'new' | 'sale' | 'soldout' | 'heritage' | 'neutral' | 'sample' | 'madeToOrder';
   size?: 'sm' | 'md';
 }
 
@@ -21,12 +21,14 @@ export function Badge({
     md: 'text-xs px-2.5 py-1 leading-tight',
   };
 
-  const variantStyles = {
+  const variantStyles: Record<string, string> = {
     new: 'bg-peach-soft text-cocoa-dark font-semibold border border-peach-deep/30',
     sale: 'bg-coral-warm text-white font-bold shadow-sm',
     soldout: 'bg-cocoa-muted text-cream-light font-medium',
     heritage: 'bg-[#E3B873] text-[#3B2A24] font-semibold border border-[#CBA05C]',
     neutral: 'bg-blush-surface text-cocoa-dark border border-peach-soft/40',
+    sample: 'bg-burgundy text-white font-semibold border border-burgundy-dark/30',
+    madeToOrder: 'bg-peach-soft/60 text-burgundy font-semibold border border-peach-deep/40',
   };
 
   return (

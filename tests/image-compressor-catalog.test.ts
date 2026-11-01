@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { calculateTargetDimensions, compressImageFile } from '../src/lib/image-utils';
 import {
+  CATALOG_STORAGE_KEY,
   loadCatalogFromStorage,
   saveCatalogToStorage,
   createProductRecord,
@@ -29,7 +30,6 @@ describe('Image Compressor Utilities', () => {
 
   it('handles compressImageFile fallback safely when FileReader/Canvas are mocked or in Node environment', async () => {
     const mockFile = new Blob(['mock-image-bytes'], { type: 'image/jpeg' }) as unknown as File;
-    // In Node test environment, compressImageFile should return a valid data url or string representation
     const result = await compressImageFile(mockFile, 1000, 0.8);
     expect(typeof result).toBe('string');
     expect(result.length).toBeGreaterThan(0);
@@ -37,8 +37,6 @@ describe('Image Compressor Utilities', () => {
 });
 
 describe('Catalog Store Engine', () => {
-  const STORAGE_KEY = 'kandaka_products';
-
   beforeEach(() => {
     if (typeof globalThis.localStorage === 'undefined') {
       let store: Record<string, string> = {};
@@ -69,13 +67,11 @@ describe('Catalog Store Engine', () => {
   it('adds a new product and computes valid id and slug', () => {
     const newProductData = {
       title: { ar: 'ثوب جديد فاخر', en: 'New Luxury Toub' },
-      subtitle: { ar: 'وصف فرعي', en: 'Subtitle' },
-      description: { ar: 'وصف كامل', en: 'Full description' },
+      description: { ar: 'وصف تجريبي', en: 'Test description' },
       priceQAR: 1800,
       category: 'toubs' as const,
-      inStock: true,
-      stockCount: 12,
-      fabric: { ar: 'حرير طبيعي', en: 'Natural Silk' },
+      stockCount: 10,
+      fabric: { ar: 'حرير خالص', en: 'Pure Silk' },
       origin: { ar: 'السودان', en: 'Sudan' },
       careInstructions: { ar: 'غسيل جاف', en: 'Dry clean' },
       colors: [{ id: 'peach', name: { ar: 'وردي', en: 'Pink' }, hex: '#FFC9A8' }],

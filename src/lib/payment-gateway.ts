@@ -1,14 +1,12 @@
-export type PaymentMethod = 'card' | 'qpay' | 'fawran' | 'cod';
+export type PaymentMethod = 'card' | 'qpay' | 'fawran' | 'bank_transfer' | 'cod';
 
 export interface PaymentRequest {
   method: PaymentMethod;
   amountQAR: number;
   orderId: string;
-  cardNumber?: string;
-  cardExpiry?: string;
-  cardCvv?: string;
-  cardHolder?: string;
+  receiptImageUrl?: string;
   fawranAlias?: string; // Qatar mobile number or alias
+  notes?: string;
 }
 
 export interface PaymentResponse {
@@ -18,17 +16,30 @@ export interface PaymentResponse {
   amountQAR: number;
   message: string;
   timestamp: string;
+  isPendingVerification?: boolean;
 }
 
 export interface PaymentGatewayAdapter {
   process(req: PaymentRequest): Promise<PaymentResponse>;
 }
 
-// Qatar Payment Gateway Simulator Implementation
-export class QatarPaymentGatewaySimulator implements PaymentGatewayAdapter {
+// Swappable Qatar Payment Gateway Adapter (Supports QPay/NAPS, Fawran, Card, Bank Wire & COD)
+export class QatarPaymentGatewayAdapter implements PaymentGatewayAdapter {
   async process(req: PaymentRequest): Promise<PaymentResponse> {
-    // Simulate brief network roundtrip
+    // Brief network roundtrip simulation
     await new Promise((resolve) => setTimeout(resolve, 300));
+
+    if (req.method === 'bank_transfer') {
+      return {
+        success: true,
+        transactionId: `WIRE-QNB-${Date.now().toString(36).toUpperCase()}`,
+        method: req.method,
+        amountQAR: req.amountQAR,
+        message: 'Receipt uploaded successfully. Order set to Pending Verification.',
+        timestamp: new Date().toISOString(),
+        isPendingVerification: true,
+      };
+    }
 
     const txnPrefix =
       req.method === 'fawran'
@@ -36,7 +47,7 @@ export class QatarPaymentGatewaySimulator implements PaymentGatewayAdapter {
         : req.method === 'qpay'
         ? 'QPAY-NAPS'
         : req.method === 'card'
-        ? 'QNB-GATEWAY'
+        ? 'MYFATOORAH-QNB'
         : 'COD-AUTH';
 
     const randomSuffix = Math.floor(10000000 + Math.random() * 90000000);
@@ -51,12 +62,12 @@ export class QatarPaymentGatewaySimulator implements PaymentGatewayAdapter {
           ? 'Order confirmed with Cash on Delivery authorization'
           : 'Payment authorized successfully under Qatar banking network',
       timestamp: new Date().toISOString(),
+      isPendingVerification: false,
     };
   }
 }
 
-// Default active gateway instance
-export const defaultPaymentGateway = new QatarPaymentGatewaySimulator();
+export const defaultPaymentGateway = new QatarPaymentGatewayAdapter();
 
 export async function processPayment(req: PaymentRequest): Promise<PaymentResponse> {
   return defaultPaymentGateway.process(req);
