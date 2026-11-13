@@ -47,19 +47,19 @@ export function HomeContent({ lang }: HomeContentProps) {
       <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-gold-hairline/60">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12">
           <div className="text-center sm:text-start space-y-2">
-            <span className="text-xs font-bold text-gold uppercase tracking-widest flex items-center justify-center sm:justify-start gap-1.5">
+            <span className="text-xs font-bold text-gold-ink uppercase tracking-widest flex items-center justify-center sm:justify-start gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
-              <span className="font-cairo">{dict.home.featuredCategoriesTitle}</span>
+              <span className="font-display">{dict.home.featuredCategoriesTitle}</span>
             </span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-cairo tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-display tracking-tight">
               {dict.home.newArrivalsTitle}
             </h2>
           </div>
-          <Link href={`/${lang}/shop`}>
-            <Button variant="ghost" size="sm" className="text-burgundy hover:text-burgundy-hover hover:bg-canvas-warm border border-gold-hairline rounded-full px-5 py-2 text-xs font-bold">
+          <Button asChild variant="ghost" size="sm" className="text-burgundy hover:text-burgundy-hover hover:bg-canvas-warm border border-gold-hairline rounded-full px-5 py-2 text-xs font-bold">
+            <Link href={`/${lang}/shop`}>
               {isAr ? 'عرض تشكيلة المتجر' : 'View Boutique Shop'} {isAr ? <ArrowLeft className="w-4 h-4 ms-1" /> : <ArrowRight className="w-4 h-4 ms-1" />}
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
@@ -89,18 +89,18 @@ export function HomeContent({ lang }: HomeContentProps) {
             />
 
             <div className="relative z-10 max-w-3xl space-y-6 text-center sm:text-start">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 backdrop-blur-md border border-gold/40 text-gold text-xs font-bold tracking-widest uppercase">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 backdrop-blur-md border border-gold/40 text-gold-ink text-xs font-bold tracking-widest uppercase">
                 <Gem className="w-3.5 h-3.5" />
-                <span className="font-cairo">{isAr ? 'خدمة التفصيل الخاص والأعراس' : 'VIP BRIDAL & BESPOKE ATELIER'}</span>
+                <span className="font-display">{isAr ? 'خدمة التفصيل الخاص والأعراس' : 'VIP BRIDAL & BESPOKE ATELIER'}</span>
               </div>
 
-              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white font-cairo leading-tight">
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white font-display leading-tight">
                 {isAr
                   ? 'ثوب زفافكِ ومناسباتكِ.. يُرسم خصيصاً ليخلد حضوركِ الملكي'
                   : 'Your Ceremonial Toub, Hand-Painted Exclusively For Your Milestone Moments'}
               </h2>
 
-              <p className="text-sm sm:text-base text-white/80 leading-relaxed font-tajawal max-w-2xl">
+              <p className="text-sm sm:text-base text-white/80 leading-relaxed font-body max-w-2xl">
                 {isAr
                   ? 'نقدم لسيدات الدوحة جلسات استشارة وتفصيل خاصة لاختيار خامات الفوال السويسري الفاخر أو الحرير الطبيعي، مع تصميم نقوش يدوية مخصصة ومطرزة بالذهب لا تتكرر أبداً.'
                   : 'We welcome patrons across Doha for private atelier consultations—hand-selecting heirloom Swiss voile, bespoke palette blending, and personalized monogramming.'}
@@ -116,7 +116,7 @@ export function HomeContent({ lang }: HomeContentProps) {
                 </Link>
 
                 <a
-                  href={`https://wa.me/${settings.contactWhatsApp || '97477123456'}?text=${encodeURIComponent(
+                  href={`https://wa.me/${settings.whatsappNumber.replace(/[^0-9]/g, '') || '97477123456'}?text=${encodeURIComponent(
                     isAr ? 'مرحباً، أود الاستفسار عن تفصيل ثوب خاص من دار بيرغندي' : 'Hello, I would like to inquire about a bespoke commission from BURGUNDY'
                   )}`}
                   target="_blank"
@@ -130,11 +130,11 @@ export function HomeContent({ lang }: HomeContentProps) {
 
               <div className="flex items-center gap-6 pt-4 text-xs text-white/70 justify-center sm:justify-start border-t border-white/10">
                 <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-gold" />
+                  <ShieldCheck className="w-4 h-4 text-gold-ink" />
                   <span>{isAr ? 'مرخص رسمياً في دولة قطر' : 'Licensed in Qatar'}</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-gold" />
+                  <Sparkles className="w-4 h-4 text-gold-ink" />
                   <span>{isAr ? 'خدمة اللؤلؤة ولوسيل والخليج الغربي' : 'The Pearl, Lusail & West Bay'}</span>
                 </span>
               </div>
@@ -149,11 +149,11 @@ export function HomeContent({ lang }: HomeContentProps) {
       {/* 7. Most Coveted Pieces */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-gold-hairline/60">
         <div className="text-center max-w-xl mx-auto mb-12 space-y-2">
-          <span className="text-xs font-bold text-gold uppercase tracking-widest flex items-center justify-center gap-1.5">
+          <span className="text-xs font-bold text-gold-ink uppercase tracking-widest flex items-center justify-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
-            <span className="font-cairo">{isAr ? 'روائع مختارة' : 'COVETED SELECTIONS'}</span>
+            <span className="font-display">{isAr ? 'روائع مختارة' : 'COVETED SELECTIONS'}</span>
           </span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-cairo tracking-tight">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-display tracking-tight">
             {dict.home.bestSellersTitle}
           </h2>
         </div>

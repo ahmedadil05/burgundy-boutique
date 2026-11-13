@@ -13,7 +13,7 @@ export interface SiteConfig {
   };
   domain: string;
   defaultCurrency: 'QAR';
-  currencies: Array<'QAR' | 'USD' | 'SDG'>;
+  currencies: Array<'QAR' | 'USD'>;
   defaultLanguage: 'ar';
   languages: Array<'ar' | 'en'>;
   socials: {
@@ -45,7 +45,7 @@ export const siteConfig: SiteConfig = {
   },
   domain: 'https://burgundy.com.qa',
   defaultCurrency: 'QAR',
-  currencies: ['QAR', 'USD', 'SDG'],
+  currencies: ['QAR', 'USD'],
   defaultLanguage: 'ar',
   languages: ['ar', 'en'],
   socials: {

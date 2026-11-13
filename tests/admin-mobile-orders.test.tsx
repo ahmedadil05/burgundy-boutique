@@ -57,7 +57,6 @@ describe('SalesSummaryCards Component & KPI Calculation', () => {
     expect(kpis.rails.fawran).toBe(1);
     expect(kpis.rails.qpay).toBe(1);
     expect(kpis.rails.card).toBe(0);
-    expect(kpis.rails.cod).toBe(0);
     expect(kpis.byStatus.confirmed).toBe(1);
     expect(kpis.byStatus.shipped).toBe(1);
   });

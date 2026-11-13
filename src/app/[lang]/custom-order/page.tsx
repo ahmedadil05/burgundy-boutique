@@ -59,7 +59,7 @@ export default function CustomOrderPage() {
           <span>{isRtl ? 'تفصيل ورسم يدوي خاص' : 'BESPOKE ATELIER TAILORING'}</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-burgundy font-cairo">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-burgundy font-display">
           {isRtl ? 'طلب تفصيل قطعة خاصة بكِ' : 'Commission a Bespoke Creation'}
         </h1>
 
@@ -76,7 +76,7 @@ export default function CustomOrderPage() {
             <div className="w-16 h-16 rounded-full bg-surface-peachSoft/40 text-burgundy flex items-center justify-center mx-auto border border-gold-hairline">
               <Heart className="w-8 h-8 text-burgundy fill-burgundy/20" />
             </div>
-            <h2 className="text-2xl font-bold text-burgundy font-cairo">
+            <h2 className="text-2xl font-bold text-burgundy font-display">
               {isRtl ? 'شكراً لكِ.. تم استلام طلب التفصيل' : 'Your Bespoke Request Has Been Received'}
             </h2>
             <p className="text-xs text-slateText-secondary leading-relaxed max-w-sm mx-auto">
@@ -106,7 +106,7 @@ export default function CustomOrderPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-gold-hairline">
-              <h2 className="text-base font-bold text-burgundy font-cairo">
+              <h2 className="text-base font-bold text-burgundy font-display">
                 {isRtl ? 'بيانات المناسبة ومواصفات التصميم' : 'Design & Event Specifications'}
               </h2>
               <a
@@ -209,7 +209,7 @@ export default function CustomOrderPage() {
                   onChange={(e) => setFormData({ ...formData, budgetQAR: Number(e.target.value) })}
                   className="flex-1 accent-burgundy"
                 />
-                <span className="text-xs font-bold text-burgundy bg-surface-peachSoft/40 px-3 py-1.5 rounded-xl border border-gold-hairline min-w-[95px] text-center font-mono">
+                <span className="text-xs font-bold text-burgundy bg-surface-peachSoft/40 px-3 py-1.5 rounded-xl border border-gold-hairline min-w-[95px] text-center font-body tabular-nums">
                   {formData.budgetQAR} QAR
                 </span>
               </div>

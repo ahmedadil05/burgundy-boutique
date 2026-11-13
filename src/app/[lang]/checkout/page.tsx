@@ -199,7 +199,7 @@ export default function CheckoutPage() {
             <Lock className="w-3.5 h-3.5 text-gold-line" />
             <span>{isAr ? 'دفع آمن ومشفر 100%' : '100% Encrypted Qatar Checkout'}</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-burgundy font-cairo">
+          <h1 className="text-3xl font-extrabold text-burgundy font-display">
             {dict.checkout.title}
           </h1>
           <p className="text-xs text-slateText-secondary">
@@ -233,14 +233,13 @@ export default function CheckoutPage() {
               receiptImage={receiptImage}
               onReceiptImageChange={(img) => setReceiptImage(img)}
               lang={lang}
-              allowCOD={formData.destination === 'qatar'}
             />
           </div>
 
           {/* Right: Order Summary & Review (Cols 5) */}
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-white rounded-2xl p-6 border border-gold-hairline shadow-soft space-y-4">
-              <h3 className="font-bold text-sm text-burgundy font-cairo border-b border-gold-hairline/60 pb-3">
+              <h3 className="font-bold text-sm text-burgundy font-display border-b border-gold-hairline/60 pb-3">
                 {isAr ? 'ملخص المنتجات في الحقيبة' : 'Items Summary'} ({cart.length})
               </h3>
 
@@ -253,7 +252,7 @@ export default function CheckoutPage() {
                         {item.size} • {isAr ? 'الكمية:' : 'Qty:'} {item.quantity}
                       </p>
                     </div>
-                    <span className="font-mono font-semibold text-burgundy">
+                    <span className="font-body tabular-nums font-semibold text-burgundy">
                       {item.priceQAR * item.quantity} QAR
                     </span>
                   </div>

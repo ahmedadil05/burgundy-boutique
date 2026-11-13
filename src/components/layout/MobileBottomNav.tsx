@@ -56,7 +56,7 @@ export function MobileBottomNav({ lang = 'ar' }: { lang?: Language }) {
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
-      className="lg:hidden fixed bottom-0 start-0 end-0 z-40 bg-white/95 backdrop-blur-lg border-t border-gold-hairline shadow-[0_-4px_20px_rgba(95,15,64,0.06)] px-2 py-1.5 transition-transform"
+      className="lg:hidden fixed bottom-0 start-0 end-0 z-40 bg-canvas/90 supports-[backdrop-filter]:bg-canvas/75 backdrop-blur-xl border-t border-gold-hairline shadow-[0_-4px_24px_rgba(95,15,64,0.06)] px-2 py-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] transition-transform"
     >
       <div className="max-w-md mx-auto grid grid-cols-5 items-center">
         {navItems.map((item) => {
@@ -90,6 +90,7 @@ export function MobileBottomNav({ lang = 'ar' }: { lang?: Language }) {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={active ? 'page' : undefined}
               className={`relative flex flex-col items-center justify-center py-1 touch-target-48 rounded-xl transition-all duration-200 ${
                 active
                   ? 'text-burgundy font-bold scale-[1.02]'

@@ -178,17 +178,17 @@ export function ProductQuickViewModal({
                 <span className="text-[11px] font-semibold text-slateText-secondary uppercase tracking-wider block mb-1">
                   {product.fabric[lang]}
                 </span>
-                <h3 className="text-xl sm:text-2xl font-extrabold text-burgundy font-cairo leading-snug">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-burgundy font-display leading-snug">
                   {product.title[lang]}
                 </h3>
 
                 {/* Price Display */}
                 <div className="mt-3 flex items-baseline gap-3">
-                  <span className="text-xl font-extrabold text-burgundy font-mono">
+                  <span className="text-xl font-extrabold text-burgundy font-body tabular-nums">
                     {formatPrice(product.priceQAR, currency, lang)}
                   </span>
                   {product.originalPriceQAR && product.originalPriceQAR > product.priceQAR && (
-                    <span className="text-sm text-slateText-secondary line-through opacity-70 font-mono">
+                    <span className="text-sm text-slateText-secondary line-through opacity-70 font-body tabular-nums">
                       {formatPrice(product.originalPriceQAR, currency, lang)}
                     </span>
                   )}
@@ -205,7 +205,7 @@ export function ProductQuickViewModal({
                 {/* Size Selector */}
                 <div className="mt-4 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slateText-body font-cairo">
+                    <span className="text-xs font-bold text-slateText-body font-display">
                       {isAr ? 'المقاس / الطول' : 'Size / Length'}
                     </span>
                     <span className="text-[11px] text-slateText-secondary flex items-center gap-1">
@@ -236,7 +236,7 @@ export function ProductQuickViewModal({
 
                 {/* Quantity */}
                 <div className="mt-4 flex items-center gap-3">
-                  <span className="text-xs font-bold text-slateText-body font-cairo">
+                  <span className="text-xs font-bold text-slateText-body font-display">
                     {isAr ? 'الكمية' : 'Quantity'}
                   </span>
                   <div className="flex items-center border border-gold-hairline rounded-lg bg-canvas-warm/30">
@@ -247,7 +247,7 @@ export function ProductQuickViewModal({
                     >
                       -
                     </button>
-                    <span className="w-8 text-center text-xs font-bold text-burgundy font-mono">
+                    <span className="w-8 text-center text-xs font-bold text-burgundy font-body tabular-nums">
                       {quantity}
                     </span>
                     <button

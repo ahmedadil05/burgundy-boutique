@@ -21,7 +21,7 @@ export function CostBreakdown({
 
   return (
     <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gold-hairline shadow-sm space-y-4">
-      <h3 className="font-bold text-base text-burgundy font-cairo pb-3 border-b border-gold-hairline flex items-center justify-between">
+      <h3 className="font-bold text-base text-burgundy font-display pb-3 border-b border-gold-hairline flex items-center justify-between">
         <span>{isAr ? 'ملخص التكلفة والشفافية' : 'Cost Breakdown'}</span>
         <span className="text-[10px] font-bold text-burgundy bg-surface-peachSoft/50 px-2.5 py-0.5 rounded-full border border-gold-hairline">
           {isAr ? 'قرار وزاري قطري رقم 25' : 'Qatar MOCI Decision 25'}
@@ -31,7 +31,7 @@ export function CostBreakdown({
       <div className="space-y-2.5 text-xs">
         <div className="flex items-center justify-between text-slateText-secondary">
           <span>{isAr ? 'المجموع الفرعي للقطع' : 'Items Subtotal'}</span>
-          <span className="font-bold text-slateText-body font-mono">
+          <span className="font-bold text-slateText-body font-body tabular-nums">
             {formatPrice(totals.subtotal, currency, lang)}
           </span>
         </div>
@@ -47,7 +47,7 @@ export function CostBreakdown({
                 {isAr ? 'توصيل مجاني' : 'FREE'}
               </span>
             ) : (
-              <span className="text-slateText-body font-mono">
+              <span className="text-slateText-body font-body tabular-nums">
                 {formatPrice(totals.deliveryFee, currency, lang)}
               </span>
             )}
@@ -56,15 +56,15 @@ export function CostBreakdown({
 
         <div className="flex items-center justify-between text-slateText-secondary">
           <span>{isAr ? 'الضرائب والرسوم الإضافية' : 'Taxes & Hidden Fees'}</span>
-          <span className="font-bold text-emerald-800 font-mono">{formatPrice(0, currency, lang)}</span>
+          <span className="font-bold text-emerald-800 font-body tabular-nums">{formatPrice(0, currency, lang)}</span>
         </div>
       </div>
 
       <div className="pt-3 border-t border-gold-hairline flex items-baseline justify-between">
-        <span className="text-sm font-bold text-burgundy font-cairo">
+        <span className="text-sm font-bold text-burgundy font-display">
           {isAr ? 'الإجمالي النهائي المطلوب سداده' : 'Final Total Due'}
         </span>
-        <span className="text-2xl font-black text-burgundy font-mono">
+        <span className="text-2xl font-black text-burgundy font-body tabular-nums">
           {formatPrice(totals.total, currency, lang)}
         </span>
       </div>

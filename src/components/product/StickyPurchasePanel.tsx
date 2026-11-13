@@ -94,7 +94,7 @@ export function StickyPurchasePanel({
       {/* Category & Title */}
       <div>
         <div className="flex items-center justify-between gap-2 mb-2">
-          <span className="text-xs font-bold text-gold-shimmer uppercase tracking-wider">
+          <span className="text-xs font-bold text-gold-ink uppercase tracking-wider">
             {product.fabric[lang]}
           </span>
           <div className="flex items-center gap-1.5">
@@ -118,7 +118,7 @@ export function StickyPurchasePanel({
           </div>
         </div>
 
-        <h1 className="text-xl sm:text-2xl font-extrabold text-burgundy font-cairo leading-snug">
+        <h1 className="text-xl sm:text-2xl font-extrabold text-burgundy font-display leading-snug">
           {product.title[lang]}
         </h1>
         <p className="text-xs text-slateText-secondary mt-1 leading-relaxed">
@@ -129,11 +129,11 @@ export function StickyPurchasePanel({
       {/* Pricing with QAR Primary + Clear Delivery Statement */}
       <div className="pb-5 border-b border-gold-hairline/60">
         <div className="flex items-baseline gap-3">
-          <span className="text-3xl font-black text-burgundy font-mono">
+          <span className="text-3xl font-black text-burgundy font-body tabular-nums">
             {formatPrice(product.priceQAR, currency, lang)}
           </span>
           {product.originalPriceQAR && product.originalPriceQAR > product.priceQAR && (
-            <span className="text-base text-slateText-secondary line-through opacity-70 font-mono">
+            <span className="text-base text-slateText-secondary line-through opacity-70 font-body tabular-nums">
               {formatPrice(product.originalPriceQAR, currency, lang)}
             </span>
           )}
@@ -236,7 +236,7 @@ export function StickyPurchasePanel({
           >
             -
           </button>
-          <span className="w-6 text-center text-xs font-bold font-mono">{quantity}</span>
+          <span className="w-6 text-center text-xs font-bold font-body tabular-nums">{quantity}</span>
           <button
             type="button"
             onClick={() => setQuantity((q) => q + 1)}

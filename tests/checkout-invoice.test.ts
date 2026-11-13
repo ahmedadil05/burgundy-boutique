@@ -20,7 +20,7 @@ describe('Qatar Compliant Checkout & Payment Rails', () => {
     expect(over.isFreeDelivery).toBe(true);
   });
 
-  it('supports Qatar payment rails: Card, QPay/NAPS, Fawran, COD, Bank Wire Transfer', async () => {
+  it('supports Qatar payment rails: Card, QPay/NAPS, Fawran, Bank Wire Transfer', async () => {
     const cardRes = await processPayment({
       method: 'card',
       amountQAR: 1450,

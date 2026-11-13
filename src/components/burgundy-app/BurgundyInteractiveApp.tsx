@@ -24,6 +24,7 @@ import {
   Heart,
   Plus,
   Trash2,
+  Star,
 } from 'lucide-react';
 import { Language } from '@/lib/i18n';
 
@@ -211,11 +212,11 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
   return (
     <div
       dir={isAr ? 'rtl' : 'ltr'}
-      className="min-h-screen bg-canvas text-slateText-body font-almarai selection:bg-peach-sorbet selection:text-burgundy flex flex-col antialiased relative"
+      className="min-h-screen bg-canvas text-slateText-body font-body selection:bg-peach-sorbet selection:text-burgundy flex flex-col antialiased relative"
     >
       {/* 1. Subtle Luxury Top Status Bar */}
       <div className="bg-canvas-warm/70 border-b border-gold/20 py-1.5 px-4 text-center text-[11px] text-slateText-secondary flex items-center justify-center gap-2">
-        <Sparkles className="w-3 h-3 text-gold-shimmer" strokeWidth={1.5} />
+        <Sparkles className="w-3 h-3 text-gold-ink" strokeWidth={1.5} />
         <span>
           {isAr
             ? 'توصيل فاخر وسريع خلال 24–48 ساعة في كافة مناطق قطر • دفع آمن عبر فوران وكيوباي'
@@ -240,7 +241,7 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
                 <span className="font-cormorant text-xl tracking-[0.2em] font-bold text-burgundy group-hover:text-burgundy-hover transition-colors">
                   BURGUNDY
                 </span>
-                <span className="text-[9px] tracking-widest text-gold font-sans uppercase -mt-1 font-semibold">
+                <span className="text-[9px] tracking-widest text-gold-ink font-sans uppercase -mt-1 font-semibold">
                   {isAr ? 'بيرغندي • الدوحة' : 'DOHA • HAUTE COUTURE'}
                 </span>
               </div>
@@ -295,15 +296,15 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
             <section className="relative overflow-hidden bg-gradient-to-b from-canvas-warm/80 via-canvas to-surface-peachSoft/30 py-12 sm:py-20 px-4 text-center border-b border-gold/20">
               <div className="max-w-3xl mx-auto flex flex-col items-center">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-burgundy/5 border border-gold/30 text-burgundy text-xs font-medium mb-4">
-                  <Sparkles className="w-3.5 h-3.5 text-gold" strokeWidth={1.5} />
+                  <Sparkles className="w-3.5 h-3.5 text-gold-ink" strokeWidth={1.5} />
                   {isAr ? 'مجموعة أثواب التوتال السويسري والحرير الطبيعي' : 'Artisanal Sudanese Toubs & Swiss Voile'}
                 </span>
 
-                <h1 className="font-amiri text-4xl sm:text-6xl font-bold text-burgundy leading-tight mb-4 drop-shadow-sm">
+                <h1 className="font-display text-4xl sm:text-6xl font-bold text-burgundy leading-tight mb-4 drop-shadow-sm">
                   {isAr ? 'أصالة الثوب السوداني بلمسة ملكية' : 'Bespoke Sudanese Luxury in Doha'}
                 </h1>
 
-                <p className="font-almarai text-base sm:text-lg text-slateText-body max-w-xl leading-relaxed mb-8">
+                <p className="font-body text-base sm:text-lg text-slateText-body max-w-xl leading-relaxed mb-8">
                   {isAr
                     ? 'قطع فنية نادرة مرسومة يدوياً بالفرشاة على أفخر أقمشة التوتال السويسري والحرير، صممت خصيصاً للمرأة الأنيقة في قطر والخليج.'
                     : 'Hand-painted couture toubs and tailored linen jalabiyas, combining ancient Nubian craftsmanship with understated Gulf opulence.'}
@@ -327,7 +328,7 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
                     onClick={() => setCustomerView('bespoke')}
                     className="py-3.5 px-5 rounded-full border border-gold bg-canvas text-burgundy font-medium text-sm hover:bg-gold/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <Palette className="w-4 h-4 text-gold-shimmer" strokeWidth={1.5} />
+                    <Palette className="w-4 h-4 text-gold-ink" strokeWidth={1.5} />
                     <span>{isAr ? 'طلب تفصيل خاص' : 'Commission Bespoke'}</span>
                   </button>
                 </div>
@@ -338,7 +339,7 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
             <section className="py-12 px-4 max-w-6xl mx-auto">
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h2 className="font-amiri text-2xl sm:text-3xl font-bold text-burgundy">
+                  <h2 className="font-display text-2xl sm:text-3xl font-bold text-burgundy">
                     {isAr ? 'روائع الأتيليه الأكثر طلباً' : 'Curated Atelier Pieces'}
                   </h2>
                   <p className="text-xs sm:text-sm text-slateText-secondary mt-1">
@@ -387,11 +388,11 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
                 </div>
 
                 <div className="w-full md:w-1/2 space-y-4">
-                  <span className="text-xs font-bold text-coral uppercase tracking-wider flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-gold-shimmer" strokeWidth={1.5} />
+                  <span className="text-xs font-bold text-coral-ink uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-gold-ink" strokeWidth={1.5} />
                     {isAr ? 'وراء الريشة والألوان' : 'BEHIND THE BRUSH'}
                   </span>
-                  <h3 className="font-amiri text-2xl sm:text-3xl font-bold text-burgundy leading-snug">
+                  <h3 className="font-display text-2xl sm:text-3xl font-bold text-burgundy leading-snug">
                     {isAr
                       ? 'لكل ثوب حكاية نُسجت بفرشاة الفنان وخيوط الحرير'
                       : 'Each piece is a wearable canvas painted by master artisans'}
@@ -403,11 +404,11 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
                   </p>
                   <div className="pt-2 flex items-center gap-4 text-xs font-medium text-slateText-secondary">
                     <div className="flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-gold-shimmer" strokeWidth={1.5} />
+                      <ShieldCheck className="w-4 h-4 text-gold-ink" strokeWidth={1.5} />
                       <span>{isAr ? 'أقمشة سويسرية 100%' : '100% Swiss Voile'}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <Truck className="w-4 h-4 text-gold-shimmer" strokeWidth={1.5} />
+                      <Truck className="w-4 h-4 text-gold-ink" strokeWidth={1.5} />
                       <span>{isAr ? 'توصيل قطر السريع' : 'Qatar Express'}</span>
                     </div>
                   </div>
@@ -417,20 +418,28 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
 
             {/* Client Testimonials */}
             <section className="py-12 px-4 max-w-4xl mx-auto text-center">
-              <h3 className="font-amiri text-2xl font-bold text-burgundy mb-6">
+              <h3 className="font-display text-2xl font-bold text-burgundy mb-6">
                 {isAr ? 'آراء عميلاتنا في قطر' : 'Client Testimonials in Qatar'}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-5 rounded-2xl bg-canvas-white border border-gold/25 shadow-soft text-right">
-                  <div className="text-gold mb-2 text-sm">★★★★★</div>
-                  <p className="font-almarai text-xs sm:text-sm text-slateText-body leading-relaxed mb-3">
+                <div className="flex items-center gap-0.5 mb-2" role="img" aria-label={isAr ? 'تقييم ٥ من ٥' : '5 out of 5 stars'}>
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-gold-ink text-gold-ink" aria-hidden="true" />
+                  ))}
+                </div>
+                  <p className="font-body text-xs sm:text-sm text-slateText-body leading-relaxed mb-3">
                     "{isAr ? 'الثوب السويسري والرسم يفوق الوصف من الفخامة والنعومة! وصلني في لوسيل مع تغليف ملكي فاخر.' : 'The Swiss toub and delicate painting exceeded my expectations. Delivered in Lusail in regal packaging.'}"
                   </p>
                   <p className="text-xs font-bold text-burgundy">{isAr ? 'عائشة آل ثاني — لوسيل' : 'Aisha Al-Thani — Lusail'}</p>
                 </div>
                 <div className="p-5 rounded-2xl bg-canvas-white border border-gold/25 shadow-soft text-right">
-                  <div className="text-gold mb-2 text-sm">★★★★★</div>
-                  <p className="font-almarai text-xs sm:text-sm text-slateText-body leading-relaxed mb-3">
+                <div className="flex items-center gap-0.5 mb-2" role="img" aria-label={isAr ? 'تقييم ٥ من ٥' : '5 out of 5 stars'}>
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-gold-ink text-gold-ink" aria-hidden="true" />
+                  ))}
+                </div>
+                  <p className="font-body text-xs sm:text-sm text-slateText-body leading-relaxed mb-3">
                     "{isAr ? 'طلبت تفصيل خاص لمناسبة زواج، وتعامل الأتيليه وسرعة التنسيق عبر الواتساب كانت استثنائية.' : 'Commissioned a bespoke piece for a wedding. The atelier WhatsApp concierge was exceptionally attentive.'}"
                   </p>
                   <p className="text-xs font-bold text-burgundy">{isAr ? 'مريم الكواري — الدوحة' : 'Maryam Al-Kuwari — Doha'}</p>
@@ -444,7 +453,7 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
         {customerView === 'shop' && (
           <div className="max-w-6xl mx-auto px-4 py-8 animate-in fade-in duration-300">
             <div className="text-center mb-8">
-              <h2 className="font-amiri text-3xl sm:text-4xl font-bold text-burgundy mb-2">
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-burgundy mb-2">
                 {isAr ? 'المجموعة الكاملة' : 'Boutique Collection'}
               </h2>
               <p className="text-xs sm:text-sm text-slateText-secondary max-w-md mx-auto">
@@ -510,7 +519,7 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
               >
                 {isAr ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
               </button>
-              <h2 className="font-amiri text-2xl font-bold text-burgundy">
+              <h2 className="font-display text-2xl font-bold text-burgundy">
                 {isAr ? 'حقيبة المشتريات' : 'Shopping Bag'}
               </h2>
             </div>
@@ -546,7 +555,7 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
                     </div>
                     <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                       <div>
-                        <h4 className="font-amiri text-base font-bold text-burgundy truncate">
+                        <h4 className="font-display text-base font-bold text-burgundy truncate">
                           {isAr && item.titleAr ? item.titleAr : item.title}
                         </h4>
                         <p className="text-[11px] text-slateText-secondary mt-0.5">
@@ -555,12 +564,12 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
                       </div>
                       <div className="flex items-center justify-between mt-2">
                         <span className="font-bold text-sm text-burgundy">
-                          {item.price} <span className="text-[10px] text-gold font-sans font-semibold">QAR</span>
+                          {item.price} <span className="text-[10px] text-gold-ink font-sans font-semibold">QAR</span>
                         </span>
                         <button
                           type="button"
                           onClick={() => removeFromCart(item.cartId)}
-                          className="text-slateText-secondary hover:text-coral transition-colors p-1"
+                          className="text-slateText-secondary hover:text-coral-ink transition-colors p-1"
                           aria-label="Remove item"
                         >
                           <Trash2 className="w-4 h-4" strokeWidth={1.5} />
@@ -581,7 +590,7 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
                     <span className="text-green-700 font-semibold">{isAr ? 'مجاني للطلبات الفاخرة' : 'Complimentary'}</span>
                   </div>
                   <div className="border-t border-gold/30 pt-3 flex justify-between items-center font-bold text-base text-burgundy">
-                    <span className="font-amiri text-lg">{isAr ? 'المجموع النهائي' : 'Total'}</span>
+                    <span className="font-display text-lg">{isAr ? 'المجموع النهائي' : 'Total'}</span>
                     <span>{cartTotal} QAR</span>
                   </div>
 
@@ -646,7 +655,7 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
               customerView === 'shop' ? 'text-burgundy font-bold' : 'text-slateText-secondary hover:text-burgundy'
             }`}
           >
-            <Sparkles className="w-5 h-5 text-gold-shimmer" strokeWidth={customerView === 'shop' ? 2 : 1.5} />
+            <Sparkles className="w-5 h-5 text-gold-ink" strokeWidth={customerView === 'shop' ? 2 : 1.5} />
             <span>{isAr ? 'المجموعات' : 'Toubs'}</span>
           </button>
 
@@ -712,7 +721,7 @@ export function BurgundyInteractiveApp({ initialLang = 'ar' }: { initialLang?: L
       {/* 6. Clean Luxury Footer */}
       <footer className="bg-canvas-warm/80 border-t border-gold/25 py-8 px-4 text-center text-xs text-slateText-secondary space-y-3">
         <div className="font-cormorant text-lg font-bold text-burgundy tracking-widest">BURGUNDY DOHA</div>
-        <p className="max-w-md mx-auto opacity-80 leading-relaxed font-almarai">
+        <p className="max-w-md mx-auto opacity-80 leading-relaxed font-body">
           {isAr
             ? 'أتيليه الأثواب السودانية الفاخرة والرسم اليدوي الراقي في دولة قطر.'
             : 'Artisanal hand-painted Sudanese toubs and bespoke women’s luxury in Doha, Qatar.'}
@@ -777,21 +786,21 @@ function ProductCardItem({
           className="absolute top-2.5 left-2.5 w-7 h-7 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-burgundy hover:bg-white transition-colors"
           aria-label="Save to Wishlist"
         >
-          <Heart className={`w-3.5 h-3.5 ${isFavorite ? 'fill-coral text-coral' : 'text-burgundy'}`} strokeWidth={1.5} />
+          <Heart className={`w-3.5 h-3.5 ${isFavorite ? 'fill-coral text-coral-ink' : 'text-burgundy'}`} strokeWidth={1.5} />
         </button>
       </div>
 
       <div className="p-3.5 flex flex-col flex-1 justify-between gap-2">
         <div onClick={onSelect} className="cursor-pointer">
-          <p className="text-[10px] text-gold font-medium uppercase tracking-wider">{product.fabric}</p>
-          <h3 className="font-amiri text-sm sm:text-base font-bold text-burgundy line-clamp-1 mt-0.5">
+          <p className="text-[10px] text-gold-ink font-medium uppercase tracking-wider">{product.fabric}</p>
+          <h3 className="font-display text-sm sm:text-base font-bold text-burgundy line-clamp-1 mt-0.5">
             {isAr && product.titleAr ? product.titleAr : product.title}
           </h3>
         </div>
 
         <div className="flex items-center justify-between pt-1">
           <span className="font-bold text-sm sm:text-base text-burgundy">
-            {product.price} <span className="text-[10px] text-gold font-sans font-semibold">QAR</span>
+            {product.price} <span className="text-[10px] text-gold-ink font-sans font-semibold">QAR</span>
           </span>
           <button
             type="button"
@@ -826,7 +835,7 @@ function ProductDetailModal({
       <div className="bg-canvas w-full max-w-lg rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl border border-gold/30 max-h-[90vh] flex flex-col">
         {/* Header Bar */}
         <div className="p-4 border-b border-gold/20 flex justify-between items-center bg-canvas-warm/50">
-          <span className="text-xs font-semibold text-gold tracking-widest uppercase">
+          <span className="text-xs font-semibold text-gold-ink tracking-widest uppercase">
             {isAr ? 'تفاصيل القطعة الحصرية' : 'Product Details'}
           </span>
           <button
@@ -845,12 +854,12 @@ function ProductDetailModal({
           </div>
 
           <div>
-            <span className="text-xs font-bold text-coral">{product.fabric}</span>
-            <h3 className="font-amiri text-2xl font-bold text-burgundy mt-1">
+            <span className="text-xs font-bold text-coral-ink">{product.fabric}</span>
+            <h3 className="font-display text-2xl font-bold text-burgundy mt-1">
               {isAr && product.titleAr ? product.titleAr : product.title}
             </h3>
             <p className="text-lg font-bold text-burgundy mt-1">
-              {product.price} <span className="text-xs text-gold font-sans font-semibold">QAR</span>
+              {product.price} <span className="text-xs text-gold-ink font-sans font-semibold">QAR</span>
             </p>
           </div>
 
@@ -931,7 +940,7 @@ function BespokeFormView({ isAr, onBack }: { isAr: boolean; onBack: () => void }
         <button type="button" onClick={onBack} className="p-1 rounded-full hover:bg-gold/15 text-burgundy cursor-pointer">
           {isAr ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
         </button>
-        <h2 className="font-amiri text-2xl font-bold text-burgundy">
+        <h2 className="font-display text-2xl font-bold text-burgundy">
           {isAr ? 'طلب تفصيل ورسم خاص' : 'Bespoke Atelier Commission'}
         </h2>
       </div>
@@ -941,7 +950,7 @@ function BespokeFormView({ isAr, onBack }: { isAr: boolean; onBack: () => void }
           <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
             <CheckCircle className="w-7 h-7" strokeWidth={1.5} />
           </div>
-          <h3 className="font-amiri text-2xl font-bold text-burgundy">
+          <h3 className="font-display text-2xl font-bold text-burgundy">
             {isAr ? 'تم استلام طلبكِ الراقي' : 'Commission Received'}
           </h3>
           <p className="text-xs sm:text-sm text-slateText-body leading-relaxed">
@@ -1085,7 +1094,7 @@ function CheckoutView({
         <button type="button" onClick={onBack} className="p-1 rounded-full hover:bg-gold/15 text-burgundy cursor-pointer">
           {isAr ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
         </button>
-        <h2 className="font-amiri text-2xl font-bold text-burgundy">{isAr ? 'إتمام الطلب' : 'Checkout'}</h2>
+        <h2 className="font-display text-2xl font-bold text-burgundy">{isAr ? 'إتمام الطلب' : 'Checkout'}</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4 bg-canvas-white p-5 rounded-2xl border border-gold/25 shadow-soft">
@@ -1148,7 +1157,6 @@ function CheckoutView({
               { id: 'Fawran', labelAr: 'فوران (QCB Instant)', labelEn: 'Fawran Instant' },
               { id: 'QPay', labelAr: 'كيوباي / NAPS', labelEn: 'QPay Debit' },
               { id: 'Card', labelAr: 'بطاقة فيزا / ماستركارد', labelEn: 'Credit Card' },
-              { id: 'COD', labelAr: 'الدفع عند الاستلام', labelEn: 'Cash on Delivery' },
             ].map((m) => (
               <button
                 key={m.id}
@@ -1199,7 +1207,7 @@ function InvoiceView({ order, isAr, onHome }: { order: OrderItem; isAr: boolean;
       </div>
 
       <div>
-        <h2 className="font-amiri text-3xl font-bold text-burgundy mb-1">
+        <h2 className="font-display text-3xl font-bold text-burgundy mb-1">
           {isAr ? 'تم تأكيد طلبكِ بنجاح' : 'Order Confirmed'}
         </h2>
         <p className="text-xs text-slateText-secondary">
@@ -1208,7 +1216,7 @@ function InvoiceView({ order, isAr, onHome }: { order: OrderItem; isAr: boolean;
       </div>
 
       {/* Invoice Card */}
-      <div className="bg-canvas-white p-5 rounded-2xl border border-gold/30 shadow-soft text-right space-y-3 font-almarai">
+      <div className="bg-canvas-white p-5 rounded-2xl border border-gold/30 shadow-soft text-right space-y-3 font-body">
         <div className="flex justify-between items-center pb-3 border-b border-gold/20 text-xs">
           <span className="text-slateText-secondary">{isAr ? 'رقم الفاتورة الرسمية' : 'Invoice No.'}</span>
           <span className="font-mono font-bold text-burgundy">{order.orderId}</span>
@@ -1236,7 +1244,7 @@ function InvoiceView({ order, isAr, onHome }: { order: OrderItem; isAr: boolean;
         </div>
 
         <div className="flex justify-between items-center pt-1 font-bold text-sm text-burgundy">
-          <span className="font-amiri text-base">{isAr ? 'المجموع النهائي' : 'Total Paid'}</span>
+          <span className="font-display text-base">{isAr ? 'المجموع النهائي' : 'Total Paid'}</span>
           <span>{order.total} QAR</span>
         </div>
       </div>

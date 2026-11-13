@@ -66,7 +66,7 @@ export function StoreProvider({
       if (savedWishlist) setWishlist(JSON.parse(savedWishlist));
 
       const savedCurr = localStorage.getItem('kandaka_currency') as Currency;
-      if (savedCurr && ['QAR', 'USD', 'SDG'].includes(savedCurr)) {
+      if (savedCurr && ['QAR', 'USD'].includes(savedCurr)) {
         setCurrencyState(savedCurr);
       }
     } catch {

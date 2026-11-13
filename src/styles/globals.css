@@ -26,15 +26,15 @@ html {
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-tajawal), var(--font-jakarta), var(--font-inter), sans-serif;
+  font-family: var(--font-amiri), var(--font-jakarta), serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* RTL Typography Enhancements */
+/* RTL Typography Enhancements — Amiri Naskh for Arabic */
 [dir="rtl"] {
-  font-family: var(--font-tajawal), sans-serif;
+  font-family: var(--font-amiri), serif;
 }
 
 [dir="rtl"] h1,
@@ -43,12 +43,30 @@ body {
 [dir="rtl"] h4,
 [dir="rtl"] h5,
 [dir="rtl"] h6 {
-  font-family: var(--font-cairo), sans-serif;
-  line-height: 1.35;
+  font-family: var(--font-amiri), serif;
+  line-height: 1.4;
 }
 
 [dir="ltr"] {
-  font-family: var(--font-jakarta), var(--font-inter), sans-serif;
+  font-family: var(--font-jakarta), sans-serif;
+}
+
+/* Direction-aware editorial typography.
+   Latin copy uses Cormorant/Jakarta; Arabic copy uses Amiri. */
+.font-display {
+  font-family: var(--font-cormorant), serif;
+}
+
+[dir="rtl"] .font-display {
+  font-family: var(--font-amiri), serif;
+}
+
+.font-body {
+  font-family: var(--font-jakarta), sans-serif;
+}
+
+[dir="rtl"] .font-body {
+  font-family: var(--font-amiri), serif;
 }
 
 [dir="ltr"] h1,
@@ -57,26 +75,20 @@ body {
 [dir="ltr"] h4,
 [dir="ltr"] h5,
 [dir="ltr"] h6 {
-  font-family: var(--font-cormorant), var(--font-playfair), serif;
+  font-family: var(--font-cormorant), serif;
   line-height: 1.2;
 }
 
 /* Luxury Wordmark Typography */
 .brand-wordmark {
-  font-family: var(--font-cormorant), var(--font-playfair), serif;
+  font-family: var(--font-cormorant), serif;
   letter-spacing: 0.22em;
   font-weight: 700;
   text-transform: uppercase;
 }
 
-/* Hairline Luxury Borders */
-.border-gold-hairline {
-  border: 1px solid rgba(217, 185, 122, 0.45);
-}
-
-.border-b-gold-hairline {
-  border-bottom: 1px solid rgba(217, 185, 122, 0.35);
-}
+/* Hairlines are real Tailwind utilities now (`border-gold-hairline`, `/60`, …)
+   so they compose with `border-b`, `border-y`, and opacity modifiers. */
 
 /* Leaf-Shadow Ambient Backdrop */
 .leaf-shadow-bg {
@@ -136,5 +148,40 @@ body {
 .touch-target-48 {
   min-height: 48px;
   min-width: 48px;
+}
+
+/* Editorial line breaking */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Keyboard focus safety net: components that set `focus:outline-none`
+   still get a visible ring for keyboard users. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--brand-burgundy);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fadeIn,
+  .animate-scale-up,
+  .animate-scaleUp,
+  .animate-slide-in-end {
+    animation: none !important;
+  }
 }
 

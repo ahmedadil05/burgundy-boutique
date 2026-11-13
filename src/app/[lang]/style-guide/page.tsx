@@ -60,10 +60,10 @@ export default function StyleGuidePage() {
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-10 text-center">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-peach-soft text-cocoa-dark mb-3">
-          <Sparkles className="w-3.5 h-3.5 text-coral-warm" />
+          <Sparkles className="w-3.5 h-3.5 text-coral-ink" />
           Kandaka Boutique Design System
         </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-cocoa-dark font-cairo">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-cocoa-dark font-display">
           دليل التصميم — Peach Sorbet Palette & Components
         </h1>
         <p className="mt-2 text-sm text-cocoa-muted max-w-2xl mx-auto">
@@ -76,8 +76,8 @@ export default function StyleGuidePage() {
             onClick={() => setActiveTab('both')}
             className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
               activeTab === 'both'
-                ? 'bg-coral-warm text-white shadow-sm'
-                : 'text-cocoa-dark hover:text-coral-warm'
+                ? 'bg-coral-ink text-white shadow-sm'
+                : 'text-cocoa-dark hover:text-coral-ink'
             }`}
           >
             Side-by-Side (RTL & LTR)
@@ -86,8 +86,8 @@ export default function StyleGuidePage() {
             onClick={() => setActiveTab('rtl')}
             className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
               activeTab === 'rtl'
-                ? 'bg-coral-warm text-white shadow-sm'
-                : 'text-cocoa-dark hover:text-coral-warm'
+                ? 'bg-coral-ink text-white shadow-sm'
+                : 'text-cocoa-dark hover:text-coral-ink'
             }`}
           >
             Arabic (RTL) View
@@ -96,8 +96,8 @@ export default function StyleGuidePage() {
             onClick={() => setActiveTab('ltr')}
             className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
               activeTab === 'ltr'
-                ? 'bg-coral-warm text-white shadow-sm'
-                : 'text-cocoa-dark hover:text-coral-warm'
+                ? 'bg-coral-ink text-white shadow-sm'
+                : 'text-cocoa-dark hover:text-coral-ink'
             }`}
           >
             English (LTR) View
@@ -139,8 +139,8 @@ export default function StyleGuidePage() {
           <div dir="rtl" className="bg-cream-light border-2 border-peach-deep/30 rounded-3xl p-6 sm:p-8 shadow-sm">
             <div className="flex items-center justify-between pb-4 mb-6 border-b border-peach-soft">
               <div>
-                <span className="text-xs font-bold text-coral-warm uppercase tracking-wider">الواجهة العربية (RTL)</span>
-                <h3 className="text-xl font-bold font-cairo text-cocoa-dark">العناصر والأنماط التفاعلية</h3>
+                <span className="text-xs font-bold text-coral-ink uppercase tracking-wider">الواجهة العربية (RTL)</span>
+                <h3 className="text-xl font-bold font-display text-cocoa-dark">العناصر والأنماط التفاعلية</h3>
               </div>
               <Badge variant="new">الوضع الافتراضي</Badge>
             </div>
@@ -229,8 +229,8 @@ export default function StyleGuidePage() {
           <div dir="ltr" className="bg-cream-light border-2 border-peach-soft rounded-3xl p-6 sm:p-8 shadow-sm">
             <div className="flex items-center justify-between pb-4 mb-6 border-b border-peach-soft">
               <div>
-                <span className="text-xs font-bold text-coral-warm uppercase tracking-wider">English Interface (LTR)</span>
-                <h3 className="text-xl font-bold font-playfair text-cocoa-dark">Components & Design Primitives</h3>
+                <span className="text-xs font-bold text-coral-ink uppercase tracking-wider">English Interface (LTR)</span>
+                <h3 className="text-xl font-bold font-display text-cocoa-dark">Components & Design Primitives</h3>
               </div>
               <Badge variant="neutral">LTR Switched</Badge>
             </div>

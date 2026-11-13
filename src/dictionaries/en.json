@@ -120,7 +120,6 @@
     "payQPay": "Qatar Debit Card (QPay / NAPS)",
     "payFawran": "Fawran Instant Mobile Payment (QCB)",
     "payBankTransfer": "Direct Bank Wire (Upload Transfer Receipt)",
-    "payCOD": "Cash on Delivery (Qatar Only)",
     "bankInstructions": "Please transfer to BURGUNDY's official Qatari IBAN and upload your receipt voucher to confirm the order instantly.",
     "uploadReceipt": "Upload Proof of Bank Transfer Receipt",
     "privacyConsent": "I agree to the Terms of Service and Privacy Policy pursuant to Qatar MOCI Decision No. 25 of 2026.",

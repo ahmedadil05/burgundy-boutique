@@ -28,7 +28,7 @@ export default function WishlistPage() {
           <div className="w-14 h-14 bg-surface-peachSoft/40 text-burgundy rounded-full flex items-center justify-center mx-auto mb-3 border border-gold-hairline shadow-sm">
             <Heart className="w-7 h-7 fill-burgundy text-burgundy" />
           </div>
-          <h1 className="text-3xl font-extrabold text-burgundy font-cairo">
+          <h1 className="text-3xl font-extrabold text-burgundy font-display">
             {dict.nav.wishlist}
           </h1>
           <p className="text-xs text-slateText-secondary leading-relaxed">
@@ -40,7 +40,7 @@ export default function WishlistPage() {
 
         {wishlistedProducts.length === 0 ? (
           <div className="bg-white rounded-3xl p-12 text-center border border-gold-hairline max-w-md mx-auto space-y-4 shadow-luxury">
-            <p className="text-base font-bold text-burgundy font-cairo">
+            <p className="text-base font-bold text-burgundy font-display">
               {dict.common.emptyWishlist}
             </p>
             <p className="text-xs text-slateText-secondary leading-relaxed">
@@ -48,12 +48,12 @@ export default function WishlistPage() {
                 ? 'استكشفي أحدث الثياب السودانية والجلابيات والشيلان وأضيفي ما يعجبكِ بالضغط على رمز القلب.'
                 : 'Browse our latest artisanal collections and tap the heart icon to save items here.'}
             </p>
-            <Link href={`/${lang}/shop`}>
-              <Button variant="primary" className="bg-burgundy hover:bg-burgundy-hover text-white shadow-luxury">
+            <Button asChild variant="primary" className="bg-burgundy hover:bg-burgundy-hover text-white shadow-luxury">
+              <Link href={`/${lang}/shop`}>
                 <span>{dict.common.continueShopping}</span>
                 {isAr ? <ArrowLeft className="w-4 h-4 ms-1" /> : <ArrowRight className="w-4 h-4 ms-1" />}
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">

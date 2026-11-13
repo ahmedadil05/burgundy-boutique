@@ -11,7 +11,7 @@ export function DeliveryEstimator({ lang = 'ar' }: { lang?: Language }) {
   return (
     <div className="p-4 bg-canvas-warm/40 rounded-2xl border border-gold-hairline space-y-3 text-xs">
       <div className="flex items-center justify-between font-bold text-burgundy">
-        <span className="flex items-center gap-1.5 font-cairo">
+        <span className="flex items-center gap-1.5 font-display">
           <Truck className="w-4 h-4 text-gold-line rtl-flip" />
           <span>{isAr ? 'الشحن والتوصيل السريع' : 'Express Delivery Information'}</span>
         </span>
@@ -28,7 +28,7 @@ export function DeliveryEstimator({ lang = 'ar' }: { lang?: Language }) {
               <MapPin className="w-3 h-3 text-gold-line" />
               <span>{isAr ? 'داخل دولة قطر' : 'Domestic Qatar'}</span>
             </span>
-            <span className="text-burgundy font-mono">24 - 48 {isAr ? 'ساعة' : 'hrs'}</span>
+            <span className="text-burgundy font-body tabular-nums">24 - 48 {isAr ? 'ساعة' : 'hrs'}</span>
           </div>
           <p className="text-[10px] text-slateText-secondary">
             {isAr
@@ -44,7 +44,7 @@ export function DeliveryEstimator({ lang = 'ar' }: { lang?: Language }) {
               <Clock className="w-3 h-3 text-gold-line" />
               <span>{isAr ? 'دول الخليج (GCC)' : 'GCC Countries'}</span>
             </span>
-            <span className="text-burgundy font-mono">3 - 5 {isAr ? 'أيام' : 'days'}</span>
+            <span className="text-burgundy font-body tabular-nums">3 - 5 {isAr ? 'أيام' : 'days'}</span>
           </div>
           <p className="text-[10px] text-slateText-secondary">
             {isAr

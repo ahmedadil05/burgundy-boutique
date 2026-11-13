@@ -67,7 +67,7 @@ export function CartDrawer({ lang = 'ar' }: { lang?: Language }) {
           <div className="px-6 py-5 border-b border-gold-hairline flex items-center justify-between bg-white/70">
             <div className="flex items-center gap-2">
               <ShoppingBag className="w-5 h-5 text-burgundy" />
-              <h2 className="text-base font-bold text-burgundy font-cairo">
+              <h2 className="text-base font-bold text-burgundy font-display">
                 {isAr ? 'حقيبة التسوق' : 'Shopping Bag'}
               </h2>
               <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-burgundy/10 text-burgundy text-xs font-bold flex items-center justify-center">
@@ -133,7 +133,7 @@ export function CartDrawer({ lang = 'ar' }: { lang?: Language }) {
               <div className="w-20 h-20 rounded-full bg-surface-peachSoft/40 border border-gold-hairline flex items-center justify-center mb-4 text-burgundy">
                 <ShoppingBag className="w-9 h-9 stroke-[1.4]" />
               </div>
-              <h3 className="text-lg font-bold text-burgundy font-cairo mb-1.5">
+              <h3 className="text-lg font-bold text-burgundy font-display mb-1.5">
                 {isAr ? 'حقيبتك فارغة حالياً' : 'Your bag is empty'}
               </h3>
               <p className="text-xs text-slateText-secondary max-w-xs mb-6 leading-relaxed">
@@ -172,7 +172,7 @@ export function CartDrawer({ lang = 'ar' }: { lang?: Language }) {
                       <Link
                         href={`/${lang}/products/${item.slug}`}
                         onClick={closeCart}
-                        className="text-xs font-bold text-burgundy hover:underline line-clamp-2 font-cairo leading-snug"
+                        className="text-xs font-bold text-burgundy hover:underline line-clamp-2 font-display leading-snug"
                       >
                         {item.title[lang]}
                       </Link>
@@ -193,7 +193,7 @@ export function CartDrawer({ lang = 'ar' }: { lang?: Language }) {
                     </div>
 
                     <div className="mt-3 flex items-center justify-between">
-                      <span className="text-xs font-extrabold text-burgundy font-mono">
+                      <span className="text-xs font-extrabold text-burgundy font-body tabular-nums">
                         {formatPrice(item.priceQAR * item.quantity, currency, lang)}
                       </span>
 
@@ -207,7 +207,7 @@ export function CartDrawer({ lang = 'ar' }: { lang?: Language }) {
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="w-8 text-center text-xs font-bold text-burgundy font-mono">
+                        <span className="w-8 text-center text-xs font-bold text-burgundy font-body tabular-nums">
                           {item.quantity}
                         </span>
                         <button
@@ -232,7 +232,7 @@ export function CartDrawer({ lang = 'ar' }: { lang?: Language }) {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs text-slateText-secondary">
                   <span>{isAr ? 'المجموع الفرعي' : 'Subtotal'}</span>
-                  <span className="text-base font-extrabold text-burgundy font-mono">
+                  <span className="text-base font-extrabold text-burgundy font-body tabular-nums">
                     {formatPrice(cartTotalQAR, currency, lang)}
                   </span>
                 </div>

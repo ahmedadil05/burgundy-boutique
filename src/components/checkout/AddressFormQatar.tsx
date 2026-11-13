@@ -44,7 +44,7 @@ export function AddressFormQatar({
 
   return (
     <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gold-hairline shadow-sm space-y-6">
-      <div className="flex items-center gap-2 pb-3 border-b border-gold-hairline text-burgundy font-bold font-cairo">
+      <div className="flex items-center gap-2 pb-3 border-b border-gold-hairline text-burgundy font-bold font-display">
         <MapPin className="w-5 h-5 text-gold-line" />
         <span>{isAr ? 'بيانات التوصيل والعنوان في قطر' : 'Qatar Delivery Address & Contact'}</span>
       </div>

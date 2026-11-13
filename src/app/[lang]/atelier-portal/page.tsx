@@ -476,14 +476,14 @@ export default function AtelierPortalPage() {
     return (
       <div
         dir={isAr ? 'rtl' : 'ltr'}
-        className="min-h-screen bg-canvas flex flex-col items-center justify-center p-4 font-tajawal text-slateText-body relative leaf-shadow-bg"
+        className="min-h-screen bg-canvas flex flex-col items-center justify-center p-4 font-body text-slateText-body relative leaf-shadow-bg"
       >
         <div className="w-full max-w-sm bg-white p-8 rounded-3xl border border-gold-hairline shadow-luxury text-center space-y-6">
           <BurgundyLogo variant="emblem" size="lg" className="mx-auto" />
 
           <div>
             <h1 className="font-cormorant text-2xl font-bold tracking-[0.2em] text-burgundy">BURGUNDY ATELIER</h1>
-            <p className="text-xs text-gold font-bold uppercase tracking-wider mt-1">
+            <p className="text-xs text-gold-ink font-bold uppercase tracking-wider mt-1">
               {isAr ? 'بوابة إدارة الأتيليه وخدمة العملاء (Twenty CRM & ERP)' : 'Atelier Twenty CRM & ERP Management'}
             </p>
           </div>
@@ -515,7 +515,7 @@ export default function AtelierPortalPage() {
             )}
 
             {lockoutRemaining > 0 && (
-              <div className="text-xs text-coral font-bold flex items-center justify-center gap-1">
+              <div className="text-xs text-coral-ink font-bold flex items-center justify-center gap-1">
                 <Clock className="w-4 h-4" />
                 <span>
                   {isAr ? `إعادة المحاولة بعد ${lockoutRemaining} ثانية` : `Retry in ${lockoutRemaining}s`}
@@ -548,7 +548,7 @@ export default function AtelierPortalPage() {
   return (
     <div
       dir={isAr ? 'rtl' : 'ltr'}
-      className="min-h-screen bg-canvas flex flex-col lg:flex-row font-tajawal text-slateText-body"
+      className="min-h-screen bg-canvas flex flex-col lg:flex-row font-body text-slateText-body"
     >
       {/* ========================================================= */}
       {/* 1. TWENTY-INSPIRED COLLAPSIBLE WORKSPACE SIDEBAR          */}
@@ -562,7 +562,7 @@ export default function AtelierPortalPage() {
               <span className="font-cormorant font-bold text-base text-burgundy tracking-wider block">
                 BURGUNDY ATELIER
               </span>
-              <span className="text-[10px] text-gold font-bold uppercase tracking-wider block">
+              <span className="text-[10px] text-gold-ink font-bold uppercase tracking-wider block">
                 {isAr ? 'مقر الدوحة • Twenty CRM' : 'Doha HQ • Twenty CRM'}
               </span>
             </div>
@@ -685,7 +685,7 @@ export default function AtelierPortalPage() {
             </span>
             <button
               onClick={handleLogout}
-              className="text-coral hover:text-red-700 flex items-center gap-1 font-bold text-xs"
+              className="text-coral-ink hover:text-red-700 flex items-center gap-1 font-bold text-xs"
               title="Logout"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -776,7 +776,7 @@ export default function AtelierPortalPage() {
                   <div className="text-2xl font-bold font-mono text-burgundy">
                     {customers.length}
                   </div>
-                  <span className="text-[10px] text-gold font-bold block">
+                  <span className="text-[10px] text-gold-ink font-bold block">
                     {customers.filter((c) => c.tier === 'Royal VIP').length} {isAr ? 'ملكات تصنيف Royal VIP' : 'Royal VIP Clients'}
                   </span>
                 </div>
@@ -804,7 +804,7 @@ export default function AtelierPortalPage() {
                   </div>
                   <span className="text-[10px] text-slateText-secondary block">
                     {lowFabricAlertCount > 0 ? (
-                      <span className="text-coral font-bold">{lowFabricAlertCount} {isAr ? 'أقمشة قاربت على النفاد' : 'Restock alerts'}</span>
+                      <span className="text-coral-ink font-bold">{lowFabricAlertCount} {isAr ? 'أقمشة قاربت على النفاد' : 'Restock alerts'}</span>
                     ) : (
                       <span className="text-emerald-600 font-bold">{isAr ? 'المخزون مثالي' : 'Optimal Inventory'}</span>
                     )}
@@ -815,7 +815,7 @@ export default function AtelierPortalPage() {
               {/* Quick Commission Stages Snapshot */}
               <div className="bg-white p-6 rounded-2xl border border-gold-hairline shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-cairo font-bold text-sm text-burgundy">
+                  <h3 className="font-display font-bold text-sm text-burgundy">
                     {isAr ? 'نظرة سريعة على ورشة الرسم والتفصيل' : 'Atelier Production Snapshot'}
                   </h3>
                   <button
@@ -857,7 +857,7 @@ export default function AtelierPortalPage() {
             <div className="bg-white rounded-2xl border border-gold-hairline shadow-sm overflow-hidden">
               <div className="p-4 border-b border-gold-hairline/60 flex items-center justify-between">
                 <div>
-                  <h3 className="font-cairo font-bold text-sm text-burgundy">
+                  <h3 className="font-display font-bold text-sm text-burgundy">
                     {isAr ? 'سيدات الأتيليه وكبار الشخصيات (VIP Patrons CRM)' : 'VIP Patrons (CRM Directory)'}
                   </h3>
                   <p className="text-xs text-slateText-secondary">
@@ -931,7 +931,7 @@ export default function AtelierPortalPage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-cairo font-bold text-sm text-burgundy">
+                  <h3 className="font-display font-bold text-sm text-burgundy">
                     {isAr ? 'مسار ورشة التفصيل والرسم اليدوي (Kanban Board)' : 'Bespoke Atelier Kanban Pipeline'}
                   </h3>
                   <p className="text-xs text-slateText-secondary">
@@ -979,7 +979,7 @@ export default function AtelierPortalPage() {
             <div className="bg-white rounded-2xl border border-gold-hairline shadow-sm overflow-hidden">
               <div className="p-4 border-b border-gold-hairline/60 flex items-center justify-between">
                 <div>
-                  <h3 className="font-cairo font-bold text-sm text-burgundy">
+                  <h3 className="font-display font-bold text-sm text-burgundy">
                     {isAr ? 'مخزون الأقمشة والخامات الملكية (ERP Inventory)' : 'Fabric & Raw Materials ERP'}
                   </h3>
                   <p className="text-xs text-slateText-secondary">
@@ -1038,7 +1038,7 @@ export default function AtelierPortalPage() {
             <div className="bg-white rounded-2xl border border-gold-hairline shadow-sm overflow-hidden">
               <div className="p-4 border-b border-gold-hairline/60 flex items-center justify-between">
                 <div>
-                  <h3 className="font-cairo font-bold text-sm text-burgundy">
+                  <h3 className="font-display font-bold text-sm text-burgundy">
                     {isAr ? 'إدارة وتتبع طلبات المتجر (3NF Order Fulfillment)' : 'Order Fulfillment Engine'}
                   </h3>
                   <p className="text-xs text-slateText-secondary">
@@ -1110,7 +1110,7 @@ export default function AtelierPortalPage() {
                 </div>
                 <div className="bg-white p-5 rounded-2xl border border-gold-hairline shadow-sm space-y-1">
                   <span className="text-xs text-slateText-secondary">{isAr ? 'تحويل بنكي مدقق' : 'Verified Bank Wires'}</span>
-                  <div className="text-xl font-bold font-mono text-gold-shimmer">6,200 QAR</div>
+                  <div className="text-xl font-bold font-mono text-gold-ink">6,200 QAR</div>
                   <span className="text-[10px] text-slateText-secondary">{isAr ? 'تحويل حساب بنك قطر الوطني QNB' : 'QNB Corporate Account'}</span>
                 </div>
               </div>
@@ -1139,7 +1139,7 @@ export default function AtelierPortalPage() {
             {/* Header */}
             <div className="p-5 border-b border-gold-hairline flex items-center justify-between bg-canvas">
               <div>
-                <span className="text-[10px] font-bold text-gold uppercase tracking-wider block">
+                <span className="text-[10px] font-bold text-gold-ink uppercase tracking-wider block">
                   {selectedRecordType === 'customer'
                     ? isAr ? 'ملف عميلة كبار الشخصيات' : 'VIP Patron Profile'
                     : selectedRecordType === 'commission'
@@ -1148,7 +1148,7 @@ export default function AtelierPortalPage() {
                     ? isAr ? 'بيانات طلب المتجر' : 'Store Order Inspector'
                     : isAr ? 'تفاصيل القماش' : 'Fabric Record'}
                 </span>
-                <h3 className="text-base font-bold text-burgundy font-cairo">
+                <h3 className="text-base font-bold text-burgundy font-display">
                   {selectedRecord.name || selectedRecord.customerName || selectedRecord.orderNumber || selectedRecord.name?.ar}
                 </h3>
               </div>

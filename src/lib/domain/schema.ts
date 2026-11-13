@@ -101,7 +101,7 @@ export interface Customer {
 
 // 9. Orders Table (Clean order metadata referencing Customer)
 export type OrderStatus = 'Confirmed' | 'Processing' | 'In Atelier' | 'Shipped' | 'Delivered' | 'Cancelled';
-export type PaymentMethod = 'card' | 'qpay' | 'fawran' | 'bank_transfer' | 'cod';
+export type PaymentMethod = 'card' | 'qpay' | 'fawran' | 'bank_transfer';
 export type PaymentStatus = 'pending' | 'verified' | 'failed' | 'refunded';
 
 export interface Order {
@@ -137,7 +137,7 @@ export interface OrderItem {
 export interface Payment {
   id: string;
   orderId: string;
-  gateway: 'myfatoorah' | 'qpay' | 'fawran' | 'bank_wire' | 'cod';
+  gateway: 'myfatoorah' | 'qpay' | 'fawran' | 'bank_wire';
   transactionRef: string;
   amountQAR: number;
   status: 'authorized' | 'captured' | 'pending_verification' | 'failed';

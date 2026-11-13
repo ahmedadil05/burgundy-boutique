@@ -56,7 +56,7 @@ export default async function PolicyPage({
                 : 'Qatar Ministry of Commerce & Industry Regulations (Decision 25/2026)'}
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-cairo">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-display">
             {policyDoc.title}
           </h1>
           <p className="mt-2 text-sm text-slateText-secondary leading-relaxed">
@@ -77,7 +77,7 @@ export default async function PolicyPage({
         <div className="space-y-8 bg-white rounded-3xl p-6 sm:p-10 border border-gold-hairline shadow-sm">
           {policyDoc.sections.map((section, idx) => (
             <div key={idx} className="pb-6 last:pb-0 border-b last:border-0 border-gold-hairline/60">
-              <h2 className="text-lg font-bold text-burgundy mb-3 flex items-center gap-2 font-cairo">
+              <h2 className="text-lg font-bold text-burgundy mb-3 flex items-center gap-2 font-display">
                 <FileText className="w-4 h-4 text-gold-line shrink-0" />
                 <span>{section.heading}</span>
               </h2>

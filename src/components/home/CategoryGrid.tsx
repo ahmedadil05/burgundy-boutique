@@ -49,10 +49,10 @@ export function CategoryGrid({ lang = 'ar' }: { lang?: Language }) {
           <Sparkles className="w-3.5 h-3.5 text-gold-line" />
           <span>{isAr ? 'روائع الأتيليه' : 'ATELIER COLLECTIONS'}</span>
         </div>
-        <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-cairo">
+        <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-display">
           {dict.home.featuredCategoriesTitle}
         </h2>
-        <p className="text-xs sm:text-sm text-slateText-secondary font-tajawal max-w-lg mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-slateText-secondary font-body max-w-lg mx-auto leading-relaxed">
           {dict.home.featuredCategoriesSubtitle}
         </p>
       </div>
@@ -86,10 +86,10 @@ export function CategoryGrid({ lang = 'ar' }: { lang?: Language }) {
 
             {/* Bottom Content Area */}
             <div className="relative z-10 mt-auto p-5 space-y-1.5 text-start">
-              <h3 className="text-lg sm:text-xl font-bold text-white font-cairo leading-snug group-hover:text-gold-soft transition-colors">
+              <h3 className="text-lg sm:text-xl font-bold text-white font-display leading-snug group-hover:text-gold-soft transition-colors">
                 {cat.title}
               </h3>
-              <p className="text-xs text-white/80 line-clamp-2 leading-relaxed font-tajawal">
+              <p className="text-xs text-white/80 line-clamp-2 leading-relaxed font-body">
                 {cat.subtitle}
               </p>
             </div>

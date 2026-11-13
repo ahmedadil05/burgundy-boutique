@@ -81,7 +81,7 @@ export default function OrderConfirmationPage() {
             <CheckCircle2 className="w-7 h-7 text-burgundy" />
           </div>
 
-          <h1 className="text-2xl font-extrabold text-burgundy font-cairo">
+          <h1 className="text-2xl font-extrabold text-burgundy font-display">
             {order.paymentStatus === 'pending_verification'
               ? isAr ? 'تم استلام طلبكِ وجاري مراجعة إشعار التحويل' : 'Order Received - Verifying Bank Slip'
               : isAr ? 'تم تأكيد طلبكِ وسداد الفاتورة بنجاح!' : 'Your Order & Invoice Are Confirmed!'}

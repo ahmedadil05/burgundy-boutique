@@ -106,7 +106,7 @@ export const SUPPORTED_DEVICES: DeviceSpec[] = [
 
 export function DeviceEmulator({ initialLang = 'ar' }: { initialLang?: Language }) {
   const [selectedDevice, setSelectedDevice] = useState<DeviceSpec>(SUPPORTED_DEVICES[0]);
-  const [scale, setScale] = useState<number>(0.85);
+  const [scale, setScale] = useState<number>(0.75);
   const [lang, setLang] = useState<Language>(initialLang);
   const [showSafeAreas, setShowSafeAreas] = useState<boolean>(true);
   const [previewTarget, setPreviewTarget] = useState<'app' | 'classic' | 'portal'>('app');
@@ -241,7 +241,7 @@ export function DeviceEmulator({ initialLang = 'ar' }: { initialLang?: Language 
       </header>
 
       {/* Main Workspace Stage */}
-      <main className="flex-1 overflow-auto p-6 flex flex-col items-center justify-center relative">
+      <main className="flex-1 overflow-auto px-6 py-4 flex flex-col items-center justify-start relative">
         {/* Hardware Specs Badge */}
         <div className="mb-4 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs shadow-md">

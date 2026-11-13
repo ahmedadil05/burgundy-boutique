@@ -200,7 +200,7 @@ export function ProductCard({
           </p>
           <Link
             href={`/${lang}/products/${product.slug}`}
-            className="block text-sm font-bold text-burgundy hover:underline transition-colors line-clamp-1 font-cairo"
+            className="block text-sm font-bold text-burgundy hover:underline transition-colors line-clamp-1 font-display"
           >
             {product.title[lang]}
           </Link>
@@ -209,11 +209,11 @@ export function ProductCard({
         {/* Pricing & Mobile Quick Action */}
         <div className="mt-2.5 flex items-center justify-between gap-2">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-sm font-extrabold text-burgundy font-mono">
+            <span className="text-sm font-extrabold text-burgundy font-body tabular-nums">
               {formatPrice(product.priceQAR, currency, lang)}
             </span>
             {product.originalPriceQAR && product.originalPriceQAR > product.priceQAR && (
-              <span className="text-[11px] text-slateText-secondary line-through opacity-70 font-mono">
+              <span className="text-[11px] text-slateText-secondary line-through opacity-70 font-body tabular-nums">
                 {formatPrice(product.originalPriceQAR, currency, lang)}
               </span>
             )}

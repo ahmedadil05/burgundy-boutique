@@ -13,7 +13,6 @@ import {
   Truck,
   DollarSign,
   Smartphone,
-  Banknote,
 } from 'lucide-react';
 
 export interface SalesKPIs {
@@ -24,7 +23,6 @@ export interface SalesKPIs {
     fawran: number;
     qpay: number;
     card: number;
-    cod: number;
   };
   byStatus: {
     confirmed: number;
@@ -43,7 +41,6 @@ export function computeSalesKPIs(orders: OrderRow[]): SalesKPIs {
     fawran: 0,
     qpay: 0,
     card: 0,
-    cod: 0,
   };
 
   const byStatus = {
@@ -88,15 +85,15 @@ export function SalesSummaryCards({
         {/* Total Revenue */}
         <div className="col-span-2 md:col-span-1 bg-gradient-to-br from-blush-surface to-peach-soft/30 rounded-3xl p-5 border border-peach-soft shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-cocoa-muted font-cairo">
+            <span className="text-xs font-semibold text-cocoa-muted font-display">
               {isAr ? 'إجمالي المبيعات' : 'Total Revenue'}
             </span>
-            <div className="w-9 h-9 rounded-2xl bg-coral-warm/15 text-coral-warm flex items-center justify-center">
+            <div className="w-9 h-9 rounded-2xl bg-coral-warm/15 text-coral-ink flex items-center justify-center">
               <TrendingUp className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-2xl md:text-3xl font-extrabold text-cocoa-dark font-playfair tracking-tight">
+            <div className="text-2xl md:text-3xl font-extrabold text-cocoa-dark font-display tracking-tight">
               {formatPrice(kpis.totalRevenue, 'QAR', lang)}
             </div>
             <p className="text-[11px] text-cocoa-muted mt-1">
@@ -108,7 +105,7 @@ export function SalesSummaryCards({
         {/* Total Orders */}
         <div className="bg-white/95 rounded-3xl p-5 border border-peach-soft shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-cocoa-muted font-cairo">
+            <span className="text-xs font-semibold text-cocoa-muted font-display">
               {isAr ? 'عدد الطلبات' : 'Total Orders'}
             </span>
             <div className="w-9 h-9 rounded-2xl bg-peach-deep/20 text-peach-deep flex items-center justify-center">
@@ -116,7 +113,7 @@ export function SalesSummaryCards({
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-2xl md:text-3xl font-extrabold text-cocoa-dark font-cairo">
+            <div className="text-2xl md:text-3xl font-extrabold text-cocoa-dark font-display">
               {kpis.totalOrders}
             </div>
             <p className="text-[11px] text-cocoa-muted mt-1">
@@ -128,7 +125,7 @@ export function SalesSummaryCards({
         {/* Average Order Value */}
         <div className="bg-white/95 rounded-3xl p-5 border border-peach-soft shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-cocoa-muted font-cairo">
+            <span className="text-xs font-semibold text-cocoa-muted font-display">
               {isAr ? 'متوسط قيمة الطلب' : 'Average Order'}
             </span>
             <div className="w-9 h-9 rounded-2xl bg-amber-500/15 text-amber-600 flex items-center justify-center">
@@ -136,7 +133,7 @@ export function SalesSummaryCards({
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-2xl md:text-3xl font-extrabold text-cocoa-dark font-playfair">
+            <div className="text-2xl md:text-3xl font-extrabold text-cocoa-dark font-display">
               {formatPrice(kpis.averageOrderValue, 'QAR', lang)}
             </div>
             <p className="text-[11px] text-cocoa-muted mt-1">
@@ -149,8 +146,8 @@ export function SalesSummaryCards({
       {/* Qatar Payment Rails Distribution Bar */}
       <div className="bg-white/90 rounded-3xl p-4 md:p-5 border border-peach-soft shadow-xs space-y-3">
         <div className="flex items-center justify-between">
-          <h4 className="text-xs font-bold text-cocoa-dark font-cairo flex items-center gap-2">
-            <CreditCard className="w-4 h-4 text-coral-warm" />
+          <h4 className="text-xs font-bold text-cocoa-dark font-display flex items-center gap-2">
+            <CreditCard className="w-4 h-4 text-coral-ink" />
             <span>{isAr ? 'توزيع بوابات الدفع القطرية' : 'Qatar Payment Rails Distribution'}</span>
           </h4>
           <span className="text-[10px] text-cocoa-muted uppercase tracking-wider font-semibold">
@@ -166,7 +163,7 @@ export function SalesSummaryCards({
                 <Smartphone className="w-4 h-4" />
               </div>
               <div>
-                <span className="block text-xs font-bold text-cocoa-dark font-cairo">
+                <span className="block text-xs font-bold text-cocoa-dark font-display">
                   {isAr ? 'فوران' : 'Fawran'}
                 </span>
                 <span className="text-[10px] text-cocoa-muted font-mono">QCB Instant</span>
@@ -200,7 +197,7 @@ export function SalesSummaryCards({
                 <CreditCard className="w-4 h-4" />
               </div>
               <div>
-                <span className="block text-xs font-bold text-cocoa-dark font-cairo">
+                <span className="block text-xs font-bold text-cocoa-dark font-display">
                   {isAr ? 'بطاقة ائتمان' : 'Card'}
                 </span>
                 <span className="text-[10px] text-cocoa-muted">Visa / MC</span>
@@ -211,23 +208,6 @@ export function SalesSummaryCards({
             </span>
           </div>
 
-          {/* COD */}
-          <div className="p-3 rounded-2xl bg-cream-50 border border-peach-soft/60 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
-                <Banknote className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="block text-xs font-bold text-cocoa-dark font-cairo">
-                  {isAr ? 'عند الاستلام' : 'COD'}
-                </span>
-                <span className="text-[10px] text-cocoa-muted">Qatar Cash</span>
-              </div>
-            </div>
-            <span className="text-sm font-extrabold text-cocoa-dark bg-white px-2 py-0.5 rounded-lg border border-peach-soft/40">
-              {kpis.rails.cod}
-            </span>
-          </div>
         </div>
       </div>
     </div>

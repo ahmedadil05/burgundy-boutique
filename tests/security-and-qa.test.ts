@@ -116,10 +116,11 @@ describe('Multi-Device Responsive Matrix UI/UX Verification', () => {
       'utf-8'
     );
 
-    // Verify font family registrations
+    // Verify font family registrations (Latin serif/sans + Arabic Amiri)
     expect(tailwindConfig).toContain('amiri:');
-    expect(tailwindConfig).toContain('almarai:');
     expect(tailwindConfig).toContain('cormorant:');
     expect(tailwindConfig).toContain('jakarta:');
+    expect(tailwindConfig).toContain('display:');
+    expect(tailwindConfig).toContain('body:');
   });
 });

@@ -16,7 +16,7 @@ export function AnnouncementBar({ lang = 'ar' }: { lang?: Language }) {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
         <Sparkles className="w-3.5 h-3.5 text-gold-line shrink-0" />
-        <span className="font-cairo">
+        <span className="font-display">
           {settings.launchMode
             ? lang === 'ar'
               ? 'شيءٌ استثنائي يلوح في الأفق – انضمي لقائمة الانتظار الحصرية لدار بيرغندي'

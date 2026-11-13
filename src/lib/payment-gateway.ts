@@ -1,4 +1,4 @@
-export type PaymentMethod = 'card' | 'qpay' | 'fawran' | 'bank_transfer' | 'cod';
+export type PaymentMethod = 'card' | 'qpay' | 'fawran' | 'bank_transfer';
 
 export interface PaymentRequest {
   method: PaymentMethod;
@@ -23,7 +23,7 @@ export interface PaymentGatewayAdapter {
   process(req: PaymentRequest): Promise<PaymentResponse>;
 }
 
-// Swappable Qatar Payment Gateway Adapter (Supports QPay/NAPS, Fawran, Card, Bank Wire & COD)
+// Swappable Qatar Payment Gateway Adapter (Supports QPay/NAPS, Fawran, Card & Bank Wire)
 export class QatarPaymentGatewayAdapter implements PaymentGatewayAdapter {
   async process(req: PaymentRequest): Promise<PaymentResponse> {
     // Brief network roundtrip simulation
@@ -46,9 +46,7 @@ export class QatarPaymentGatewayAdapter implements PaymentGatewayAdapter {
         ? 'FAWRAN-QCB'
         : req.method === 'qpay'
         ? 'QPAY-NAPS'
-        : req.method === 'card'
-        ? 'MYFATOORAH-QNB'
-        : 'COD-AUTH';
+        : 'MYFATOORAH-QNB';
 
     const randomSuffix = Math.floor(10000000 + Math.random() * 90000000);
 
@@ -57,10 +55,7 @@ export class QatarPaymentGatewayAdapter implements PaymentGatewayAdapter {
       transactionId: `${txnPrefix}-${randomSuffix}`,
       method: req.method,
       amountQAR: req.amountQAR,
-      message:
-        req.method === 'cod'
-          ? 'Order confirmed with Cash on Delivery authorization'
-          : 'Payment authorized successfully under Qatar banking network',
+      message: 'Payment authorized successfully under Qatar banking network',
       timestamp: new Date().toISOString(),
       isPendingVerification: false,
     };

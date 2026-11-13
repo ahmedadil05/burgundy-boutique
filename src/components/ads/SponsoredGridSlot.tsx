@@ -13,11 +13,12 @@ export function SponsoredGridSlot({ lang }: SponsoredGridSlotProps) {
   const { getActiveAd, recordView, recordClick } = useAds();
   const ad = getActiveAd('shop_grid');
 
+  const adId = ad?.id;
   useEffect(() => {
-    if (ad) {
-      recordView(ad.id);
+    if (adId) {
+      recordView(adId);
     }
-  }, [ad, recordView]);
+  }, [adId, recordView]);
 
   if (!ad) return null;
 
@@ -30,7 +31,7 @@ export function SponsoredGridSlot({ lang }: SponsoredGridSlotProps) {
     >
       {/* Top Banner Tag */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-[10px] font-bold uppercase tracking-wider bg-white px-2.5 py-0.5 rounded-full border border-gold-hairline text-gold-shimmer flex items-center gap-1">
+        <span className="text-[10px] font-bold uppercase tracking-wider bg-white px-2.5 py-0.5 rounded-full border border-gold-hairline text-gold-ink flex items-center gap-1">
           <Sparkles className="w-3 h-3 text-gold-line" />
           <span>{isRtl ? 'مساحة إعلانية برعاية' : 'Sponsored Partner'}</span>
         </span>
@@ -39,7 +40,7 @@ export function SponsoredGridSlot({ lang }: SponsoredGridSlotProps) {
 
       {/* Main Copy */}
       <div className="space-y-2 mb-6">
-        <h4 className="text-base font-bold text-burgundy font-cairo">
+        <h4 className="text-base font-bold text-burgundy font-display">
           {ad.title[lang]}
         </h4>
         <p className="text-xs text-slateText-body leading-relaxed">

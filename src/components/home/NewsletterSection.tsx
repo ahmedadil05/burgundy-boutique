@@ -58,7 +58,7 @@ export function NewsletterSection({ lang = 'ar' }: { lang?: Language }) {
               <Instagram className="w-4 h-4 text-burgundy" />
               <span dir="ltr">@burgundy974_</span>
             </a>
-            <h3 className="text-xl sm:text-3xl font-extrabold text-burgundy font-cairo mt-1">
+            <h3 className="text-xl sm:text-3xl font-extrabold text-burgundy font-display mt-1">
               {isAr ? 'عالم بيرغندي على إنستغرام' : 'BURGUNDY on Instagram'}
             </h3>
           </div>
@@ -88,7 +88,7 @@ export function NewsletterSection({ lang = 'ar' }: { lang?: Language }) {
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                <span className="text-white text-xs font-bold font-cairo line-clamp-1">
+                <span className="text-white text-xs font-bold font-display line-clamp-1">
                   {post.title}
                 </span>
               </div>
@@ -104,11 +104,11 @@ export function NewsletterSection({ lang = 'ar' }: { lang?: Language }) {
             <Mail className="w-5 h-5 text-burgundy" />
           </div>
 
-          <h3 className="text-xl sm:text-3xl font-extrabold text-burgundy font-cairo">
+          <h3 className="text-xl sm:text-3xl font-extrabold text-burgundy font-display">
             {dict.home.newsletterTitle}
           </h3>
 
-          <p className="text-xs sm:text-sm text-slateText-secondary max-w-md mx-auto leading-relaxed font-tajawal">
+          <p className="text-xs sm:text-sm text-slateText-secondary max-w-md mx-auto leading-relaxed font-body">
             {dict.home.newsletterSubtitle}
           </p>
 

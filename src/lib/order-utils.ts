@@ -64,7 +64,7 @@ export interface OrderInvoice {
     size: string;
   }>;
   paymentMethod: PaymentMethod;
-  paymentStatus: 'paid' | 'pending_verification' | 'cod_pending';
+  paymentStatus: 'paid' | 'pending_verification';
   receiptImageUrl?: string;
   totals: CheckoutTotals;
   status: 'pending_verification' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
@@ -93,11 +93,8 @@ export function createOrderInvoice(params: {
   receiptImageUrl?: string;
   invoiceNumber?: string;
 }): OrderInvoice {
-  const isPendingVerification = params.paymentMethod === 'bank_transfer';
-  const paymentStatus = isPendingVerification
+  const paymentStatus = params.paymentMethod === 'bank_transfer'
     ? 'pending_verification'
-    : params.paymentMethod === 'cod'
-    ? 'cod_pending'
     : 'paid';
 
   return {
@@ -114,6 +111,6 @@ export function createOrderInvoice(params: {
     paymentStatus,
     receiptImageUrl: params.receiptImageUrl,
     totals: params.totals,
-    status: isPendingVerification ? 'pending_verification' : 'confirmed',
+    status: params.paymentMethod === 'bank_transfer' ? 'pending_verification' : 'confirmed',
   };
 }

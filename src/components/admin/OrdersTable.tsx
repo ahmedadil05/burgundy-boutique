@@ -21,7 +21,7 @@ export interface OrderRow {
     };
   };
   totals: { total: number; subtotal?: number; shipping?: number };
-  paymentMethod: 'card' | 'qpay' | 'fawran' | 'cod';
+  paymentMethod: 'card' | 'qpay' | 'fawran' | 'bank_transfer';
   status: 'confirmed' | 'processing' | 'shipped' | 'delivered';
   items?: Array<{
     id: string;
@@ -49,8 +49,8 @@ export function OrdersTable({
   return (
     <div className="bg-white/90 rounded-3xl p-6 border border-peach-soft shadow-sm space-y-4">
       <div className="flex items-center justify-between pb-3 border-b border-peach-soft">
-        <h3 className="font-bold text-base text-cocoa-dark font-cairo flex items-center gap-2">
-          <Package className="w-5 h-5 text-coral-warm" />
+        <h3 className="font-bold text-base text-cocoa-dark font-display flex items-center gap-2">
+          <Package className="w-5 h-5 text-coral-ink" />
           <span>{isAr ? 'إدارة الطلبات والمبيعات' : 'Customer Orders & Fulfillment'}</span>
         </h3>
         <span className="text-xs text-cocoa-muted font-semibold">
@@ -77,7 +77,7 @@ export function OrdersTable({
             <tbody className="divide-y divide-peach-soft/50">
               {orders.map((o) => (
                 <tr key={o.orderId} className="hover:bg-cream/60 transition-colors">
-                  <td className="p-3 font-mono font-bold text-coral-warm">#{o.orderId}</td>
+                  <td className="p-3 font-mono font-bold text-coral-ink">#{o.orderId}</td>
                   <td className="p-3">
                     <p className="font-bold text-cocoa-dark">{o.customer.name}</p>
                     <p className="text-[11px] text-cocoa-muted" dir="ltr">{o.customer.phone}</p>

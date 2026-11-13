@@ -58,13 +58,13 @@ export default async function AboutPage({
               <span>{isAr ? 'إرث الملكات الكنداكات • النيل والدوحة' : 'The Kandaka Queen Legacy • Nile to Doha'}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-burgundy font-cairo leading-tight max-w-3xl tracking-tight">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-burgundy font-display leading-tight max-w-3xl tracking-tight">
               {isAr
                 ? 'حين تلتقي عراقة النيل بأناقة الدوحة المعاصرة'
                 : 'Where Nile Heritage Meets Contemporary Doha Grace'}
             </h1>
 
-            <p className="mt-6 text-sm sm:text-base lg:text-lg text-slateText-secondary max-w-2xl leading-relaxed font-tajawal">
+            <p className="mt-6 text-sm sm:text-base lg:text-lg text-slateText-secondary max-w-2xl leading-relaxed font-body">
               {isAr
                 ? 'دار بيرغندي ليست مجرد متجر أزياء، بل هي أتيليه فني يحتفي بهوية الثوب السوداني كتحفة تشكيلية متفردة، صُنعت بأيدي فنانات سودانيات من خيوط الفوال السويسري الفاخر وحرير الكريب الصيني، لتتألق بها سيدات قطر والخليج.'
                 : 'BURGUNDY is not merely a fashion label; it is a fine art atelier celebrating the Sudanese Toub as an authentic canvas of wearable artistry, hand-painted on imported Swiss voile and pure silk for the discerning women of Qatar and the Gulf.'}
@@ -77,18 +77,18 @@ export default async function AboutPage({
         {/* ========================================================= */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-7 space-y-5">
-            <span className="text-xs font-bold text-gold uppercase tracking-[0.25em] flex items-center gap-1.5">
+            <span className="text-xs font-bold text-gold-ink uppercase tracking-[0.25em] flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-gold-line" />
               <span>{isAr ? 'الفصل الأول: الأصل والاسم' : 'Chapter I: The Queen Kandaka'}</span>
             </span>
 
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-cairo leading-snug">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-display leading-snug">
               {isAr
                 ? 'كنداكة.. تاج العزّة وسيدة النيل التاريخية'
                 : 'Kandaka: The Sovereign Queens of Ancient Nubia'}
             </h2>
 
-            <div className="space-y-4 text-xs sm:text-sm text-slateText-body leading-relaxed font-tajawal">
+            <div className="space-y-4 text-xs sm:text-sm text-slateText-body leading-relaxed font-body">
               <p>
                 {isAr
                   ? 'منذ آلاف السنين في مملكة كوش ومروي القديمة، حُمِل لقب «كنداكة» كأرفع وسام للملكات المحاربات والحاكمات اللواتي عُرفن بالوقار والشجاعة والجمال الاستثنائي. ارتدت الكنداكات أقمشة بيضاء وكتانية منسوجة ببراعة، تلتف حول أجسادهن كرمز للسيادة والأصالة.'
@@ -111,8 +111,8 @@ export default async function AboutPage({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep/70 via-transparent to-transparent flex items-end p-6">
               <div>
-                <span className="text-[10px] uppercase tracking-widest text-gold font-bold">HERITAGE PIECE</span>
-                <p className="text-white text-xs sm:text-sm font-semibold font-cairo mt-0.5">
+                <span className="text-[10px] uppercase tracking-widest text-gold-ink font-bold">HERITAGE PIECE</span>
+                <p className="text-white text-xs sm:text-sm font-semibold font-display mt-0.5">
                   {isAr ? 'ثوب تراثي مرسوم ومطرز بأنامل حرفيات الخرطوم' : 'Artisanal Toub Hand-Painted in Khartoum'}
                 </p>
               </div>
@@ -133,8 +133,8 @@ export default async function AboutPage({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep/70 via-transparent to-transparent flex items-end p-6">
               <div>
-                <span className="text-[10px] uppercase tracking-widest text-gold font-bold">THE ATELIER BRUSH</span>
-                <p className="text-white text-xs sm:text-sm font-semibold font-cairo mt-0.5">
+                <span className="text-[10px] uppercase tracking-widest text-gold-ink font-bold">THE ATELIER BRUSH</span>
+                <p className="text-white text-xs sm:text-sm font-semibold font-display mt-0.5">
                   {isAr ? 'رسم يدوي متفرد بضربات الفرشاة والألوان المائية الثابتة' : 'One-of-a-Kind Water-Resistant Brushwork'}
                 </p>
               </div>
@@ -142,18 +142,18 @@ export default async function AboutPage({
           </div>
 
           <div className="lg:col-span-7 order-1 lg:order-2 space-y-5">
-            <span className="text-xs font-bold text-gold uppercase tracking-[0.25em] flex items-center gap-1.5">
+            <span className="text-xs font-bold text-gold-ink uppercase tracking-[0.25em] flex items-center gap-1.5">
               <Feather className="w-3.5 h-3.5 text-gold-line" />
               <span>{isAr ? 'الفصل الثاني: الحرفة والفرشاة' : 'Chapter II: The 4.5-Meter Canvas'}</span>
             </span>
 
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-cairo leading-snug">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-display leading-snug">
               {isAr
                 ? 'أربعة أمتار ونصف من الفن الخالص.. لا طباعة، لا تكرار'
                 : 'Four and a Half Meters of Pure Artistry: No Prints, No Duplicates'}
             </h2>
 
-            <div className="space-y-4 text-xs sm:text-sm text-slateText-body leading-relaxed font-tajawal">
+            <div className="space-y-4 text-xs sm:text-sm text-slateText-body leading-relaxed font-body">
               <p>
                 {isAr
                   ? 'يتميز الثوب السوداني بطوله البالغ 4.5 أمتار وعرضه الفسيح، ما يجعله بمثابة لوحة فنية متكاملة. في ورشات بيرغندي، لا نستخدم الطباعة الرقمية الجاهزة؛ بل تمتد الأقمشة البيضاء على طاولات خشبية، لتقوم الفنانات بالرسم اليدوي المباشر ضربة بضربة فرشاة.'
@@ -173,10 +173,10 @@ export default async function AboutPage({
         {/* ========================================================= */}
         <section className="space-y-8">
           <div className="text-center max-w-xl mx-auto">
-            <span className="text-xs font-bold text-gold uppercase tracking-[0.25em]">
+            <span className="text-xs font-bold text-gold-ink uppercase tracking-[0.25em]">
               {isAr ? 'قيم ووعود الدار' : 'Pillars of Haute Couture'}
             </span>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-cairo mt-1">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-display mt-1">
               {isAr ? 'أربعة مبادئ لا نساوم عليها' : 'Our Four Uncompromising Standards'}
             </h3>
           </div>
@@ -186,7 +186,7 @@ export default async function AboutPage({
               <div className="w-12 h-12 bg-burgundy/10 text-burgundy rounded-full flex items-center justify-center mx-auto border border-gold/30">
                 <Gem className="w-5 h-5 text-burgundy" />
               </div>
-              <h4 className="text-sm font-bold text-burgundy font-cairo">
+              <h4 className="text-sm font-bold text-burgundy font-display">
                 {isAr ? 'نقاء الخامات الإمبراطورية' : 'Textile Purity'}
               </h4>
               <p className="text-xs text-slateText-secondary leading-relaxed">
@@ -200,7 +200,7 @@ export default async function AboutPage({
               <div className="w-12 h-12 bg-burgundy/10 text-burgundy rounded-full flex items-center justify-center mx-auto border border-gold/30">
                 <Feather className="w-5 h-5 text-burgundy" />
               </div>
-              <h4 className="text-sm font-bold text-burgundy font-cairo">
+              <h4 className="text-sm font-bold text-burgundy font-display">
                 {isAr ? 'رسم يدوي أصيل 100%' : '100% Hand-Painted'}
               </h4>
               <p className="text-xs text-slateText-secondary leading-relaxed">
@@ -214,7 +214,7 @@ export default async function AboutPage({
               <div className="w-12 h-12 bg-burgundy/10 text-burgundy rounded-full flex items-center justify-center mx-auto border border-gold/30">
                 <Crown className="w-5 h-5 text-burgundy" />
               </div>
-              <h4 className="text-sm font-bold text-burgundy font-cairo">
+              <h4 className="text-sm font-bold text-burgundy font-display">
                 {isAr ? 'تمكين الحرفيات في النيل' : 'Empowering Artisans'}
               </h4>
               <p className="text-xs text-slateText-secondary leading-relaxed">
@@ -228,7 +228,7 @@ export default async function AboutPage({
               <div className="w-12 h-12 bg-burgundy/10 text-burgundy rounded-full flex items-center justify-center mx-auto border border-gold/30">
                 <ShieldCheck className="w-5 h-5 text-burgundy" />
               </div>
-              <h4 className="text-sm font-bold text-burgundy font-cairo">
+              <h4 className="text-sm font-bold text-burgundy font-display">
                 {isAr ? 'خدمة وضمان دولة قطر' : 'Qatar Bespoke Concierge'}
               </h4>
               <p className="text-xs text-slateText-secondary leading-relaxed">
@@ -247,10 +247,10 @@ export default async function AboutPage({
           <BurgundyLogo variant="compact" size="md" className="mx-auto" />
 
           <div className="max-w-xl mx-auto space-y-2">
-            <h3 className="text-2xl sm:text-3xl font-bold text-burgundy font-cairo">
+            <h3 className="text-2xl sm:text-3xl font-bold text-burgundy font-display">
               {isAr ? 'هل تبحثين عن قطعة خاصة لمناسبة لا تُنسى؟' : 'Commission a Bespoke Heirloom'}
             </h3>
-            <p className="text-xs sm:text-sm text-slateText-secondary leading-relaxed font-tajawal">
+            <p className="text-xs sm:text-sm text-slateText-secondary leading-relaxed font-body">
               {isAr
                 ? 'استشيري مصممي الأتيليه في الدوحة لاختيار القماش، نظام الألوان، والتطريز المذهب لأعراسكِ ومناسباتكِ الخاصة.'
                 : 'Consult our Doha atelier curators to choose your base fabric, botanical color palette, and bespoke metallic gold embroidery.'}
@@ -258,12 +258,12 @@ export default async function AboutPage({
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <Link href={`/${currentLang}/custom-order`}>
-              <Button size="lg" className="bg-burgundy text-white hover:bg-burgundy-hover font-bold shadow-luxury">
+            <Button asChild size="lg" className="bg-burgundy text-white hover:bg-burgundy-hover font-bold shadow-luxury">
+              <Link href={`/${currentLang}/custom-order`}>
                 {isAr ? 'طلب تفصيل خاص' : 'Start Bespoke Order'}
                 {isAr ? <ArrowLeft className="w-4 h-4 ms-2" /> : <ArrowRight className="w-4 h-4 ms-2" />}
-              </Button>
-            </Link>
+              </Link>
+            </Button>
 
             <a
               href={`https://wa.me/97450000974?text=${encodeURIComponent(

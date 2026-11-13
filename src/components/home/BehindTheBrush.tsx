@@ -46,15 +46,15 @@ export function BehindTheBrush({ lang }: BehindTheBrushProps) {
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white border border-gold-hairline text-burgundy text-[11px] font-semibold tracking-widest uppercase shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-gold" />
-            <span className="font-cairo">{isRtl ? 'حرفية المرسم والتراث' : 'ATELIER CRAFTSMANSHIP'}</span>
+            <Sparkles className="w-3.5 h-3.5 text-gold-ink" />
+            <span className="font-display">{isRtl ? 'حرفية المرسم والتراث' : 'ATELIER CRAFTSMANSHIP'}</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-burgundy font-cairo tracking-tight">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-burgundy font-display tracking-tight">
             {dict.home.behindTheBrushTitle}
           </h2>
 
-          <p className="text-sm sm:text-base text-slateText-body font-normal leading-relaxed font-tajawal max-w-xl mx-auto">
+          <p className="text-sm sm:text-base text-slateText-body font-normal leading-relaxed font-body max-w-xl mx-auto">
             {dict.home.behindTheBrushSubtitle}
           </p>
         </div>
@@ -75,21 +75,21 @@ export function BehindTheBrush({ lang }: BehindTheBrushProps) {
                       <Icon className="w-5 h-5" strokeWidth={1.75} />
                     </div>
 
-                    <span className="text-4xl font-extrabold font-playfair text-gold/40 group-hover:text-gold transition-colors">
+                    <span className="text-4xl font-extrabold font-display text-gold-ink/40 group-hover:text-gold-ink transition-colors">
                       {step.num}
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-burgundy mb-3 font-cairo">
+                  <h3 className="text-lg font-bold text-burgundy mb-3 font-display">
                     {step.title}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-slateText-body leading-relaxed font-tajawal">
+                  <p className="text-xs sm:text-sm text-slateText-body leading-relaxed font-body">
                     {step.desc}
                   </p>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-gold-hairline/40 flex items-center justify-between text-[11px] text-gold font-semibold uppercase tracking-wider">
+                <div className="pt-6 mt-6 border-t border-gold-hairline/40 flex items-center justify-between text-[11px] text-gold-ink font-semibold uppercase tracking-wider">
                   <span>{isRtl ? 'مرحلة أصيلة' : 'Authentic Stage'}</span>
                   <span className="w-1.5 h-1.5 rounded-full bg-gold" />
                 </div>

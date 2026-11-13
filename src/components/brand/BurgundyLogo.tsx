@@ -37,7 +37,7 @@ export function BurgundyLogo({
   const burgundyColor = isLight ? '#FFFFFF' : '#5F0F40';
   const goldColor = '#D9B97A';
   const textColor = isLight ? 'text-white' : 'text-burgundy';
-  const subtextColor = isLight ? 'text-gold/90' : 'text-gold';
+  const subtextColor = isLight ? 'text-gold-ink/90' : 'text-gold-ink';
 
   // Bespoke Luxury Emblem SVG: Royal Crown + Kandaka Lotus Monogram
   const Emblem = (

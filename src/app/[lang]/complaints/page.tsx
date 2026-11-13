@@ -57,7 +57,7 @@ export default function ComplaintsPage() {
                 : 'Consumer Complaints Portal — Qatar MOCI Decision 25/2026'}
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-cairo">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-display">
             {isAr ? 'تقديم شكوى أو استفسار رسمي' : 'File a Formal Consumer Complaint'}
           </h1>
           <p className="text-xs sm:text-sm text-slateText-secondary max-w-xl mx-auto leading-relaxed">
@@ -72,7 +72,7 @@ export default function ComplaintsPage() {
             <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-200">
               <CheckCircle className="w-8 h-8" />
             </div>
-            <h2 className="text-xl font-bold text-burgundy font-cairo mb-2">
+            <h2 className="text-xl font-bold text-burgundy font-display mb-2">
               {isAr ? 'تم تسجيل شكواكِ بنجاح' : 'Complaint Successfully Registered'}
             </h2>
             <p className="text-xs text-slateText-secondary mb-6">
@@ -221,7 +221,7 @@ export default function ComplaintsPage() {
             <div className="mt-8 p-4 rounded-2xl bg-canvas-warm/40 border border-gold-hairline text-xs text-slateText-secondary flex items-start gap-3">
               <ShieldAlert className="w-5 h-5 text-gold-line shrink-0 mt-0.5" />
               <div className="leading-relaxed">
-                <p className="font-bold text-burgundy mb-0.5 font-cairo">
+                <p className="font-bold text-burgundy mb-0.5 font-display">
                   {isAr ? 'ضمان حماية المستهلك' : 'Consumer Protection Assurance'}
                 </p>
                 <p>

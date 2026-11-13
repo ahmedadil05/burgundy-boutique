@@ -59,7 +59,7 @@ export function FilterSidebar({
   return (
     <div className="bg-white rounded-3xl p-6 border border-gold-hairline shadow-sm space-y-6">
       <div className="flex items-center justify-between pb-3 border-b border-gold-hairline">
-        <span className="flex items-center gap-2 text-sm font-bold text-burgundy font-cairo">
+        <span className="flex items-center gap-2 text-sm font-bold text-burgundy font-display">
           <Filter className="w-4 h-4 text-gold-line" />
           <span>{isAr ? 'تصفية المنتجات' : 'Filter Catalog'}</span>
         </span>
@@ -74,7 +74,7 @@ export function FilterSidebar({
 
       {/* Categories */}
       <div className="space-y-2.5">
-        <h4 className="text-xs font-bold text-burgundy font-cairo uppercase tracking-wider">
+        <h4 className="text-xs font-bold text-burgundy font-display uppercase tracking-wider">
           {isAr ? 'التصنيف' : 'Category'}
         </h4>
         <div className="space-y-1">
@@ -97,7 +97,7 @@ export function FilterSidebar({
 
       {/* Fabric */}
       <div className="space-y-2.5 pt-3 border-t border-gold-hairline/60">
-        <h4 className="text-xs font-bold text-burgundy font-cairo uppercase tracking-wider">
+        <h4 className="text-xs font-bold text-burgundy font-display uppercase tracking-wider">
           {isAr ? 'نوع القماش' : 'Fabric Type'}
         </h4>
         <div className="space-y-1">
@@ -120,7 +120,7 @@ export function FilterSidebar({
 
       {/* Price Range */}
       <div className="space-y-2.5 pt-3 border-t border-gold-hairline/60">
-        <h4 className="text-xs font-bold text-burgundy font-cairo uppercase tracking-wider">
+        <h4 className="text-xs font-bold text-burgundy font-display uppercase tracking-wider">
           {isAr ? 'نطاق السعر (ر.ق)' : 'Price Range (QAR)'}
         </h4>
         <div className="space-y-1">
@@ -148,7 +148,7 @@ export function FilterSidebar({
             type="checkbox"
             checked={inStockOnly}
             onChange={(e) => onToggleInStock(e.target.checked)}
-            className="w-4 h-4 text-burgundy rounded border-gold-hairline focus:ring-burgundy accent-burgundy"
+            className="w-4 h-4 text-burgundy rounded border border-gold-hairline focus:ring-burgundy accent-burgundy"
           />
           <span>{isAr ? 'القطع المتوفرة فورياً فقط' : 'In Stock Only'}</span>
         </label>

@@ -73,10 +73,10 @@ export function PreLaunchTeaser({ lang }: PreLaunchTeaserProps) {
 
         {/* Poetic Arabic / English Brand Teaser */}
         <div className="space-y-3 mb-8 px-2">
-          <h2 className="text-2xl font-bold font-cairo text-burgundy leading-snug">
+          <h2 className="text-2xl font-bold font-display text-burgundy leading-snug">
             {isRtl ? 'شيءٌ استثنائي يلوح في الأفق' : "Something's on the Horizon"}
           </h2>
-          <p className="text-xs uppercase tracking-[0.25em] text-gold-shimmer font-semibold">
+          <p className="text-xs uppercase tracking-[0.25em] text-gold-ink font-semibold">
             STAY TUNED • ترقبونا
           </p>
           <p className="text-sm text-slateText-body font-normal leading-relaxed">
@@ -112,7 +112,7 @@ export function PreLaunchTeaser({ lang }: PreLaunchTeaserProps) {
                   dir="ltr"
                 />
               </div>
-              {errorMsg && <p className="text-xs text-coral font-medium text-start">{errorMsg}</p>}
+              {errorMsg && <p className="text-xs text-coral-ink font-medium text-start">{errorMsg}</p>}
               <button
                 type="submit"
                 className="w-full py-3 px-5 rounded-xl bg-burgundy hover:bg-burgundy-hover active:scale-[0.99] text-white text-xs font-bold tracking-wider uppercase transition-all shadow-md flex items-center justify-center gap-2"

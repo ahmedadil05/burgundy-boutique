@@ -3,7 +3,7 @@
 import React, { useRef } from 'react';
 import { PaymentMethod } from '../../lib/payment-gateway';
 import { Language } from '../../lib/i18n';
-import { CreditCard, Smartphone, Banknote, ShieldCheck, CheckCircle2, Building2, Upload, FileCheck } from 'lucide-react';
+import { CreditCard, Smartphone, ShieldCheck, CheckCircle2, Building2, Upload, FileCheck } from 'lucide-react';
 import { Input } from '../ui/Input';
 
 export interface PaymentMethodSelectorProps {
@@ -14,7 +14,6 @@ export interface PaymentMethodSelectorProps {
   receiptImage?: string;
   onReceiptImageChange?: (base64Url: string) => void;
   lang?: Language;
-  allowCOD?: boolean;
 }
 
 export function PaymentMethodSelector({
@@ -25,7 +24,6 @@ export function PaymentMethodSelector({
   receiptImage,
   onReceiptImageChange,
   lang = 'ar',
-  allowCOD = true,
 }: PaymentMethodSelectorProps) {
   const isAr = lang === 'ar';
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -83,24 +81,14 @@ export function PaymentMethodSelector({
         ? 'التحويل المباشر لحساب مؤسسة بيرغندي البنكي في الدوحة ورفع صورة إشعار التحويل'
         : 'Direct transfer to BURGUNDY official Qatari IBAN with proof of receipt upload',
       badge: isAr ? 'تحويل بنكي' : 'Bank Wire',
-      icon: <Building2 className="w-5 h-5 text-gold-shimmer" />,
-    },
-    {
-      id: 'cod',
-      title: isAr ? 'الدفع نقداً عند الاستلام (COD)' : 'Cash on Delivery (COD)',
-      description: isAr
-        ? 'سداد نقدي مباشر لمندوب التوصيل عند استلام الطلب داخل دولة قطر'
-        : 'Pay cash to the licensed courier upon doorstep delivery in Qatar',
-      badge: isAr ? 'داخل قطر فقط' : 'Qatar Only',
-      icon: <Banknote className="w-5 h-5 text-amber-700" />,
-      disabled: !allowCOD,
+      icon: <Building2 className="w-5 h-5 text-gold-ink" />,
     },
   ];
 
   return (
     <div className="bg-white rounded-2xl p-6 sm:p-8 border border-gold-hairline shadow-soft space-y-5">
       <div className="flex items-center justify-between pb-3 border-b border-gold-hairline">
-        <h3 className="font-bold text-base text-burgundy font-cairo flex items-center gap-2">
+        <h3 className="font-bold text-base text-burgundy font-display flex items-center gap-2">
           <ShieldCheck className="w-5 h-5 text-gold-line" />
           <span>{isAr ? 'وسيلة الدفع المعتمدة' : 'Payment Rail Selection'}</span>
         </h3>
@@ -128,7 +116,7 @@ export function PaymentMethodSelector({
                 <div className="mt-0.5">{m.icon}</div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-sm text-slateText-body font-cairo">
+                    <span className="font-bold text-sm text-slateText-body font-display">
                       {m.title}
                     </span>
                     <span className="text-[10px] font-bold text-burgundy bg-surface-peachSoft/50 px-2 py-0.5 rounded-md border border-gold-hairline">

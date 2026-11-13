@@ -49,8 +49,8 @@ export function InventoryManager({
   return (
     <div className="bg-white/90 rounded-3xl p-6 border border-peach-soft shadow-sm space-y-4">
       <div className="flex items-center justify-between pb-3 border-b border-peach-soft">
-        <h3 className="font-bold text-base text-cocoa-dark font-cairo flex items-center gap-2">
-          <Layers className="w-5 h-5 text-coral-warm" />
+        <h3 className="font-bold text-base text-cocoa-dark font-display flex items-center gap-2">
+          <Layers className="w-5 h-5 text-coral-ink" />
           <span>{isAr ? 'إدارة المخزون والأسعار (ر.ق)' : 'Inventory & Price Management (QAR)'}</span>
         </h3>
         {hasChanges && (
@@ -82,7 +82,7 @@ export function InventoryManager({
                   />
                   <div>
                     <strong className="block font-bold text-cocoa-dark">{it.title[lang]}</strong>
-                    <span className="text-[10px] text-coral-warm font-semibold uppercase tracking-wider">
+                    <span className="text-[10px] text-coral-ink font-semibold uppercase tracking-wider">
                       {it.category}
                     </span>
                   </div>
@@ -93,7 +93,7 @@ export function InventoryManager({
                     type="number"
                     value={it.priceQAR}
                     onChange={(e) => updatePrice(it.id, parseFloat(e.target.value))}
-                    className="w-20 px-2 py-1 text-center font-bold text-coral-warm rounded-lg border border-peach-soft bg-cream focus:outline-none"
+                    className="w-20 px-2 py-1 text-center font-bold text-coral-ink rounded-lg border border-peach-soft bg-cream focus:outline-none"
                   />
                 </td>
                 <td className="p-3 text-center">

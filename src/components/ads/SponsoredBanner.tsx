@@ -14,11 +14,12 @@ export function SponsoredBanner({ lang }: SponsoredBannerProps) {
   const { getActiveAd, recordView, recordClick } = useAds();
   const ad = getActiveAd('home_banner');
 
+  const adId = ad?.id;
   useEffect(() => {
-    if (ad) {
-      recordView(ad.id);
+    if (adId) {
+      recordView(adId);
     }
-  }, [ad, recordView]);
+  }, [adId, recordView]);
 
   if (!ad) return null;
 
@@ -38,12 +39,12 @@ export function SponsoredBanner({ lang }: SponsoredBannerProps) {
 
         {/* Content */}
         <div className="flex-1 space-y-2 text-center md:text-start pt-2 md:pt-0">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-shimmer">
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-ink">
             <Sparkles className="w-3.5 h-3.5 text-gold-line" />
             <span>{ad.advertiserName}</span>
           </div>
 
-          <h3 className="text-base sm:text-lg font-bold text-burgundy font-cairo">
+          <h3 className="text-base sm:text-lg font-bold text-burgundy font-display">
             {ad.title[lang]}
           </h3>
 

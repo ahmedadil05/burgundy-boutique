@@ -51,11 +51,11 @@ export function ShopByFabric({ lang }: ShopByFabricProps) {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-ink uppercase tracking-widest">
               <Sparkles className="w-3.5 h-3.5" />
-              <span className="font-cairo">{isRtl ? 'أقمشة ملكية منتقاة بعناية' : 'NOBLE TEXTILES'}</span>
+              <span className="font-display">{isRtl ? 'أقمشة ملكية منتقاة بعناية' : 'NOBLE TEXTILES'}</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-cairo tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-display tracking-tight">
               {dict.home.shopByFabricTitle}
             </h2>
           </div>
@@ -89,11 +89,11 @@ export function ShopByFabric({ lang }: ShopByFabricProps) {
                   <span className="w-2 h-2 rounded-full bg-gold group-hover:scale-125 transition-transform" />
                 </div>
 
-                <h3 className="text-base font-bold text-burgundy mb-2 font-cairo group-hover:text-burgundy-hover transition-colors">
+                <h3 className="text-base font-bold text-burgundy mb-2 font-display group-hover:text-burgundy-hover transition-colors">
                   {fabric.name}
                 </h3>
 
-                <p className="text-xs text-slateText-body leading-relaxed font-tajawal">
+                <p className="text-xs text-slateText-body leading-relaxed font-body">
                   {fabric.desc}
                 </p>
               </div>

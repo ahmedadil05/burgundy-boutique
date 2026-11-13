@@ -20,7 +20,7 @@ describe('Bilingual i18n and Currency Engine', () => {
     expect(isRTL('en')).toBe(false);
   });
 
-  it('formats prices correctly in QAR, USD, and SDG', () => {
+  it('formats prices correctly in QAR and USD', () => {
     const qarAr = formatPrice(350, 'QAR', 'ar');
     const qarEn = formatPrice(350, 'QAR', 'en');
     expect(qarAr).toContain('350');

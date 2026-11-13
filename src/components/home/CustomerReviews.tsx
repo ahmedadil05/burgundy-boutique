@@ -47,10 +47,10 @@ export function CustomerReviews({ lang = 'ar' }: { lang?: Language }) {
           <span>{isAr ? 'آراء عميلاتنا في قطر' : 'CLIENT EXPERIENCES'}</span>
         </div>
 
-        <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-cairo">
+        <h2 className="text-2xl sm:text-4xl font-extrabold text-burgundy font-display">
           {dict.home.reviewsTitle}
         </h2>
-        <p className="text-xs sm:text-sm text-slateText-secondary font-tajawal leading-relaxed">
+        <p className="text-xs sm:text-sm text-slateText-secondary font-body leading-relaxed">
           {dict.home.reviewsSubtitle}
         </p>
       </div>
@@ -64,7 +64,7 @@ export function CustomerReviews({ lang = 'ar' }: { lang?: Language }) {
             <div className="space-y-4">
               {/* Star Rating & Quote Accent */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-gold-shimmer">
+                <div className="flex items-center gap-1 text-gold-ink">
                   {[...Array(r.rating)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-current text-gold-line" />
                   ))}
@@ -73,7 +73,7 @@ export function CustomerReviews({ lang = 'ar' }: { lang?: Language }) {
               </div>
 
               {/* Review Text */}
-              <p className="text-xs sm:text-sm text-slateText-body leading-relaxed font-tajawal">
+              <p className="text-xs sm:text-sm text-slateText-body leading-relaxed font-body">
                 &ldquo;{r.text}&rdquo;
               </p>
             </div>
@@ -81,7 +81,7 @@ export function CustomerReviews({ lang = 'ar' }: { lang?: Language }) {
             {/* Author Meta */}
             <div className="pt-4 border-t border-gold-hairline/60 flex items-center justify-between">
               <div>
-                <strong className="block text-xs font-bold text-burgundy font-cairo">
+                <strong className="block text-xs font-bold text-burgundy font-display">
                   {r.author}
                 </strong>
                 <span className="text-[11px] text-slateText-secondary">{r.location}</span>

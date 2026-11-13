@@ -1,31 +1,12 @@
 import type { Metadata } from 'next';
 import {
-  Cairo,
-  Tajawal,
-  Playfair_Display,
-  Inter,
   Amiri,
-  Almarai,
   Cormorant_Garamond,
   Plus_Jakarta_Sans,
 } from 'next/font/google';
 import '../styles/globals.css';
 import { siteConfig } from '../config/site';
 import { SettingsProvider } from '../lib/settings-store';
-
-const amiri = Amiri({
-  subsets: ['arabic', 'latin'],
-  variable: '--font-amiri',
-  display: 'swap',
-  weight: ['400', '700'],
-});
-
-const almarai = Almarai({
-  subsets: ['arabic'],
-  variable: '--font-almarai',
-  display: 'swap',
-  weight: ['300', '400', '700', '800'],
-});
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -41,31 +22,11 @@ const jakarta = Plus_Jakarta_Sans({
   weight: ['400', '500', '600', '700'],
 });
 
-const cairo = Cairo({
-  subsets: ['arabic', 'latin'],
-  variable: '--font-cairo',
+const amiri = Amiri({
+  subsets: ['arabic'],
+  variable: '--font-amiri',
   display: 'swap',
-  weight: ['400', '600', '700', '800'],
-});
-
-const tajawal = Tajawal({
-  subsets: ['arabic', 'latin'],
-  variable: '--font-tajawal',
-  display: 'swap',
-  weight: ['400', '500', '700'],
-});
-
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair',
-  display: 'swap',
-  weight: ['400', '600', '700', '800', '900'],
-});
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
+  weight: ['400', '700'],
 });
 
 export const metadata: Metadata = {
@@ -78,7 +39,8 @@ export const metadata: Metadata = {
     images: ['/brand/teaser-clean.jpg'],
   },
   icons: {
-    icon: '/brand/teaser-clean.jpg',
+    // src/app/icon.svg (brand emblem) is auto-served by Next.js metadata conventions.
+    icon: '/icon.svg',
   },
 };
 
@@ -89,7 +51,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      className={`${amiri.variable} ${almarai.variable} ${cormorant.variable} ${jakarta.variable} ${cairo.variable} ${tajawal.variable} ${playfair.variable} ${inter.variable}`}
+      className={`${cormorant.variable} ${jakarta.variable} ${amiri.variable}`}
     >
       <body className="min-h-screen flex flex-col bg-canvas text-slateText-body selection:bg-peach-sorbet selection:text-burgundy antialiased">
         <SettingsProvider>

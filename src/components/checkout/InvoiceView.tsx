@@ -72,7 +72,7 @@ export function InvoiceView({ invoice, lang = 'ar' }: InvoiceViewProps) {
             <span className="brand-wordmark text-2xl sm:text-3xl text-burgundy block font-extrabold">
               {invoice.legalEntityName.en.toUpperCase()}
             </span>
-            <p className="text-sm font-cairo text-slateText-secondary font-medium">
+            <p className="text-sm font-display text-slateText-secondary font-medium">
               {invoice.legalEntityName.ar}
             </p>
             <p className="text-[11px] text-slateText-secondary mt-1">
@@ -81,7 +81,7 @@ export function InvoiceView({ invoice, lang = 'ar' }: InvoiceViewProps) {
           </div>
 
           <div className="text-start sm:text-end space-y-1">
-            <span className="text-xs uppercase font-extrabold tracking-widest text-gold-shimmer block">
+            <span className="text-xs uppercase font-extrabold tracking-widest text-gold-ink block">
               OFFICIAL INVOICE • فاتورة ضريبية رسمية
             </span>
             <p className="text-lg font-bold text-burgundy">

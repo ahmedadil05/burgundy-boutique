@@ -66,7 +66,7 @@ export function SizeGuideModal({
 
         {/* Section 1: The Sudanese Toub */}
         <div className="p-4 rounded-2xl bg-white border border-gold-hairline shadow-sm space-y-2">
-          <h4 className="font-bold text-sm text-burgundy flex items-center gap-1.5 font-cairo">
+          <h4 className="font-bold text-sm text-burgundy flex items-center gap-1.5 font-display">
             <Sparkles className="w-4 h-4 text-gold-line" />
             <span>{isAr ? '١. مواصفات الثوب السوداني (المقاس الحر الملكي)' : '1. Sudanese Toub Specifications (Royal Free Size)'}</span>
           </h4>
@@ -78,27 +78,30 @@ export function SizeGuideModal({
           <div className="grid grid-cols-2 gap-3 pt-2">
             <div className="bg-canvas-warm/40 p-2.5 rounded-xl border border-gold-hairline text-center">
               <span className="block text-[11px] text-slateText-secondary">{isAr ? 'الطول الإجمالي للثوب' : 'Total Fabric Length'}</span>
-              <strong className="text-sm font-extrabold text-burgundy font-mono">
+              <strong className="text-sm font-extrabold text-burgundy font-body tabular-nums">
                 {unit === 'cm' ? '4.5 أمتار (450 cm)' : '4.5 Meters (~177 in)'}
               </strong>
             </div>
             <div className="bg-canvas-warm/40 p-2.5 rounded-xl border border-gold-hairline text-center">
               <span className="block text-[11px] text-slateText-secondary">{isAr ? 'عرض القماش (العرضان)' : 'Fabric Width'}</span>
-              <strong className="text-sm font-extrabold text-burgundy font-mono">
+              <strong className="text-sm font-extrabold text-burgundy font-body tabular-nums">
                 {unit === 'cm' ? '110 - 115 cm' : '43 - 45 in'}
               </strong>
             </div>
           </div>
-          <p className="text-[11px] text-slateText-secondary pt-1">
-            {isAr
-              ? '✓ يناسب كافة الأطوال والأحجام بفضل طريقة اللف الانسيابية الكلاسيكية.'
-              : '✓ Comfortably fits all heights and silhouettes through classic traditional wrapping.'}
+          <p className="text-[11px] text-slateText-secondary pt-1 flex items-start gap-1.5">
+            <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />
+            <span>
+              {isAr
+                ? 'يناسب كافة الأطوال والأحجام بفضل طريقة اللف الانسيابية الكلاسيكية.'
+                : 'Comfortably fits all heights and silhouettes through classic traditional wrapping.'}
+            </span>
           </p>
         </div>
 
         {/* Section 2: Jalabiyas & Daraas Table */}
         <div className="space-y-2">
-          <h4 className="font-bold text-sm text-burgundy font-cairo">
+          <h4 className="font-bold text-sm text-burgundy font-display">
             {isAr ? '٢. جدول مقاسات الجلابيات والدراعات والفساتين' : '2. Jalabiyas, Dara’as & Dresses Size Chart'}
           </h4>
           <div className="overflow-x-auto rounded-2xl border border-gold-hairline">

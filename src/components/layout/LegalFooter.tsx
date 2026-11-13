@@ -55,7 +55,7 @@ export function LegalFooter({ lang = 'ar' }: LegalFooterProps) {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-bold text-burgundy mb-3 font-cairo">
+            <h4 className="text-sm font-bold text-burgundy mb-3 font-display">
               {isAr ? 'المتجر والتصاميم' : 'Collections & Atelier'}
             </h4>
             <ul className="space-y-2 text-xs text-slateText-secondary">
@@ -81,7 +81,7 @@ export function LegalFooter({ lang = 'ar' }: LegalFooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href={`/${lang}/advertise`} className="text-gold-shimmer font-semibold hover:underline flex items-center gap-1">
+                <Link href={`/${lang}/advertise`} className="text-gold-ink font-semibold hover:underline flex items-center gap-1">
                   <Megaphone className="w-3.5 h-3.5" />
                   <span>{isAr ? 'الإعلان والرعاية معنا' : 'Advertise With Us'}</span>
                 </Link>
@@ -101,7 +101,7 @@ export function LegalFooter({ lang = 'ar' }: LegalFooterProps) {
 
           {/* Consumer Rights & Policies (Qatar Compliance) */}
           <div>
-            <h4 className="text-sm font-bold text-burgundy mb-3 font-cairo flex items-center gap-1.5">
+            <h4 className="text-sm font-bold text-burgundy mb-3 font-display flex items-center gap-1.5">
               <Scale className="w-4 h-4 text-gold-line" />
               <span>{isAr ? 'السياسات وحماية المستهلك' : 'Consumer Rights & Policies'}</span>
             </h4>
@@ -127,7 +127,7 @@ export function LegalFooter({ lang = 'ar' }: LegalFooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href={`/${lang}/complaints`} className="hover:text-burgundy transition-colors text-coral font-medium">
+                <Link href={`/${lang}/complaints`} className="hover:text-burgundy transition-colors text-coral-ink font-medium">
                   {isAr ? 'تقديم شكوى أو اقتراح رسمي' : 'File a Formal Complaint'}
                 </Link>
               </li>
@@ -136,7 +136,7 @@ export function LegalFooter({ lang = 'ar' }: LegalFooterProps) {
 
           {/* Contact Details & Qatar Legal Compliance */}
           <div className="space-y-2.5 text-xs text-slateText-secondary">
-            <h4 className="text-sm font-bold text-burgundy mb-3 font-cairo">
+            <h4 className="text-sm font-bold text-burgundy mb-3 font-display">
               {isAr ? 'بيانات التواصل والتراخيص' : 'Official Licensing & Support'}
             </h4>
             <div className="flex items-start gap-2">

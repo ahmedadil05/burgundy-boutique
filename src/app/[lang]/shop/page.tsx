@@ -77,11 +77,11 @@ function ShopContent() {
         {/* Header Title */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-gold-hairline">
           <div>
-            <span className="text-xs font-bold text-coral uppercase tracking-wider flex items-center gap-1.5">
+            <span className="text-xs font-bold text-coral-ink uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-gold-line" />
               <span>{isAr ? 'المتجر الإلكتروني المرخص في قطر' : 'Licensed Boutique Catalog'}</span>
             </span>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-burgundy font-cairo mt-1">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-burgundy font-display mt-1">
               {category === 'all'
                 ? dict.nav.shop
                 : dict.nav[category as keyof typeof dict.nav] || category}

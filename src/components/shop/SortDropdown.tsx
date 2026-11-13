@@ -19,7 +19,7 @@ export function SortDropdown({
 
   return (
     <div className="flex items-center gap-2 text-xs font-semibold text-cocoa-dark bg-white/80 border border-peach-soft rounded-2xl px-3 py-2 shadow-sm">
-      <ArrowDownUp className="w-3.5 h-3.5 text-coral-warm shrink-0" />
+      <ArrowDownUp className="w-3.5 h-3.5 text-coral-ink shrink-0" />
       <span className="text-cocoa-muted">{isAr ? 'الترتيب حسب:' : 'Sort by:'}</span>
       <select
         value={value}

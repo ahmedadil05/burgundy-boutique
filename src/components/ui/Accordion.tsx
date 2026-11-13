@@ -54,7 +54,7 @@ export function Accordion({
               <ChevronDown
                 className={clsx(
                   'w-4 h-4 text-cocoa-muted transition-transform duration-200 shrink-0 ms-2',
-                  isOpen && 'rotate-180 text-coral-warm'
+                  isOpen && 'rotate-180 text-coral-ink'
                 )}
               />
             </button>

@@ -72,46 +72,44 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
     }
   };
 
-  const navLinks = [
+  const navLinks: Array<{
+    href: string;
+    label: string;
+    highlight?: boolean;
+    secondary?: boolean;
+  }> = [
     { href: `/${lang}/shop`, label: isRtl ? 'المتجر الكامل' : 'All Collections' },
     { href: `/${lang}/shop?category=toubs`, label: isRtl ? 'ثياب سودانية' : 'Sudanese Toubs' },
     { href: `/${lang}/shop?category=jalabiyas`, label: isRtl ? 'جلابيات راقية' : 'Luxury Jalabiyas' },
     { href: `/${lang}/custom-order`, label: isRtl ? 'تفصيل ورسم خاص' : 'Bespoke Atelier', highlight: true },
     { href: `/${lang}/about`, label: isRtl ? 'قصة الدار' : 'Atelier Story' },
-    { href: `/${lang}/tracking`, label: isRtl ? 'تتبع طلبك' : 'Track Order' },
+    // Secondary destination — only from xl up to avoid overcrowding at lg
+    { href: `/${lang}/tracking`, label: isRtl ? 'تتبع طلبك' : 'Track Order', secondary: true },
   ];
+
+  const isActiveLink = (href: string) => {
+    if (href.includes('?') || !pathname) return false;
+    if (href === `/${lang}`) return pathname === `/${lang}` || pathname === `/${lang}/`;
+    return pathname.startsWith(href);
+  };
 
   return (
     <>
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           isScrolled
-            ? 'bg-canvas/95 backdrop-blur-md shadow-[0_4px_20px_rgba(95,15,64,0.04)] border-b border-gold-hairline'
-            : 'bg-canvas/90 backdrop-blur-sm border-b border-gold-hairline/60'
-        }`}
+            ? 'bg-canvas/85 backdrop-blur-xl supports-[backdrop-filter]:bg-canvas/70 shadow-[0_4px_24px_rgba(95,15,64,0.06)] border-b border-gold-hairline'
+            : 'bg-canvas/80 backdrop-blur-md supports-[backdrop-filter]:bg-canvas/65 border-b border-gold-hairline/60'
+        } pt-[env(safe-area-inset-top)]`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* ========================================================= */}
           {/* 1. DESKTOP HEADER (lg and above)                          */}
           {/* ========================================================= */}
-          <div className="hidden lg:flex items-center justify-between h-20 gap-8">
-            {/* Left Nav Links */}
-            <nav className="flex items-center gap-6">
-              {navLinks.slice(0, 3).map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-xs font-semibold uppercase tracking-wider text-slateText-body hover:text-burgundy transition-colors relative py-1 group"
-                >
-                  <span>{link.label}</span>
-                  <span className="absolute bottom-0 start-0 w-0 h-[1.5px] bg-gold-line group-hover:w-full transition-all duration-300" />
-                </Link>
-              ))}
-            </nav>
-
-            {/* Centered Brand Emblem & Wordmark */}
-            <div className="shrink-0 flex items-center justify-center">
+          <div className="hidden lg:flex items-center justify-between h-16 xl:h-[4.5rem] gap-4 xl:gap-6">
+            {/* Left: Brand Emblem & Wordmark */}
+            <div className="shrink-0 flex items-center">
               <BurgundyLogo
                 variant="full"
                 size="md"
@@ -120,91 +118,106 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
               />
             </div>
 
-            {/* Right Nav Links & Utilities */}
-            <div className="flex items-center gap-5">
-              <nav className="flex items-center gap-5">
-                {navLinks.slice(3).map((link) => (
+            {/* Center: Single Unified Primary Navigation */}
+            <nav
+              aria-label={isRtl ? 'التنقل الرئيسي' : 'Primary navigation'}
+              className="flex items-center gap-3 xl:gap-5 min-w-0"
+            >
+              {navLinks.map((link) => {
+                const active = isActiveLink(link.href);
+                const secondary = link.secondary;
+                return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`text-xs font-semibold uppercase tracking-wider transition-colors relative py-1 group ${
+                    aria-current={active ? 'page' : undefined}
+                    className={`${
+                      secondary ? 'hidden xl:inline-flex' : 'inline-flex'
+                    } items-center gap-1 whitespace-nowrap text-[11px] font-semibold uppercase tracking-wider transition-colors relative py-1 group ${
                       link.highlight
-                        ? 'text-burgundy font-bold hover:text-burgundy-hover flex items-center gap-1'
+                        ? 'text-burgundy font-bold hover:text-burgundy-hover'
+                        : active
+                        ? 'text-burgundy'
                         : 'text-slateText-body hover:text-burgundy'
                     }`}
                   >
-                    {link.highlight && <Sparkles className="w-3.5 h-3.5 text-gold-line" />}
+                    {link.highlight && (
+                      <Sparkles className="w-3.5 h-3.5 text-gold-line" aria-hidden="true" />
+                    )}
                     <span>{link.label}</span>
-                    <span className="absolute bottom-0 start-0 w-0 h-[1.5px] bg-gold-line group-hover:w-full transition-all duration-300" />
+                    <span
+                      aria-hidden="true"
+                      className={`absolute bottom-0 start-0 h-[1.5px] bg-gold-line transition-all duration-300 ${
+                        active ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`}
+                    />
                   </Link>
-                ))}
-              </nav>
+                );
+              })}
+            </nav>
 
-              <div className="h-4 w-[1px] bg-gold-hairline" />
-
-              {/* Action Buttons: Currency, Lang, Search, Wishlist, Cart */}
-              <div className="flex items-center gap-2">
-                {/* Currency Switcher */}
-                <div className="flex items-center text-[11px] font-semibold text-slateText-secondary bg-white border border-gold-hairline rounded-full px-2.5 py-1">
-                  <Coins className="w-3.5 h-3.5 text-gold-line me-1" />
-                  <select
-                    value={currency}
-                    onChange={(e) => setCurrency(e.target.value as Currency)}
-                    className="bg-transparent focus:outline-none cursor-pointer"
-                    aria-label="Currency"
-                  >
-                    <option value="QAR">QAR (ر.ق)</option>
-                    <option value="USD">USD ($)</option>
-                    <option value="SDG">SDG (ج.س)</option>
-                  </select>
-                </div>
-
-                {/* Language Switcher */}
-                <button
-                  type="button"
-                  onClick={toggleLanguage}
-                  className="flex items-center gap-1 text-[11px] font-bold text-slateText-body hover:text-burgundy bg-white border border-gold-hairline rounded-full px-2.5 py-1 transition-colors"
-                  aria-label="Switch Language"
+            {/* Right: Compact Utilities */}
+            <div className="flex items-center gap-1 xl:gap-2 shrink-0">
+              {/* Currency Switcher */}
+              <div className="flex items-center text-[10px] font-semibold text-slateText-secondary bg-white border border-gold-hairline rounded-full px-2 py-1">
+                <Coins className="w-3.5 h-3.5 text-gold-line me-1" aria-hidden="true" />
+                <select
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value as Currency)}
+                  className="bg-transparent focus:outline-none cursor-pointer"
+                  aria-label="Currency"
                 >
-                  <Globe className="w-3.5 h-3.5 text-gold-line" />
-                  <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
-                </button>
-
-                {/* Search */}
-                <button
-                  type="button"
-                  onClick={() => setIsSearchOpen(!isSearchOpen)}
-                  className="p-2 text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-full transition-colors"
-                  aria-label="Search"
-                >
-                  <Search className="w-4 h-4" />
-                </button>
-
-                {/* Wishlist */}
-                <Link
-                  href={`/${lang}/wishlist`}
-                  className="relative p-2 text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-full transition-colors"
-                  aria-label="Wishlist"
-                >
-                  <Heart className="w-4 h-4" />
-                  {wishlist.length > 0 && (
-                    <span className="absolute top-1 end-1 min-w-[14px] h-3.5 px-0.5 text-[9px] font-bold bg-burgundy text-white rounded-full flex items-center justify-center">
-                      {wishlist.length}
-                    </span>
-                  )}
-                </Link>
-
-                {/* Bag CTA (Opens Slide-over Cart Drawer) */}
-                <button
-                  type="button"
-                  onClick={openCart}
-                  className="relative inline-flex items-center gap-1.5 bg-burgundy hover:bg-burgundy-hover text-white text-xs font-bold rounded-full px-3.5 py-1.5 transition-colors shadow-luxury focus:outline-none"
-                  aria-label="Open Shopping Bag"
-                >
-                  <ShoppingBag className="w-3.5 h-3.5" />
-                  <span>{cartCount}</span>
-                </button>
+                  <option value="QAR">QAR (ر.ق)</option>
+                  <option value="USD">USD ($)</option>
+                </select>
               </div>
+
+              {/* Language Switcher */}
+              <button
+                type="button"
+                onClick={toggleLanguage}
+                className="flex items-center gap-1 text-[10px] font-bold text-slateText-body hover:text-burgundy bg-white border border-gold-hairline rounded-full px-2 py-1 transition-colors"
+                aria-label="Switch Language"
+              >
+                <Globe className="w-3.5 h-3.5 text-gold-line" aria-hidden="true" />
+                <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
+              </button>
+
+              {/* Search */}
+              <button
+                type="button"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="p-2 text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-full transition-colors"
+                aria-label="Search"
+                aria-expanded={isSearchOpen}
+              >
+                <Search className="w-4 h-4" aria-hidden="true" />
+              </button>
+
+              {/* Wishlist */}
+              <Link
+                href={`/${lang}/wishlist`}
+                className="relative p-2 text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-full transition-colors"
+                aria-label={isRtl ? 'المفضلة' : 'Wishlist'}
+              >
+                <Heart className="w-4 h-4" aria-hidden="true" />
+                {wishlist.length > 0 && (
+                  <span className="absolute top-0.5 end-0.5 min-w-[14px] h-3.5 px-0.5 text-[9px] font-bold bg-burgundy text-white rounded-full flex items-center justify-center">
+                    {wishlist.length}
+                  </span>
+                )}
+              </Link>
+
+              {/* Bag CTA (Opens Slide-over Cart Drawer) */}
+              <button
+                type="button"
+                onClick={openCart}
+                className="relative inline-flex items-center gap-1.5 bg-burgundy hover:bg-burgundy-hover text-white text-xs font-bold rounded-full px-3 py-1.5 transition-colors shadow-luxury focus:outline-none focus-visible:ring-2 focus-visible:ring-burgundy"
+                aria-label={isRtl ? 'افتحي الحقيبة' : 'Open Shopping Bag'}
+              >
+                <ShoppingBag className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>{cartCount}</span>
+              </button>
             </div>
           </div>
 
@@ -350,7 +363,7 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
 
             {/* Navigation Category List */}
             <div className="flex-1 p-4 space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-gold px-3 mb-2 block">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-gold-ink px-3 mb-2 block">
                 {isRtl ? 'التصاميم والتشكيلات' : 'Collections & Atelier'}
               </span>
 
@@ -374,7 +387,7 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
               ))}
 
               <div className="pt-4 mt-4 border-t border-gold-hairline/60">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-gold px-3 mb-2 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-gold-ink px-3 mb-2 block">
                   {isRtl ? 'الإدارة والخدمات' : 'Management & Portal'}
                 </span>
 
@@ -419,7 +432,6 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
                   >
                     <option value="QAR">QAR (ر.ق)</option>
                     <option value="USD">USD ($)</option>
-                    <option value="SDG">SDG (ج.س)</option>
                   </select>
                 </div>
               </div>

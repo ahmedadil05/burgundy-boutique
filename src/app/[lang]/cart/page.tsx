@@ -28,7 +28,7 @@ export default function CartPage() {
         {/* Title */}
         <div className="flex items-center justify-between pb-4 border-b border-gold-hairline">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-cairo">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-display">
               {dict.nav.cart}
             </h1>
             <p className="text-xs text-slateText-secondary mt-1">
@@ -37,11 +37,9 @@ export default function CartPage() {
                 : 'Review your selected artisanal items before checkout.'}
             </p>
           </div>
-          <Link href={`/${lang}/shop`}>
-            <Button variant="ghost" size="sm" className="text-burgundy hover:text-burgundy-hover">
-              {dict.common.continueShopping}
-            </Button>
-          </Link>
+          <Button asChild variant="ghost" size="sm" className="text-burgundy hover:text-burgundy-hover">
+            <Link href={`/${lang}/shop`}>{dict.common.continueShopping}</Link>
+          </Button>
         </div>
 
         {cart.length === 0 ? (
@@ -49,7 +47,7 @@ export default function CartPage() {
             <div className="w-16 h-16 bg-burgundy/10 text-burgundy rounded-full flex items-center justify-center mx-auto mb-2 border border-gold/30">
               <ShoppingBag className="w-8 h-8 text-burgundy" />
             </div>
-            <h2 className="text-lg font-bold text-burgundy font-cairo">
+            <h2 className="text-lg font-bold text-burgundy font-display">
               {dict.common.emptyCart}
             </h2>
             <p className="text-xs text-slateText-secondary">
@@ -58,11 +56,9 @@ export default function CartPage() {
                 : 'You have no items in your shopping bag yet. Explore our royal collections.'}
             </p>
             <div className="pt-2">
-              <Link href={`/${lang}/shop`}>
-                <Button size="lg" className="bg-burgundy text-white hover:bg-burgundy-hover font-bold shadow-luxury">
-                  {dict.common.shopNow}
-                </Button>
-              </Link>
+              <Button asChild size="lg" className="bg-burgundy text-white hover:bg-burgundy-hover font-bold shadow-luxury">
+                <Link href={`/${lang}/shop`}>{dict.common.shopNow}</Link>
+              </Button>
             </div>
           </div>
         ) : (
@@ -84,7 +80,7 @@ export default function CartPage() {
                         : `Add ${amountNeededForFree} QAR more for FREE delivery in Qatar`}
                     </span>
                   </span>
-                  <span className="text-burgundy font-mono">{progressPercent}%</span>
+                  <span className="text-burgundy font-body tabular-nums">{progressPercent}%</span>
                 </div>
                 <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-gold-hairline">
                   <div
@@ -106,14 +102,14 @@ export default function CartPage() {
                     <div className="flex-1 space-y-1">
                       <Link
                         href={`/${lang}/products/${item.slug}`}
-                        className="text-sm font-bold text-burgundy hover:underline transition-colors font-cairo block"
+                        className="text-sm font-bold text-burgundy hover:underline transition-colors font-display block"
                       >
                         {item.title[lang]}
                       </Link>
                       <p className="text-xs text-slateText-secondary">
                         {isAr ? 'المقاس:' : 'Size:'} <span className="font-semibold">{item.size}</span>
                       </p>
-                      <p className="text-xs font-extrabold text-burgundy font-mono">
+                      <p className="text-xs font-extrabold text-burgundy font-body tabular-nums">
                         {formatPrice(item.priceQAR, currency, lang)}
                       </p>
                     </div>
@@ -126,7 +122,7 @@ export default function CartPage() {
                       >
                         -
                       </button>
-                      <span className="w-6 text-center text-xs font-bold text-burgundy font-mono">
+                      <span className="w-6 text-center text-xs font-bold text-burgundy font-body tabular-nums">
                         {item.quantity}
                       </span>
                       <button
@@ -153,12 +149,12 @@ export default function CartPage() {
             {/* Summary & Checkout CTA (5 cols) */}
             <div className="lg:col-span-5 space-y-4">
               <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gold-hairline shadow-luxury space-y-4">
-                <h3 className="font-bold text-base text-burgundy font-cairo pb-3 border-b border-gold-hairline">
+                <h3 className="font-bold text-base text-burgundy font-display pb-3 border-b border-gold-hairline">
                   {dict.common.subtotal}
                 </h3>
                 <div className="flex items-baseline justify-between">
                   <span className="text-sm text-slateText-secondary">{isAr ? 'المجموع الفرعي للقطع' : 'Subtotal'}</span>
-                  <span className="text-2xl font-black text-burgundy font-mono">
+                  <span className="text-2xl font-black text-burgundy font-body tabular-nums">
                     {formatPrice(cartTotalQAR, currency, lang)}
                   </span>
                 </div>
@@ -169,11 +165,9 @@ export default function CartPage() {
                 </p>
 
                 <div className="pt-2">
-                  <Link href={`/${lang}/checkout`}>
-                    <Button size="lg" className="w-full font-bold bg-burgundy hover:bg-burgundy-hover text-white shadow-luxury">
-                      {dict.common.checkout}
-                    </Button>
-                  </Link>
+                  <Button asChild size="lg" className="w-full font-bold bg-burgundy hover:bg-burgundy-hover text-white shadow-luxury">
+                    <Link href={`/${lang}/checkout`}>{dict.common.checkout}</Link>
+                  </Button>
                 </div>
               </div>
             </div>

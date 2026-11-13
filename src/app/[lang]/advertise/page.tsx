@@ -49,7 +49,7 @@ export default function AdvertisePage() {
           <span>{isRtl ? 'فرص الشراكة والرعاية' : 'PARTNERSHIP & ADVERTISING'}</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-burgundy font-cairo">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-burgundy font-display">
           {isRtl ? 'أعلِن معنا لدى دار بيرغندي' : 'Advertise with BURGUNDY'}
         </h1>
 
@@ -66,7 +66,7 @@ export default function AdvertisePage() {
           <div className="w-10 h-10 rounded-xl bg-burgundy/10 text-burgundy flex items-center justify-center mx-auto">
             <Target className="w-5 h-5" />
           </div>
-          <h3 className="text-sm font-bold text-burgundy font-cairo">
+          <h3 className="text-sm font-bold text-burgundy font-display">
             {isRtl ? 'جمهور نسائي نخبوي' : 'Affluent Audience'}
           </h3>
           <p className="text-xs text-slateText-body">
@@ -78,7 +78,7 @@ export default function AdvertisePage() {
           <div className="w-10 h-10 rounded-xl bg-burgundy/10 text-burgundy flex items-center justify-center mx-auto">
             <ShieldCheck className="w-5 h-5" />
           </div>
-          <h3 className="text-sm font-bold text-burgundy font-cairo">
+          <h3 className="text-sm font-bold text-burgundy font-display">
             {isRtl ? 'بيئة إعلانية مصقولة' : 'Curated Brand Space'}
           </h3>
           <p className="text-xs text-slateText-body">
@@ -90,7 +90,7 @@ export default function AdvertisePage() {
           <div className="w-10 h-10 rounded-xl bg-burgundy/10 text-burgundy flex items-center justify-center mx-auto">
             <BarChart3 className="w-5 h-5" />
           </div>
-          <h3 className="text-sm font-bold text-burgundy font-cairo">
+          <h3 className="text-sm font-bold text-burgundy font-display">
             {isRtl ? 'تقارير أداء ومتابعة' : 'Transparent Analytics'}
           </h3>
           <p className="text-xs text-slateText-body">
@@ -106,7 +106,7 @@ export default function AdvertisePage() {
             <div className="w-14 h-14 rounded-full bg-surface-peachSoft/50 text-burgundy flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-8 h-8 text-burgundy" />
             </div>
-            <h2 className="text-xl font-bold text-burgundy font-cairo">
+            <h2 className="text-xl font-bold text-burgundy font-display">
               {isRtl ? 'تم استلام طلبكم بنجاح' : 'Inquiry Received with Pleasure'}
             </h2>
             <p className="text-xs text-slateText-body leading-relaxed max-w-sm mx-auto">
@@ -123,7 +123,7 @@ export default function AdvertisePage() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <h2 className="text-lg font-bold text-burgundy mb-2 font-cairo text-start">
+            <h2 className="text-lg font-bold text-burgundy mb-2 font-display text-start">
               {isRtl ? 'نموذج طلب حجز مساحة إعلانية' : 'Advertising Booking Inquiry'}
             </h2>
 

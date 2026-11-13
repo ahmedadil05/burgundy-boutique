@@ -108,7 +108,7 @@ export function Checkbox({ label, id, className, ...props }: CheckboxProps) {
         id={checkboxId}
         className={twMerge(
           clsx(
-            'mt-0.5 w-4 h-4 rounded text-coral-warm border-peach-deep/60 focus:ring-coral-warm transition-colors cursor-pointer accent-coral-warm',
+            'mt-0.5 w-4 h-4 rounded text-coral-ink border-peach-deep/60 focus:ring-coral-warm transition-colors cursor-pointer accent-coral-warm',
             className
           )
         )}

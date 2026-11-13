@@ -17,12 +17,12 @@ export function HeroBanner({ lang = 'ar' }: { lang?: Language }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Text Content (7 cols on desktop) */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-start">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/90 text-coral-warm border border-peach-soft shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/90 text-coral-ink border border-peach-soft shadow-sm">
               <Crown className="w-3.5 h-3.5 text-[#CBA05C]" />
               <span>{isAr ? 'كولكشن صيف وخريف 2026 الحصري' : 'Exclusive 2026 Couture Drop'}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-cocoa-dark font-cairo leading-[1.25] tracking-tight">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-cocoa-dark font-display leading-[1.25] tracking-tight">
               {dict.home.heroTitle}
             </h1>
 
@@ -32,34 +32,30 @@ export function HeroBanner({ lang = 'ar' }: { lang?: Language }) {
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-2">
-              <Link href={`/${lang}/shop`}>
-                <Button size="lg" variant="primary" icon={<ShoppingBag className="w-5 h-5" />}>
-                  {dict.common.shopNow}
-                </Button>
-              </Link>
-              <Link href={`/${lang}/about`}>
-                <Button size="lg" variant="outline">
-                  {dict.common.exploreCollection}
-                </Button>
-              </Link>
+              <Button asChild size="lg" variant="primary" icon={<ShoppingBag className="w-5 h-5" />}>
+                <Link href={`/${lang}/shop`}>{dict.common.shopNow}</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href={`/${lang}/about`}>{dict.common.exploreCollection}</Link>
+              </Button>
             </div>
 
             {/* Micro Highlights */}
             <div className="pt-6 border-t border-peach-soft/80 grid grid-cols-3 gap-2 sm:gap-4 max-w-lg mx-auto lg:mx-0 text-center lg:text-start">
               <div>
-                <span className="block text-base sm:text-lg font-extrabold text-coral-warm">4.5m</span>
+                <span className="block text-base sm:text-lg font-extrabold text-coral-ink">4.5m</span>
                 <span className="text-[11px] text-cocoa-muted font-medium">
                   {isAr ? 'مقاس الثوب الملكي' : 'Royal Toub Drape'}
                 </span>
               </div>
               <div>
-                <span className="block text-base sm:text-lg font-extrabold text-coral-warm">100%</span>
+                <span className="block text-base sm:text-lg font-extrabold text-coral-ink">100%</span>
                 <span className="text-[11px] text-cocoa-muted font-medium">
                   {isAr ? 'فوال سويسري أصلي' : 'Pure Swiss Voile'}
                 </span>
               </div>
               <div>
-                <span className="block text-base sm:text-lg font-extrabold text-coral-warm">24-48h</span>
+                <span className="block text-base sm:text-lg font-extrabold text-coral-ink">24-48h</span>
                 <span className="text-[11px] text-cocoa-muted font-medium">
                   {isAr ? 'توصيل مبرد بقطر' : 'Doha Fast Courier'}
                 </span>

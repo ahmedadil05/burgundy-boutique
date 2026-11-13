@@ -34,7 +34,7 @@ export function WhatsAppFloat({
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-20 lg:bottom-6 end-6 z-30 flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 group focus:outline-none focus:ring-4 focus:ring-[#25D366]/40"
+      className="fixed end-6 z-30 bottom-[calc(6.5rem+env(safe-area-inset-bottom))] lg:bottom-6 flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 group focus:outline-none focus:ring-4 focus:ring-[#25D366]/40"
       aria-label="Customer Service WhatsApp"
     >
       <MessageCircle className="w-5 h-5 fill-current" />

@@ -69,24 +69,24 @@ export function ParallaxHero({ lang }: ParallaxHeroProps) {
         >
           {/* Eyebrow Label with Delicate Gold Hairline Pill */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-gold-hairline shadow-sm text-burgundy text-xs font-semibold tracking-widest uppercase">
-            <Gem className="w-3.5 h-3.5 text-gold" strokeWidth={1.75} />
-            <span className="font-cairo">
+            <Gem className="w-3.5 h-3.5 text-gold-ink" strokeWidth={1.75} />
+            <span className="font-display">
               {isRtl ? 'دار بيرغندي للأزياء الراقية • الدوحة' : 'BURGUNDY HAUTE COUTURE • DOHA'}
             </span>
           </div>
 
           {/* High-Contrast Luxury Serif Wordmark & Headline */}
           <div className="space-y-3">
-            <span className="brand-wordmark text-xs sm:text-sm text-gold tracking-[0.35em] uppercase block font-semibold">
+            <span className="brand-wordmark text-xs sm:text-sm text-gold-ink tracking-[0.35em] uppercase block font-semibold">
               {settings.storeName.en} • ATELIER DE LUXE
             </span>
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-burgundy tracking-tight leading-[1.25] font-cairo">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-burgundy tracking-tight leading-[1.25] font-display">
               {dict.home.heroTitle}
             </h1>
           </div>
 
           {/* Warm Poetic Body Copy with Generous Breathing Room */}
-          <p className="max-w-xl text-sm sm:text-base text-slateText-body font-normal leading-relaxed font-tajawal">
+          <p className="max-w-xl text-sm sm:text-base text-slateText-body font-normal leading-relaxed font-body">
             {dict.home.heroSubtitle}
           </p>
 
@@ -111,15 +111,15 @@ export function ParallaxHero({ lang }: ParallaxHeroProps) {
           {/* Provenance & Craft Pillars */}
           <div className="grid grid-cols-3 gap-4 pt-6 text-[11px] text-slateText-secondary border-t border-gold-hairline/60 w-full max-w-lg">
             <div className="flex flex-col items-center lg:items-start space-y-0.5">
-              <span className="font-bold text-burgundy font-cairo">{isRtl ? 'فوال سويسري' : 'Swiss Voile'}</span>
+              <span className="font-bold text-burgundy font-display">{isRtl ? 'فوال سويسري' : 'Swiss Voile'}</span>
               <span className="text-[10px] text-slateText-secondary">{isRtl ? 'قطن أصلي 100%' : '100% St. Gallen'}</span>
             </div>
             <div className="flex flex-col items-center lg:items-start space-y-0.5 border-x border-gold-hairline/60 px-2">
-              <span className="font-bold text-burgundy font-cairo">{isRtl ? 'رسم يدوي أصيل' : 'Hand-Guided'}</span>
+              <span className="font-bold text-burgundy font-display">{isRtl ? 'رسم يدوي أصيل' : 'Hand-Guided'}</span>
               <span className="text-[10px] text-slateText-secondary">{isRtl ? 'قطعة فنية فريدة' : 'One of a Kind'}</span>
             </div>
             <div className="flex flex-col items-center lg:items-start space-y-0.5">
-              <span className="font-bold text-burgundy font-cairo">{isRtl ? 'توصيل قطر' : 'Qatar Express'}</span>
+              <span className="font-bold text-burgundy font-display">{isRtl ? 'توصيل قطر' : 'Qatar Express'}</span>
               <span className="text-[10px] text-slateText-secondary">{isRtl ? 'خلال 24-48 ساعة' : '24-48h Delivery'}</span>
             </div>
           </div>
@@ -149,7 +149,7 @@ export function ParallaxHero({ lang }: ParallaxHeroProps) {
 
             {/* Floating Luxury Atelier Seal */}
             <div className="absolute top-4 start-4 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-gold-hairline shadow-soft flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3 text-gold" />
+              <Sparkles className="w-3 h-3 text-gold-ink" />
               <span className="text-[10px] font-bold text-burgundy tracking-widest uppercase">
                 {isRtl ? 'مجموعة الدوحة الملكية' : 'Doha Royal Edition'}
               </span>
@@ -157,10 +157,10 @@ export function ParallaxHero({ lang }: ParallaxHeroProps) {
 
             {/* Bottom Atelier Caption */}
             <div className="absolute bottom-4 start-4 end-4 p-4 rounded-xl bg-white/95 backdrop-blur-md border border-gold-hairline text-start shadow-luxury space-y-1">
-              <p className="text-[10px] tracking-widest uppercase font-bold text-gold">
+              <p className="text-[10px] tracking-widest uppercase font-bold text-gold-ink">
                 HAUTE COUTURE MASTERPIECE
               </p>
-              <p className="text-xs sm:text-sm font-bold text-burgundy truncate font-cairo">
+              <p className="text-xs sm:text-sm font-bold text-burgundy truncate font-display">
                 {isRtl ? 'ثوب فوال سويسري مرسوم بحناء عصرية وذهب سائل' : 'Swiss Voile Toub • Liquid Gold & Henna Brushwork'}
               </p>
             </div>

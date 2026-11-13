@@ -28,8 +28,8 @@ export function ComplaintsTable({
   return (
     <div className="bg-white/90 rounded-3xl p-6 border border-peach-soft shadow-sm space-y-4">
       <div className="flex items-center justify-between pb-3 border-b border-peach-soft">
-        <h3 className="font-bold text-base text-cocoa-dark font-cairo flex items-center gap-2">
-          <Scale className="w-5 h-5 text-coral-warm" />
+        <h3 className="font-bold text-base text-cocoa-dark font-display flex items-center gap-2">
+          <Scale className="w-5 h-5 text-coral-ink" />
           <span>{isAr ? 'شكاوى المستهلكين (رقابة وزارة التجارة والصناعة)' : 'Consumer Complaints (MOCI)'}</span>
         </h3>
         <span className="text-xs text-cocoa-muted font-semibold">
@@ -56,7 +56,7 @@ export function ComplaintsTable({
             <tbody className="divide-y divide-peach-soft/50">
               {complaints.map((c) => (
                 <tr key={c.ticketId} className="hover:bg-cream/60 transition-colors">
-                  <td className="p-3 font-mono font-bold text-coral-warm">{c.ticketId}</td>
+                  <td className="p-3 font-mono font-bold text-coral-ink">{c.ticketId}</td>
                   <td className="p-3 font-bold text-cocoa-dark">{c.fullName}</td>
                   <td className="p-3 text-cocoa-muted">{c.complaintType}</td>
                   <td className="p-3 text-cocoa-dark max-w-xs truncate" title={c.message}>

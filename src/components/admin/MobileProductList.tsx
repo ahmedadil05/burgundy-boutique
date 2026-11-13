@@ -104,7 +104,7 @@ export function MobileProductList({
       {filteredProducts.length === 0 ? (
         <div className="text-center py-12 bg-white/60 rounded-3xl border border-peach-soft p-6">
           <Layers className="w-10 h-10 mx-auto text-peach-deep mb-2 opacity-60" />
-          <p className="text-sm font-bold text-cocoa-dark font-cairo">
+          <p className="text-sm font-bold text-cocoa-dark font-display">
             {isAr ? 'لا توجد قطع مطابقة للبحث' : 'No matching products found'}
           </p>
         </div>
@@ -128,7 +128,7 @@ export function MobileProductList({
                       className="w-full h-full object-cover"
                     />
                     {product.badge && (
-                      <span className="absolute top-1 start-1 text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-coral-warm text-white uppercase">
+                      <span className="absolute top-1 start-1 text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-coral-ink text-white uppercase">
                         {product.badge}
                       </span>
                     )}
@@ -137,19 +137,19 @@ export function MobileProductList({
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
-                      <span className="text-[10px] font-bold text-coral-warm uppercase tracking-wider">
+                      <span className="text-[10px] font-bold text-coral-ink uppercase tracking-wider">
                         {product.category}
                       </span>
                       <Link
                         href={`/${lang}/products/${product.slug}`}
-                        className="text-cocoa-muted hover:text-coral-warm p-1"
+                        className="text-cocoa-muted hover:text-coral-ink p-1"
                         title={isAr ? 'عرض في المتجر' : 'View in shop'}
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                       </Link>
                     </div>
 
-                    <h4 className="font-bold text-sm text-cocoa-dark font-cairo line-clamp-1 mt-0.5">
+                    <h4 className="font-bold text-sm text-cocoa-dark font-display line-clamp-1 mt-0.5">
                       {product.title[lang]}
                     </h4>
 
@@ -158,7 +158,7 @@ export function MobileProductList({
                     </p>
 
                     <div className="flex items-baseline gap-2 mt-1.5">
-                      <span className="font-extrabold text-sm text-cocoa-dark font-playfair">
+                      <span className="font-extrabold text-sm text-cocoa-dark font-display">
                         {formatPrice(product.priceQAR, 'QAR', lang)}
                       </span>
                       {product.originalPriceQAR && (
@@ -187,7 +187,7 @@ export function MobileProductList({
                 {/* Bottom Bar: Stock Stepper & Delete Button */}
                 <div className="flex items-center justify-between pt-2.5 border-t border-peach-soft/60">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-cocoa-muted font-cairo">
+                    <span className="text-xs text-cocoa-muted font-display">
                       {isAr ? 'المخزون:' : 'Stock:'}
                     </span>
 
@@ -251,7 +251,7 @@ export function MobileProductList({
             </div>
 
             <div className="text-center space-y-1">
-              <h4 className="font-bold text-base text-cocoa-dark font-cairo">
+              <h4 className="font-bold text-base text-cocoa-dark font-display">
                 {isAr ? 'تأكيد حذف الثوب؟' : 'Confirm Product Deletion?'}
               </h4>
               <p className="text-xs text-cocoa-muted">

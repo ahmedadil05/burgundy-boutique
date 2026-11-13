@@ -129,7 +129,7 @@ export default async function ProductDetailPage({
 
             {/* Accordion Specs */}
             <div className="bg-white rounded-3xl p-6 border border-gold-hairline shadow-sm">
-              <h2 className="text-base font-bold text-burgundy mb-3 font-cairo">
+              <h2 className="text-base font-bold text-burgundy mb-3 font-display">
                 {dict.product.fabricAndCare}
               </h2>
               <Accordion items={accordionItems} defaultOpenId="details" />
@@ -177,10 +177,10 @@ export default async function ProductDetailPage({
         {/* You May Also Like Section */}
         <section className="pt-10 border-t border-gold-hairline">
           <div className="text-center mb-8">
-            <span className="text-xs font-bold text-coral uppercase tracking-wider">
+            <span className="text-xs font-bold text-coral-ink uppercase tracking-wider">
               {isAr ? 'تشكيلات مكملة' : 'Curated For You'}
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-cairo mt-1">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-display mt-1">
               {dict.product.similarProducts}
             </h2>
           </div>

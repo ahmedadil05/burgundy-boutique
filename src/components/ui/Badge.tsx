@@ -23,11 +23,11 @@ export function Badge({
 
   const variantStyles: Record<string, string> = {
     new: 'bg-peach-soft text-cocoa-dark font-semibold border border-peach-deep/30',
-    sale: 'bg-coral-warm text-white font-bold shadow-sm',
+    sale: 'bg-coral-ink text-white font-bold shadow-sm',
     soldout: 'bg-cocoa-muted text-cream-light font-medium',
     heritage: 'bg-[#E3B873] text-[#3B2A24] font-semibold border border-[#CBA05C]',
     neutral: 'bg-blush-surface text-cocoa-dark border border-peach-soft/40',
-    sample: 'bg-burgundy text-white font-semibold border border-burgundy-dark/30',
+    sample: 'bg-burgundy text-white font-semibold border border-burgundy/30',
     madeToOrder: 'bg-peach-soft/60 text-burgundy font-semibold border border-peach-deep/40',
   };
 

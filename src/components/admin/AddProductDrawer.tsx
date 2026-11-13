@@ -204,11 +204,11 @@ export function AddProductDrawer({
         {/* Drawer Header */}
         <div className="px-5 py-4 bg-white border-b border-peach-soft flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-coral-warm/15 text-coral-warm flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-coral-warm/15 text-coral-ink flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-bold text-sm text-cocoa-dark font-cairo">
+              <h3 className="font-bold text-sm text-cocoa-dark font-display">
                 {isAr ? 'إضافة قطعة أو ثوب جديد' : 'Add New Garment / Product'}
               </h3>
               <p className="text-[11px] text-cocoa-muted">
@@ -235,7 +235,7 @@ export function AddProductDrawer({
 
           {/* Section 1: Photos & Camera Upload */}
           <div className="space-y-2">
-            <label className="font-bold text-cocoa-dark block font-cairo">
+            <label className="font-bold text-cocoa-dark block font-display">
               {isAr ? 'صور الثوب (كاميرا الهاتف أو الألبوم المحلي)' : 'Product Photos (Camera or Photo Library)'}
             </label>
             <p className="text-[11px] text-cocoa-muted">
@@ -257,7 +257,7 @@ export function AddProductDrawer({
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                   {idx === 0 && (
-                    <span className="absolute bottom-1 start-1 text-[9px] bg-coral-warm text-white px-1.5 py-0.5 rounded-md font-bold">
+                    <span className="absolute bottom-1 start-1 text-[9px] bg-coral-ink text-white px-1.5 py-0.5 rounded-md font-bold">
                       {isAr ? 'الرئيسية' : 'Cover'}
                     </span>
                   )}
@@ -269,7 +269,7 @@ export function AddProductDrawer({
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isCompressing}
-                className="aspect-square rounded-2xl border-2 border-dashed border-peach-soft hover:border-coral-warm bg-white hover:bg-blush-surface/30 flex flex-col items-center justify-center gap-1 text-cocoa-muted hover:text-coral-warm transition-all p-2 text-center"
+                className="aspect-square rounded-2xl border-2 border-dashed border-peach-soft hover:border-coral-warm bg-white hover:bg-blush-surface/30 flex flex-col items-center justify-center gap-1 text-cocoa-muted hover:text-coral-ink transition-all p-2 text-center"
               >
                 {isCompressing ? (
                   <span className="text-[10px] animate-pulse">
@@ -299,7 +299,7 @@ export function AddProductDrawer({
           {/* Section 2: Bilingual Titles */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="font-bold text-cocoa-dark block mb-1 font-cairo">
+              <label className="font-bold text-cocoa-dark block mb-1 font-display">
                 {isAr ? 'عنوان الثوب بالعربية *' : 'Arabic Title *'}
               </label>
               <input
@@ -330,7 +330,7 @@ export function AddProductDrawer({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {/* Category */}
             <div className="col-span-2 sm:col-span-1">
-              <label className="font-bold text-cocoa-dark block mb-1 font-cairo">
+              <label className="font-bold text-cocoa-dark block mb-1 font-display">
                 {isAr ? 'التصنيف' : 'Category'}
               </label>
               <select
@@ -348,7 +348,7 @@ export function AddProductDrawer({
 
             {/* Price QAR */}
             <div>
-              <label className="font-bold text-cocoa-dark block mb-1 font-cairo">
+              <label className="font-bold text-cocoa-dark block mb-1 font-display">
                 {isAr ? 'السعر (ر.ق) *' : 'Price (QAR) *'}
               </label>
               <input
@@ -365,7 +365,7 @@ export function AddProductDrawer({
 
             {/* Original Price (optional) */}
             <div>
-              <label className="font-semibold text-cocoa-muted block mb-1 font-cairo">
+              <label className="font-semibold text-cocoa-muted block mb-1 font-display">
                 {isAr ? 'السعر قبل الخصم' : 'Original Price'}
               </label>
               <input
@@ -381,7 +381,7 @@ export function AddProductDrawer({
 
             {/* Initial Stock */}
             <div>
-              <label className="font-bold text-cocoa-dark block mb-1 font-cairo">
+              <label className="font-bold text-cocoa-dark block mb-1 font-display">
                 {isAr ? 'كمية المخزون *' : 'Stock Quantity *'}
               </label>
               <input
@@ -398,7 +398,7 @@ export function AddProductDrawer({
           {/* Section 4: Fabric & Origin */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="font-bold text-cocoa-dark block mb-1 font-cairo">
+              <label className="font-bold text-cocoa-dark block mb-1 font-display">
                 {isAr ? 'نوع القماش (عربي)' : 'Fabric (Arabic)'}
               </label>
               <input
@@ -425,7 +425,7 @@ export function AddProductDrawer({
 
           {/* Section 5: Sizes Selection */}
           <div className="space-y-1.5">
-            <label className="font-bold text-cocoa-dark block font-cairo">
+            <label className="font-bold text-cocoa-dark block font-display">
               {isAr ? 'المقاسات المتاحة' : 'Available Sizes'}
             </label>
             <div className="flex flex-wrap gap-2">
@@ -451,7 +451,7 @@ export function AddProductDrawer({
 
           {/* Section 6: Colors Palette Selection */}
           <div className="space-y-2">
-            <label className="font-bold text-cocoa-dark block font-cairo">
+            <label className="font-bold text-cocoa-dark block font-display">
               {isAr ? 'ألوان القطعة المتوفرة' : 'Available Colors'}
             </label>
 
@@ -504,7 +504,7 @@ export function AddProductDrawer({
 
           {/* Section 7: Optional Description */}
           <div>
-            <label className="font-semibold text-cocoa-dark block mb-1 font-cairo">
+            <label className="font-semibold text-cocoa-dark block mb-1 font-display">
               {isAr ? 'وصف القطعة (اختياري)' : 'Description (Optional)'}
             </label>
             <textarea
@@ -527,7 +527,7 @@ export function AddProductDrawer({
             </button>
             <button
               type="submit"
-              className="flex-2 py-3 px-4 rounded-2xl bg-coral-warm hover:bg-coral-warm/95 text-white font-bold text-xs shadow-sm transition-transform active:scale-[0.98] flex items-center justify-center gap-1.5"
+              className="flex-2 py-3 px-4 rounded-2xl bg-coral-ink hover:bg-coral-ink/90 text-white font-bold text-xs shadow-sm transition-transform active:scale-[0.98] flex items-center justify-center gap-1.5"
             >
               <Check className="w-4 h-4" />
               <span>{isAr ? 'حفظ ونشر القطعة' : 'Save & Publish Product'}</span>
