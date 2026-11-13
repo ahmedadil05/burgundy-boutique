@@ -1,7 +1,20 @@
 import crypto from 'crypto';
 
-const ADMIN_PIN = process.env.ADMIN_SECRET_PIN || '9740';
-const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || 'burgundy_luxury_artisan_secret_token_974';
+const isProd = process.env.NODE_ENV === 'production';
+const envPin = process.env.ADMIN_SECRET_PIN;
+const envSecret = process.env.ADMIN_SESSION_SECRET;
+
+// Fail closed in production: never silently use the well-known documented defaults.
+if (isProd && (!envPin || !envSecret)) {
+  throw new Error(
+    'ADMIN_SECRET_PIN and ADMIN_SESSION_SECRET must be set in production. ' +
+      'Refusing to start with publicly-known default credentials.'
+  );
+}
+
+// Dev/test fallback — intentional, documented convenience for local machines only.
+const ADMIN_PIN = envPin || '9740';
+const SESSION_SECRET = envSecret || 'burgundy_luxury_artisan_secret_token_974';
 export const COOKIE_NAME = 'burgundy_atelier_session';
 
 // In-Memory Rate Limiter (IP / Client lockout)
@@ -44,6 +57,52 @@ export function registerFailedAttempt(clientKey: string): { remainingAttempts: n
 
 export function resetRateLimit(clientKey: string) {
   rateLimitMap.delete(clientKey);
+}
+
+// Global (non-IP) attempt counter — closes the x-forwarded-for rotation bypass:
+// even with an unlimited supply of rotating IPs, the admin PIN can only be
+// attempted a bounded number of times per window before everyone is locked out.
+const GLOBAL_KEY = '__atelier_auth_global__';
+const GLOBAL_MAX_ATTEMPTS = 20;
+const GLOBAL_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+
+export function checkGlobalRateLimit(): { allowed: boolean; retryAfterSec?: number } {
+  const now = Date.now();
+  const record = rateLimitMap.get(GLOBAL_KEY);
+  if (record?.lockedUntil && record.lockedUntil > now) {
+    return {
+      allowed: false,
+      retryAfterSec: Math.ceil((record.lockedUntil - now) / 1000),
+    };
+  }
+  return { allowed: true };
+}
+
+export function registerGlobalFailedAttempt(): { locked: boolean } {
+  const now = Date.now();
+  const record = rateLimitMap.get(GLOBAL_KEY) || { attempts: 0 };
+
+  // Reset window bookkeeping if the previous window elapsed
+  if (record.lockedUntil && record.lockedUntil < now) {
+    rateLimitMap.delete(GLOBAL_KEY);
+    return { locked: false };
+  }
+  if (record.lockedUntil && record.lockedUntil > now) {
+    return { locked: true };
+  }
+
+  record.attempts += 1;
+  if (record.attempts >= GLOBAL_MAX_ATTEMPTS) {
+    record.lockedUntil = now + GLOBAL_WINDOW_MS;
+    rateLimitMap.set(GLOBAL_KEY, record);
+    return { locked: true };
+  }
+  rateLimitMap.set(GLOBAL_KEY, record);
+  return { locked: false };
+}
+
+export function resetGlobalRateLimit() {
+  rateLimitMap.delete(GLOBAL_KEY);
 }
 
 // Timing-safe PIN verification

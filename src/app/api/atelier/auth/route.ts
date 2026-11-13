@@ -6,8 +6,12 @@ import {
   checkRateLimit,
   registerFailedAttempt,
   resetRateLimit,
+  checkGlobalRateLimit,
+  registerGlobalFailedAttempt,
+  resetGlobalRateLimit,
   COOKIE_NAME,
 } from '@/lib/server/auth/session';
+import { getClientIp } from '@/lib/server/rate-limit';
 
 export async function GET(req: NextRequest) {
   const token = req.cookies.get(COOKIE_NAME)?.value;
@@ -16,14 +20,16 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
+  const ip = getClientIp(req.headers);
   const rateLimit = checkRateLimit(ip);
+  const globalLimit = checkGlobalRateLimit();
 
-  if (!rateLimit.allowed) {
+  if (!rateLimit.allowed || !globalLimit.allowed) {
+    const retryAfterSec = rateLimit.retryAfterSec ?? globalLimit.retryAfterSec;
     return NextResponse.json(
       {
         error: 'Too many failed PIN attempts. Locked out for security.',
-        retryAfterSec: rateLimit.retryAfterSec,
+        retryAfterSec,
       },
       { status: 429 }
     );
@@ -41,11 +47,12 @@ export async function POST(req: NextRequest) {
 
     if (!isValid) {
       const failed = registerFailedAttempt(ip);
+      const globalFailed = registerGlobalFailedAttempt();
       return NextResponse.json(
         {
           error: 'Invalid master PIN',
           remainingAttempts: failed.remainingAttempts,
-          locked: failed.locked,
+          locked: failed.locked || globalFailed.locked,
         },
         { status: 401 }
       );
@@ -53,6 +60,7 @@ export async function POST(req: NextRequest) {
 
     // Success: Reset rate limits & issue signed HTTP-only cookie
     resetRateLimit(ip);
+    resetGlobalRateLimit();
     const token = createSessionToken();
 
     const response = NextResponse.json({

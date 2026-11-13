@@ -62,8 +62,20 @@ describe('Server API Endpoints', () => {
     expect(createData.success).toBe(true);
     expect(createData.orderNumber).toMatch(/^BUR-2026-\d{4}$/);
 
-    // Now test public tracking GET
-    const trackReq = new NextRequest(`http://localhost:3000/api/orders/${createData.orderNumber}`);
+    // Public tracking requires the checkout phone number (privacy gate)
+    const noPhoneReq = new NextRequest(`http://localhost:3000/api/orders/${createData.orderNumber}`);
+    const noPhoneRes = await getOrderRoute(noPhoneReq, {
+      params: Promise.resolve({ orderNumber: createData.orderNumber }),
+    });
+    expect(noPhoneRes.status).toBe(400);
+
+    const wrongPhoneReq = new NextRequest(`http://localhost:3000/api/orders/${createData.orderNumber}?phone=0000`);
+    const wrongPhoneRes = await getOrderRoute(wrongPhoneReq, {
+      params: Promise.resolve({ orderNumber: createData.orderNumber }),
+    });
+    expect(wrongPhoneRes.status).toBe(404);
+
+    const trackReq = new NextRequest(`http://localhost:3000/api/orders/${createData.orderNumber}?phone=+974 7788 9900`);
     const trackRes = await getOrderRoute(trackReq, {
       params: Promise.resolve({ orderNumber: createData.orderNumber }),
     });

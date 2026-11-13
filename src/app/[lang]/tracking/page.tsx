@@ -16,89 +16,91 @@ function TrackingContent() {
 
   const initialOrder = searchParams?.get('order') || '';
   const [orderQuery, setOrderQuery] = useState(initialOrder);
+  const [phoneQuery, setPhoneQuery] = useState('');
+  const [error, setErrorState] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [trackedOrder, setTrackedOrder] = useState<any | null>(null);
 
-  const fetchOrderTracking = async (orderId: string) => {
-    if (!orderId.trim()) return;
+  const digitsOnly = (s: string) => s.replace(/\D/g, '');
+
+  const mapRealOrder = (data: any) => {
+    const status: string = data.status || 'Confirmed';
+    const isShipped = status === 'Shipped' || status === 'Delivered';
+    const isDelivered = status === 'Delivered';
+    const created = data.createdAt ? new Date(data.createdAt) : new Date();
+    return {
+      orderId: data.orderNumber,
+      status,
+      carrier: isAr ? 'مندوب دار بيرغندي المبرد (الدوحة)' : 'BURGUNDY Climate-Controlled Express (Doha)',
+      estimatedDelivery: isDelivered
+        ? isAr ? 'تم التسليم' : 'Delivered'
+        : isAr ? 'خلال 24-48 ساعة' : 'Within 24-48 hours',
+      destination: data.customer?.municipality ? `${data.customer.municipality}, Qatar` : 'Qatar',
+      customerName: data.customer?.name || '',
+      maskedPhone: data.customer?.maskedPhone || '',
+      totalQAR: data.totalQAR,
+      createdAt: created.toLocaleString(),
+      steps: [
+        {
+          title: isAr ? 'تم استلام وتأكيد طلبكِ من الأتيليه' : 'Order confirmed at the atelier',
+          time: created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          done: true,
+        },
+        {
+          title: isAr ? 'الفحص والمقاس والتغليف الملكي' : 'Atelier inspection & regal packaging',
+          time: status === 'Confirmed' ? (isAr ? 'قيد التنفيذ' : 'In progress') : (isAr ? 'مكتمل' : 'Completed'),
+          done: status !== 'Confirmed',
+          current: status === 'Processing' || status === 'In Atelier' || status === 'Confirmed',
+        },
+        {
+          title: isAr ? 'مع مندوب التوصيل في قطر' : 'Out with BURGUNDY courier',
+          time: isAr ? 'جاري التوصيل' : 'In transit',
+          done: isShipped,
+          current: status === 'Shipped',
+        },
+        {
+          title: isAr ? 'تم التسليم بنجاح لباب العميل' : 'Delivered to your doorstep',
+          time: isDelivered ? (isAr ? 'تم الاستلام' : 'Delivered') : (isAr ? 'بانتظار التسليم' : 'Pending'),
+          done: isDelivered,
+        },
+      ],
+    };
+  };
+
+  const fetchOrderTracking = async (orderId: string, phone: string) => {
+    if (!orderId.trim() || !phone.trim()) {
+      setErrorState(isAr ? 'أدخلي رقم الطلب ورقم الجوال المستخدم عند الطلب.' : 'Enter the order number and the phone used at checkout.');
+      return;
+    }
     setLoading(true);
+    setErrorState(null);
+    setTrackedOrder(null);
 
     try {
-      const res = await fetch(`/api/orders/${encodeURIComponent(orderId.trim())}`);
+      const res = await fetch(`/api/orders/${encodeURIComponent(orderId.trim())}?phone=${encodeURIComponent(phone.trim())}`);
       if (res.ok) {
         const data = await res.json();
-        const order = data.order;
-        setTrackedOrder({
-          orderId: order.orderNumber,
-          status: order.fulfillmentStatus || 'PROCESSING',
-          carrier: isAr ? 'مندوب دار بيرغندي المبرد (الدوحة)' : 'BURGUNDY Climate-Controlled Express (Doha)',
-          estimatedDelivery: isAr ? 'خلال 24-48 ساعة' : 'Within 24-48 hours',
-          destination: `${order.shippingAddress?.municipality || 'Doha'}, Qatar`,
-          customerName: order.customer?.fullName || '',
-          totalQAR: order.totalQAR,
-          steps: [
-            {
-              title: isAr ? 'تم استلام وتأكيد الطلب بالمرسم' : 'Order Confirmed at Atelier',
-              time: new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-              done: true,
-            },
-            {
-              title: isAr ? 'فحص جودة الحرير والفوال والتغليف الفاخر' : 'Quality Inspection & Silk Packaging',
-              time: isAr ? 'مكتمل' : 'Completed',
-              done: order.fulfillmentStatus !== 'PENDING',
-              current: order.fulfillmentStatus === 'PROCESSING',
-            },
-            {
-              title: isAr ? 'الشحنة مع مندوب التوصيل في قطر' : 'Out for Courier Delivery in Qatar',
-              time: isAr ? 'جاري التوصيل' : 'In Transit',
-              done: ['SHIPPED', 'DELIVERED'].includes(order.fulfillmentStatus),
-              current: order.fulfillmentStatus === 'SHIPPED',
-            },
-            {
-              title: isAr ? 'تم التسليم بنجاح لباب العميل' : 'Delivered to Doorstep',
-              time: order.fulfillmentStatus === 'DELIVERED' ? (isAr ? 'تم الاستلام' : 'Delivered') : (isAr ? 'بانتظار الاستلام' : 'Pending'),
-              done: order.fulfillmentStatus === 'DELIVERED',
-            },
-          ],
-        });
+        setTrackedOrder(mapRealOrder(data));
       } else {
-        // Fallback demo tracker
-        generateDemoTracker(orderId);
+        setErrorState(isAr ? 'لم يتم العثور على طلب بهذا الرقم ورقم الجوال. تحققي منهما.' : 'No order found for this order number and phone combination.');
       }
     } catch {
-      generateDemoTracker(orderId);
+      setErrorState(isAr ? 'تعذر الاتصال بالخادم. حاولي مرة أخرى.' : 'Could not reach the server. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const generateDemoTracker = (id: string) => {
-    setTrackedOrder({
-      orderId: id,
-      status: 'SHIPPED',
-      carrier: isAr ? 'مندوب دار بيرغندي المبرد (الدوحة)' : 'BURGUNDY Climate-Safe Courier (Doha)',
-      estimatedDelivery: isAr ? 'اليوم بين 4:00 - 8:00 مساءً' : 'Today between 4:00 - 8:00 PM',
-      destination: isAr ? 'الريان، المنطقة 55، دولة قطر' : 'Al Rayyan, Zone 55, Qatar',
-      steps: [
-        { title: isAr ? 'تم استلام وتأكيد الطلب بالمرسم' : 'Order Confirmed at Atelier', time: '10:30 AM', done: true },
-        { title: isAr ? 'فحص جودة الحرير والفوال والتغليف الفاخر' : 'Quality Inspection & Silk Packaging', time: '01:15 PM', done: true },
-        { title: isAr ? 'الشحنة مع مندوب التوصيل في قطر' : 'Out for Courier Delivery in Qatar', time: '03:45 PM', done: true, current: true },
-        { title: isAr ? 'تم التسليم بنجاح لباب العميل' : 'Delivered to Doorstep', time: 'Estimated 06:00 PM', done: false },
-      ],
-    });
-  };
-
   useEffect(() => {
     if (initialOrder) {
-      fetchOrderTracking(initialOrder);
+      fetchOrderTracking(initialOrder, phoneQuery);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialOrder]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (orderQuery.trim()) {
-      fetchOrderTracking(orderQuery.trim());
-    }
+    fetchOrderTracking(orderQuery, phoneQuery);
   };
 
   return (
@@ -110,39 +112,61 @@ function TrackingContent() {
           <div className="w-14 h-14 bg-surface-peachSoft/40 text-burgundy rounded-full flex items-center justify-center mx-auto mb-3 border border-gold-hairline shadow-sm">
             <Truck className="w-7 h-7 rtl-flip text-burgundy" />
           </div>
-          <h1 className="text-3xl font-extrabold text-burgundy font-cairo">
+          <h1 className="text-3xl font-extrabold text-burgundy font-display">
             {isAr ? 'تتبع مسار شحنتكِ الملكية' : 'Track Your Royal Order'}
           </h1>
           <p className="text-xs text-slateText-secondary max-w-md mx-auto leading-relaxed">
             {isAr
-              ? 'أدخلي رقم الطلب المسجل في فاتورة دار بيرغندي لمتابعة خط سير مندوب التوصيل بالدوحة.'
-              : 'Enter your BURGUNDY order invoice reference to view live courier and packaging milestones.'}
+              ? 'أدخلي رقم طلبكِ في فاتورة بيرغندي مع الجوال المستخدم عند الدفع لمتابعة شحنتكِ، خطوة بخطوة.'
+              : 'Enter your BURGUNDY order number with the phone used at checkout to follow your courier, step by step.'}
           </p>
         </div>
 
         {/* Search Bar */}
-        <form onSubmit={handleSearch} className="bg-white p-2 sm:p-2.5 rounded-3xl border border-gold-hairline shadow-luxury flex gap-2">
+        <form onSubmit={handleSearch} className="bg-white p-3 sm:p-4 rounded-3xl border border-gold-hairline shadow-luxury space-y-2.5">
           <Input
-            placeholder={isAr ? 'رقم الطلب (مثال: QA-123456 أو BURG-2026-XXXX)' : 'Order ID (e.g. QA-123456)'}
+            placeholder={isAr ? 'رقم الطلب (مثال: BUR-2026-1234)' : 'Order number (e.g. BUR-2026-1234)'}
             value={orderQuery}
             onChange={(e) => setOrderQuery(e.target.value)}
-            className="border-0 shadow-none focus:ring-0 bg-transparent text-xs sm:text-sm text-slateText-body"
+            className="text-xs sm:text-sm text-slateText-body"
+            aria-label={isAr ? 'رقم الطلب' : 'Order number'}
           />
-          <Button
-            type="submit"
-            variant="primary"
-            icon={<Search className="w-4 h-4" />}
-            className="bg-burgundy hover:bg-burgundy-hover text-white rounded-2xl px-5 text-xs font-bold"
-          >
-            {loading ? (isAr ? 'جاري البحث...' : 'Searching...') : (isAr ? 'تتبع' : 'Track')}
-          </Button>
+          <div className="flex gap-2">
+            <Input
+              placeholder={isAr ? 'رقم الجوال المستخدم عند الطلب (مثال: 50000974)' : 'Phone used at checkout (e.g. 50000974)'}
+              value={phoneQuery}
+              onChange={(e) => setPhoneQuery(e.target.value)}
+              className="text-xs sm:text-sm text-slateText-body"
+              inputMode="tel"
+              aria-label={isAr ? 'رقم الجوال' : 'Phone number used at checkout'}
+            />
+            <Button
+              type="submit"
+              variant="primary"
+              icon={<Search className="w-4 h-4" />}
+              className="bg-burgundy hover:bg-burgundy-hover text-white rounded-2xl px-5 text-xs font-bold shrink-0"
+            >
+              {loading ? (isAr ? 'جاري البحث...' : 'Searching...') : (isAr ? 'تتبع' : 'Track')}
+            </Button>
+          </div>
+          <p className="text-[10px] text-slateText-secondary px-1">
+            {isAr
+              ? 'رقم طلبكِ + الجوال المستخدم عند الدفع لعرض حالة التوصيل — حماية لخصوصية عملاء الدار.'
+              : 'Your order number + the checkout phone number — an extra privacy layer for BURGUNDY customers.'}
+          </p>
         </form>
+
+        {error && (
+          <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-medium text-red-800 text-center">
+            {error}
+          </div>
+        )}
 
         {trackedOrder && (
           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gold-hairline shadow-luxury space-y-6 animate-scaleUp">
             <div className="flex items-center justify-between pb-4 border-b border-gold-hairline">
               <div>
-                <span className="text-[10px] font-bold text-coral uppercase tracking-wider block">
+                <span className="text-[10px] font-bold text-coral-ink uppercase tracking-wider block">
                   {isAr ? 'شحنة نشطة ومؤمنة في قطر' : 'Live Insured Qatar Delivery'}
                 </span>
                 <span className="font-mono text-base font-extrabold text-burgundy">
@@ -207,11 +231,11 @@ function TrackingContent() {
                 <ShieldCheck className="w-4 h-4 text-gold-line" />
                 <span>{isAr ? 'تغليف فاخر ضد الرطوبة مع بطاقة إهداء' : 'Climate-sealed luxury gift package'}</span>
               </div>
-              <Link href={`/${lang}/orders/${trackedOrder.orderId}`}>
-                <Button variant="ghost" size="sm" className="text-burgundy hover:text-burgundy-hover">
+              <Button asChild variant="ghost" size="sm" className="text-burgundy hover:text-burgundy-hover">
+                <Link href={`/${lang}/orders/${trackedOrder.orderId}`}>
                   {isAr ? 'عرض الفاتورة الرسمية' : 'View Official Invoice'}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         )}

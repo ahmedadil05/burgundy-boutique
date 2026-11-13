@@ -35,7 +35,6 @@ Official e-commerce and pre-launch web platform for **BURGUNDY** (Instagram: [`@
   - **QPay / NAPS** (Qatar National ATM & Debit Card Gateway)
   - **Fawran** (Qatar Central Bank Instant Mobile Payment via mobile number / alias)
   - **Direct Bank Wire Transfer** (QNB with receipt slip upload & admin verification workflow)
-  - **Cash on Delivery (COD)** (available across Qatar municipalities)
 - **Sequential Invoicing:** Automated `INV-2026-XXXX` generation with printable A4/mobile PDF view, embedded QR code verification, Arabic/English bilingual layouts, and downloadable receipts.
 
 ### 5. Sponsored Advertising Engine & Inbound CRM
@@ -58,9 +57,9 @@ Official e-commerce and pre-launch web platform for **BURGUNDY** (Instagram: [`@
 | **`design-taste-frontend`** | Built-in / Rules | Curated soft-luxury aesthetics, custom typography pairs, avoiding generic purple/Inter tropes. |
 | **`impeccable` & `ui-ux-pro-max`** | Built-in / Rules | Responsive mobile micro-interactions, WCAG AAA contrast audits, polished touch targets. |
 | **`diagram-design`** | Built-in / Rules | Mermaid system architecture, order state machine, and data models in `docs/ARCHITECTURE.md`. |
-| **`qatar-payments`** | `~/.agents/skills/qatar-payments` | Swappable adapter for Qatar payment rails (QPay, Fawran, Cards, Bank Wire with slip upload, COD). |
+| **`qatar-payments`** | `~/.agents/skills/qatar-payments` | Swappable adapter for Qatar payment rails (QPay, Fawran, Cards, Bank Wire with slip upload). |
 | **`invoice-pdf-generator`** | `~/.agents/skills/invoice-pdf-generator` | Sequential bilingual RTL/LTR tax invoices (`INV-YYYY-XXXX`) compliant with Qatar MOCI rules. |
-| **`arabic-rtl-typography`** | `~/.agents/skills/arabic-rtl-typography` | High-contrast Bodoni serif wordmark, Tajawal & Cairo typography, full bidirectional layouts. |
+| **`arabic-rtl-typography`** | `~/.agents/skills/arabic-rtl-typography` | High-contrast Bodoni serif wordmark, Amiri Naskh typography for Arabic, full bidirectional layouts. |
 | **`telegram-whatsapp-notifications`** | `~/.agents/skills/telegram-whatsapp-notifications`| Immediate Telegram push with inline approval buttons; WhatsApp Cloud API templates under feature flag. |
 | **`email-notifications`** | `~/.agents/skills/email-notifications` | Transactional bilingual email templates for orders, receipts, and order tracking. |
 
@@ -89,7 +88,7 @@ Official e-commerce and pre-launch web platform for **BURGUNDY** (Instagram: [`@
 ## 🔐 Admin Dashboard Access
 
 - **Direct URL:** `http://localhost:3000/ar/admin` (or `/en/admin`)
-- **Default Owner PIN:** `9740`
+- **Owner PIN:** set `ADMIN_SECRET_PIN` in `.env.local` (see `.env.example`; the app **refuses to boot in production without it** and ships no usable default).
 - **Roles Supported:** Owner (full privileges including launch toggle and data purging) & Staff (order updates, CRM follow-ups).
 
 ---
@@ -129,7 +128,7 @@ npm test
 ```
 Tests verify:
 1. Brand identity, teaser visibility, and waitlist signup (`tests/burgundy-brand-and-teaser.test.tsx`)
-2. Qatar payment rails, Fawran, bank wire receipts, and COD (`tests/checkout-invoice.test.ts`)
+2. Qatar payment rails, Fawran, bank wire receipts, and Bank Wire verification (`tests/checkout-invoice.test.ts`)
 3. Sequential invoice PDF generation and bilingual layout (`tests/invoice-pdf-and-payments.test.tsx`)
 4. Mobile-first admin order management and status transitions (`tests/admin-mobile-orders.test.tsx`)
 5. Phone camera image compression and stock sync (`tests/image-compressor-catalog.test.ts`)
@@ -144,7 +143,7 @@ Tests verify:
 1. **Staging / Vercel Deployment:** Run `npm run build` or deploy directory to Vercel / Cloudflare Pages / Node.js container.
 2. **Domain Configuration:** Point `.qa` or `.com.qa` licensed domain.
 3. **Payment Credentials:** Populate `PAYMENT_GATEWAY_PROVIDER` and gateway API tokens in `.env`.
-4. **Purge Seed Data:** Log in to Admin (`/ar/admin` PIN `9740`), navigate to **Products**, and click **"حذف العينات التجريبية" (Remove Sample Products)** before entering live inventory.
+4. **Purge Seed Data:** Log in to Admin (`/ar/admin` — PIN from `ADMIN_SECRET_PIN`), navigate to **Products**, and click **"حذف العينات التجريبية" (Remove Sample Products)** before entering live inventory.
 5. **Launch Flip:** When client approves public launch, switch **"وضع إطلاق المتجر" (Store Launch Mode)** from ON to OFF in the Admin **Settings** tab.
 
 ---

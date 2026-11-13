@@ -208,7 +208,11 @@ class RelationalDatabaseStore {
 
     dto.items.forEach((item, idx) => {
       const product = this.products.get(item.productId);
-      const unitPrice = product ? product.basePriceQAR : item.unitPriceQAR;
+      if (!product) {
+        throw new Error(`Unknown product: ${item.productId}`);
+      }
+      // Always trust catalog pricing — never client-supplied prices.
+      const unitPrice = product.basePriceQAR;
       const itemTotal = unitPrice * item.quantity;
       subtotalQAR += itemTotal;
 
@@ -234,7 +238,8 @@ class RelationalDatabaseStore {
       }
     });
 
-    const deliveryFeeQAR = subtotalQAR >= 1000 ? 0 : 50;
+    // Delivery policy must match the checkout calculator (calculateCheckoutTotals)
+    const deliveryFeeQAR = subtotalQAR >= 500 ? 0 : 25;
     const discountQAR = 0;
     const totalQAR = subtotalQAR + deliveryFeeQAR - discountQAR;
 
