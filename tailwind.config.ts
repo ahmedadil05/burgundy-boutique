@@ -16,6 +16,9 @@ const config: Config = {
           hover: '#4D0A33',
           light: '#7F1D5A',
           subtle: 'rgba(95, 15, 64, 0.08)',
+          // Refined Burgundy Classic: obsidian shadow for editorial hero stages
+          obsidian: '#2B0A21',
+          velvet: '#4D1132',
         },
         // Gold hairline accent
         gold: {
@@ -30,15 +33,15 @@ const config: Config = {
         },
         // Base & Background Tokens
         canvas: {
-          DEFAULT: '#FBFEFB',
+          DEFAULT: '#FBF6EF',
           white: '#FFFFFF',
-          warm: '#EFE5DC',
+          warm: '#F3ECE2',
         },
         // Surfaces & Cards
         surface: {
-          peachSoft: '#F3D8C7',
+          peachSoft: '#F4D9C8',
           peachMuted: '#D0B8AC',
-          cream: '#FFFBF7',
+          cream: '#FFFDF9',
         },
         // Legacy blush surface used by primitives/admin
         blush: {
@@ -65,11 +68,11 @@ const config: Config = {
         },
         // Backward-compatibility aliases for existing components
         cream: {
-          DEFAULT: '#FBFEFB',
-          50: '#FFFBF7',
-          100: '#F7EFE7',
+          DEFAULT: '#FBF6EF',
+          50: '#FFFDFB',
+          100: '#F5EDE3',
           light: '#FFFFFF',
-          warm: '#EFE5DC',
+          warm: '#F3ECE2',
         },
         cocoa: {
           dark: '#4E5166',

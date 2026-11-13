@@ -92,10 +92,41 @@ body {
 
 /* Leaf-Shadow Ambient Backdrop */
 .leaf-shadow-bg {
-  background: 
-    radial-gradient(ellipse 60% 50% at 75% 20%, rgba(208, 184, 172, 0.18), transparent 70%),
-    radial-gradient(ellipse 50% 40% at 20% 80%, rgba(243, 216, 199, 0.25), transparent 60%),
-    #FBFEFB;
+  background:
+    radial-gradient(ellipse 70% 55% at 80% 18%, rgba(232, 199, 138, 0.16), transparent 70%),
+    radial-gradient(ellipse 56% 42% at 22% 84%, rgba(95, 15, 64, 0.10), transparent 65%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, #FBF6EF 0%, #F6EFE3 100%);
+}
+
+/* Editorial hero stage for the rebrand */
+.hero-obsidian {
+  background:
+    radial-gradient(circle at 82% 18%, rgba(217, 185, 122, 0.22) 0%, transparent 38%),
+    radial-gradient(circle at 18% 84%, rgba(0, 0, 0, 0.55) 0%, transparent 52%),
+    linear-gradient(135deg, #3A0F29 0%, #250A1E 52%, #14050E 100%);
+}
+
+/* Serif italic wordmark */
+.brand-editorial {
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Cinematic image treatment: warm terracotta wash + vignette */
+.img-cinematic {
+  filter: saturate(1.05) contrast(1.06) brightness(0.96);
+}
+
+@keyframes shimmer-sweep {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer-sweep {
+  background: linear-gradient(120deg, transparent 0%, rgba(238, 217, 173, 0) 40%, rgba(238, 217, 173, 0.55) 50%, rgba(238, 217, 173, 0) 60%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer-sweep 6s linear infinite;
 }
 
 /* Subtle Fabric Drape Texture */

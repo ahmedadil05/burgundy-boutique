@@ -95,14 +95,9 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
 
   return (
     <>
-      <header
-        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
-          isScrolled
-            ? 'bg-canvas/85 backdrop-blur-xl supports-[backdrop-filter]:bg-canvas/70 shadow-[0_4px_24px_rgba(95,15,64,0.06)] border-b border-gold-hairline'
-            : 'bg-canvas/80 backdrop-blur-md supports-[backdrop-filter]:bg-canvas/65 border-b border-gold-hairline/60'
-        } pt-[env(safe-area-inset-top)]`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Floating Apple-style pill navigation — restyled for the rebrand */}
+      <header className="pointer-events-none fixed top-10 sm:top-11 inset-x-0 z-40 px-2 sm:px-4">
+        <div className="pointer-events-auto max-w-[1440px] mx-auto h-16 xl:h-[4.5rem] flex items-center justify-between gap-3 px-3 sm:px-4 xl:px-6 rounded-3xl border border-gold-hairline/60 bg-white/85 supports-[backdrop-filter]:bg-white/80 backdrop-blur-2xl shadow-[0_8px_40px_rgba(66,20,23,0.14),0_2px_8px_rgba(66,20,23,0.06)] transition-all duration-300">
           
           {/* ========================================================= */}
           {/* 1. DESKTOP HEADER (lg and above)                          */}
@@ -112,7 +107,7 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
             <div className="shrink-0 flex items-center">
               <BurgundyLogo
                 variant="full"
-                size="md"
+                size="lg"
                 href={`/${lang}`}
                 lang={lang}
               />
@@ -121,7 +116,7 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
             {/* Center: Single Unified Primary Navigation */}
             <nav
               aria-label={isRtl ? 'التنقل الرئيسي' : 'Primary navigation'}
-              className="flex items-center gap-3 xl:gap-5 min-w-0"
+              className="flex items-center gap-1.5 xl:gap-2 min-w-0"
             >
               {navLinks.map((link) => {
                 const active = isActiveLink(link.href);
@@ -133,12 +128,12 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
                     aria-current={active ? 'page' : undefined}
                     className={`${
                       secondary ? 'hidden xl:inline-flex' : 'inline-flex'
-                    } items-center gap-1 whitespace-nowrap text-xs font-semibold uppercase tracking-wider transition-colors relative py-1 group ${
+                    } items-center gap-1.5 whitespace-nowrap text-[12.5px] font-semibold tracking-normal normal-case transition-colors px-3 py-1.5 rounded-full ${
                       link.highlight
-                        ? 'text-burgundy font-bold hover:text-burgundy-hover'
+                        ? 'text-burgundy font-bold bg-burgundy/10 ring-1 ring-burgundy/20'
                         : active
-                        ? 'text-burgundy'
-                        : 'text-slateText-body hover:text-burgundy'
+                        ? 'bg-burgundy/10 text-burgundy ring-1 ring-burgundy/20'
+                        : 'text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/50'
                     }`}
                   >
                     {link.highlight && (
@@ -232,14 +227,14 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
               className="p-2 -ms-2 touch-target-48 rounded-xl text-burgundy hover:bg-surface-peachSoft/30 flex items-center justify-center focus:outline-none"
               aria-label="Open mobile navigation menu"
             >
-              <Menu className="w-6 h-6 stroke-[1.8]" />
+              <Menu className="w-6 h-6 stroke-[2]" strokeWidth={2} />
             </button>
 
             {/* Compact Brand Logo */}
             <div className="flex-1 flex justify-center">
               <BurgundyLogo
                 variant="compact"
-                size="sm"
+                size="md"
                 href={`/${lang}`}
                 lang={lang}
               />
@@ -253,7 +248,7 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
                 className="p-2 touch-target-48 text-slateText-body hover:text-burgundy flex items-center justify-center"
                 aria-label="Search"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-5 h-5 stroke-[2]" strokeWidth={2} />
               </button>
 
               <button
@@ -263,7 +258,7 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
                 aria-label="Open Shopping Bag"
               >
                 <div className="relative">
-                  <ShoppingBag className="w-5 h-5" />
+                  <ShoppingBag className="w-5 h-5 stroke-[2]" strokeWidth={2} />
                   {cartCount > 0 && (
                     <span className="absolute -top-1 -end-1 min-w-[15px] h-3.5 px-0.5 text-[9px] font-bold bg-burgundy text-white rounded-full flex items-center justify-center">
                       {cartCount}
@@ -444,7 +439,7 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
             </div>
           </div>
         </div>
-      )}
+        )}
     </>
   );
 }

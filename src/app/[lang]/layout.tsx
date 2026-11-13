@@ -48,7 +48,7 @@ export default async function LanguageLayout({
               <CartDrawer lang={currentLang} />
 
               {/* Main Content Area */}
-              <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+              <main className="flex-1 pb-16 lg:pb-0 pt-[7rem] sm:pt-[7.5rem]">{children}</main>
 
               {/* Qatar Compliance Legal Footer */}
               <LegalFooter lang={currentLang} />

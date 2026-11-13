@@ -12,7 +12,7 @@ export function AnnouncementBar({ lang = 'ar' }: { lang?: Language }) {
   return (
     <aside
       aria-label="Announcement banner"
-      className="bg-burgundy text-white py-2 px-4 text-center text-xs font-medium tracking-wide border-b border-gold-hairline"
+      className="sticky top-0 z-50 h-10 bg-burgundy text-white py-1.5 px-4 text-center text-[11px] font-semibold tracking-wider border-b border-gold-hairline flex items-center justify-center"
     >
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
         <Sparkles className="w-3.5 h-3.5 text-gold-line shrink-0" />
