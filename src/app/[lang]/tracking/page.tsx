@@ -175,7 +175,15 @@ function TrackingContent() {
               </div>
               <span className="px-3.5 py-1.5 bg-burgundy/10 text-burgundy rounded-full text-xs font-bold flex items-center gap-1.5 border border-gold-hairline">
                 <Truck className="w-3.5 h-3.5" />
-                <span>{trackedOrder.status === 'DELIVERED' ? (isAr ? 'تم التسليم' : 'Delivered') : (isAr ? 'في طريقها إليكِ' : 'In Transit')}</span>
+                <span>
+                  {trackedOrder.status === 'Delivered'
+                    ? isAr ? 'تم التسليم' : 'Delivered'
+                    : trackedOrder.status === 'Shipped'
+                    ? isAr ? 'مع مندوب التوصيل' : 'Out for Delivery'
+                    : trackedOrder.status === 'Cancelled'
+                    ? isAr ? 'ملغي' : 'Cancelled'
+                    : isAr ? 'قيد التجهيز في الأتيليه' : 'Preparing at Atelier'}
+                </span>
               </span>
             </div>
 
@@ -188,6 +196,18 @@ function TrackingContent() {
               <div>
                 <span className="block text-[10px] text-slateText-secondary">{isAr ? 'الموعد المتوقع للتسليم:' : 'Estimated Arrival:'}</span>
                 <strong className="text-burgundy font-mono">{trackedOrder.estimatedDelivery}</strong>
+              </div>
+              <div>
+                <span className="block text-[10px] text-slateText-secondary">{isAr ? 'صاحب الطلب:' : 'Customer:'}</span>
+                <strong className="text-burgundy">{trackedOrder.customerName}</strong>
+              </div>
+              <div>
+                <span className="block text-[10px] text-slateText-secondary">{isAr ? 'جهة التوصيل والهاتف:' : 'Deliver to & phone:'}</span>
+                <strong className="text-burgundy">{trackedOrder.destination} • <span dir="ltr" className="font-mono">{trackedOrder.maskedPhone}</span></strong>
+              </div>
+              <div>
+                <span className="block text-[10px] text-slateText-secondary">{isAr ? 'قيمة الطلب:' : 'Order total:'}</span>
+                <strong className="text-burgundy tabular-nums">{trackedOrder.totalQAR} {isAr ? 'ر.ق' : 'QAR'}</strong>
               </div>
             </div>
 

@@ -111,9 +111,46 @@ export default function CheckoutPage() {
         throw new Error('Payment processing could not be completed.');
       }
 
-      // 2. Create official order invoice
+      // 2. Create the order in the server-side 3NF store (single source of truth
+      //    for order numbers — customers need the BUR-2026-XXXX number to track).
+      let serverOrderNumber = orderId;
+      try {
+        const apiRes = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customer: {
+              name: formData.fullName,
+              phone: formData.phone,
+              email: formData.email,
+              municipality: formData.municipality,
+              addressLine: `${formData.municipality}, Zone ${formData.zone}, Street ${formData.street}, Building ${formData.building}`,
+            },
+            items: cart.map((i) => ({
+              productId: i.id,
+              quantity: i.quantity,
+              sizeCode: i.size,
+              title: i.title[lang],
+              unitPriceQAR: i.priceQAR,
+            })),
+            paymentMethod,
+            receiptImageUrl: receiptImage,
+            notes: formData.notes,
+          }),
+        });
+        const apiJson = await apiRes.json();
+        if (apiRes.ok && apiJson?.orderNumber) {
+          serverOrderNumber = apiJson.orderNumber;
+        } else {
+          console.error('Server order creation failed:', apiJson?.error || apiRes.status);
+        }
+      } catch (apiErr) {
+        console.error('Server order sync failed; invoice keeps local reference', apiErr);
+      }
+
+      // 3. Create official order invoice with the server order number (when available)
       const invoice = createOrderInvoice({
-        orderId,
+        orderId: serverOrderNumber,
         customer: {
           name: formData.fullName,
           phone: formData.phone,
@@ -136,38 +173,13 @@ export default function CheckoutPage() {
         receiptImageUrl: receiptImage,
       });
 
-      // 3. Persist order in local storage for order confirmation & admin
+      // 4. Persist order in local storage for order confirmation & admin
       try {
         const existingOrders = JSON.parse(localStorage.getItem('burgundy_orders') || '[]');
         existingOrders.unshift(invoice);
         localStorage.setItem('burgundy_orders', JSON.stringify(existingOrders));
         // Also keep fallback key for backward compatibility
         localStorage.setItem('kandaka_orders', JSON.stringify(existingOrders));
-
-        // Sync with Server 3NF Database Repository
-        await fetch('/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            customer: {
-              name: formData.fullName,
-              phone: formData.phone,
-              email: formData.email,
-              municipality: formData.municipality,
-              addressLine: `${formData.municipality}, Zone ${formData.zone}, Street ${formData.street}, Building ${formData.building}`,
-            },
-            items: cart.map((i) => ({
-              productId: i.id,
-              title: i.title[lang],
-              quantity: i.quantity,
-              unitPriceQAR: i.priceQAR,
-              sizeCode: i.size,
-            })),
-            paymentMethod,
-            receiptImageUrl: receiptImage,
-            notes: formData.notes,
-          }),
-        }).catch(() => {});
       } catch {}
 
       // 4. Save lead in CRM automatically
@@ -177,13 +189,13 @@ export default function CheckoutPage() {
           name: formData.fullName,
           phone: formData.phone,
           email: formData.email,
-          details: `Order ${orderId} placed for ${totals.total} QAR via ${paymentMethod}`,
+          details: `Order ${serverOrderNumber} placed for ${totals.total} QAR via ${paymentMethod}`,
         });
       } catch {}
 
       // 5. Clear cart and navigate to official order invoice
       clearCart();
-      router.push(`/${lang}/orders/${orderId}`);
+      router.push(`/${lang}/orders/${serverOrderNumber}`);
     } catch (err: any) {
       setErrorMessage(err.message || 'An error occurred during payment.');
       setIsProcessing(false);
@@ -233,6 +245,7 @@ export default function CheckoutPage() {
               receiptImage={receiptImage}
               onReceiptImageChange={(img) => setReceiptImage(img)}
               lang={lang}
+              totalQAR={totals.total}
             />
           </div>
 
@@ -277,7 +290,7 @@ export default function CheckoutPage() {
                 type="submit"
                 variant="primary"
                 size="lg"
-                className="w-full bg-burgundy hover:bg-burgundy-hover text-white shadow-luxury text-xs tracking-wider uppercase font-bold py-3.5"
+                className="w-full bg-burgundy hover:bg-burgundy-hover text-white shadow-luxury text-sm tracking-wider uppercase font-bold py-3.5"
                 disabled={isProcessing}
               >
                 {isProcessing ? dict.checkout.processing : dict.checkout.placeOrder}

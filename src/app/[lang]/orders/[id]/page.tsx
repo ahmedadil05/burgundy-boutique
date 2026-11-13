@@ -5,9 +5,8 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { OrderInvoice } from '@/lib/order-utils';
 import { Language } from '@/lib/i18n';
-import { complianceConfig } from '@/config/compliance';
 import { InvoiceView } from '@/components/checkout/InvoiceView';
-import { CheckCircle2, ArrowRight, ArrowLeft, Clock, PackageCheck } from 'lucide-react';
+import { CheckCircle2, ArrowRight, ArrowLeft, PackageCheck } from 'lucide-react';
 
 export default function OrderConfirmationPage() {
   const params = useParams();
@@ -26,50 +25,39 @@ export default function OrderConfirmationPage() {
       if (found) {
         setOrder(found);
       } else {
-        // Fallback demo order for preview
-        setOrder({
-          orderId: orderId || 'QA-894210',
-          invoiceNumber: 'INV-2026-1001',
-          orderDate: new Date().toISOString(),
-          legalEntityName: complianceConfig.legalEntityName,
-          crNumber: complianceConfig.crNumber,
-          licenseNumber: complianceConfig.licenseNumber,
-          mociReference: complianceConfig.mociDecisionReference,
-          customer: {
-            name: 'Sara Al-Kuwari (سارة الكواري)',
-            phone: '+974 5000 0974',
-            email: 'sara.kuwari@example.qa',
-            zone: '55',
-            street: 'Al Waab St.',
-            building: 'Villa 9',
-            municipality: 'Al Rayyan',
-          },
-          items: [
-            {
-              id: 'prod-001',
-              title: isAr ? 'ثوب حرير مرسوم يدوياً بتدرجات البيرغندي' : 'Hand-Painted Royal Silk Toub in Burgundy Sunset',
-              priceQAR: 1650,
-              quantity: 1,
-              size: 'Free Size (4.5m x 1.15m)',
-            },
-          ],
-          paymentMethod: 'fawran',
-          paymentStatus: 'paid',
-          totals: {
-            subtotal: 1650,
-            deliveryFee: 0,
-            taxAmount: 0,
-            taxPercent: 0,
-            total: 1650,
-            isFreeDelivery: true,
-          },
-          status: 'confirmed',
-        });
+        // Honest state: nothing stored on this device under this id
+        setOrder(null);
       }
     } catch {}
   }, [orderId, isAr]);
 
-  if (!order) return null;
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-canvas py-16 px-6 flex items-center justify-center">
+        <div className="max-w-md text-center bg-white border border-gold-hairline rounded-3xl p-8 shadow-luxury space-y-4">
+          <div className="w-12 h-12 mx-auto rounded-full bg-canvas-warm flex items-center justify-center">
+            <PackageCheck className="w-6 h-6 text-burgundy" aria-hidden="true" />
+          </div>
+          <h1 className="text-xl font-bold text-burgundy font-display">
+            {isAr ? 'لم نجد هذه الفاتورة على هذا الجهاز' : 'Invoice not found on this device'}
+          </h1>
+          <p className="text-xs text-slateText-secondary leading-relaxed">
+            {isAr
+              ? 'الفواتير تُحفظ محلياً على الجهاز الذي أتممتِ منه الطلب. إذا كانت الطلبيات هنا فارغة، يمكنكِ تتبع طلبكِ باستخدام رقم الطلب والجوال المسجل عند الدفع.'
+              : 'Invoices are stored locally on the device you ordered from. If this list is empty, track your order with the order number and the checkout phone instead.'}
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <Link href={`/${lang}/tracking`} className="inline-flex items-center gap-2 bg-burgundy text-white text-xs font-bold rounded-full px-5 py-2.5 hover:bg-burgundy-hover transition-colors">
+              {isAr ? 'الذهاب للتتبع' : 'Go to Order Tracking'}
+            </Link>
+            <Link href={`/${lang}/shop`} className="inline-flex items-center gap-2 text-xs font-bold text-burgundy hover:underline">
+              {isAr ? 'تصفح المتجر' : 'Browse the Boutique'}
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-canvas py-10 px-4 sm:px-6 lg:px-8 leaf-shadow-bg">

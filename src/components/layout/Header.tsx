@@ -133,7 +133,7 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
                     aria-current={active ? 'page' : undefined}
                     className={`${
                       secondary ? 'hidden xl:inline-flex' : 'inline-flex'
-                    } items-center gap-1 whitespace-nowrap text-[11px] font-semibold uppercase tracking-wider transition-colors relative py-1 group ${
+                    } items-center gap-1 whitespace-nowrap text-xs font-semibold uppercase tracking-wider transition-colors relative py-1 group ${
                       link.highlight
                         ? 'text-burgundy font-bold hover:text-burgundy-hover'
                         : active
@@ -159,7 +159,7 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
             {/* Right: Compact Utilities */}
             <div className="flex items-center gap-1 xl:gap-2 shrink-0">
               {/* Currency Switcher */}
-              <div className="flex items-center text-[10px] font-semibold text-slateText-secondary bg-white border border-gold-hairline rounded-full px-2 py-1">
+              <div className="flex items-center text-[11px] font-semibold text-slateText-secondary bg-white border border-gold-hairline rounded-full px-2.5 py-1">
                 <Coins className="w-3.5 h-3.5 text-gold-line me-1" aria-hidden="true" />
                 <select
                   value={currency}
@@ -176,7 +176,7 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
               <button
                 type="button"
                 onClick={toggleLanguage}
-                className="flex items-center gap-1 text-[10px] font-bold text-slateText-body hover:text-burgundy bg-white border border-gold-hairline rounded-full px-2 py-1 transition-colors"
+                className="flex items-center gap-1 text-[11px] font-bold text-slateText-body hover:text-burgundy bg-white border border-gold-hairline rounded-full px-2.5 py-1 transition-colors"
                 aria-label="Switch Language"
               >
                 <Globe className="w-3.5 h-3.5 text-gold-line" aria-hidden="true" />

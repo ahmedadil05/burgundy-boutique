@@ -755,7 +755,7 @@ function ProductCardItem({
 }) {
   return (
     <div className="group rounded-2xl overflow-hidden bg-canvas-white border border-gold/25 shadow-soft flex flex-col transition-all hover:shadow-luxury hover:-translate-y-1">
-      <div className="aspect-[3/4] relative overflow-hidden bg-canvas-warm cursor-pointer" onClick={onSelect}>
+      <div className="aspect-[3/4] relative overflow-hidden bg-canvas-warm cursor-pointer" role="button" tabIndex={0} aria-label={isAr ? 'اختيار المنتج' : 'Select product'} onClick={onSelect} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(); } }}>
         {product.imageUrl ? (
           <img
             src={product.imageUrl}
@@ -791,7 +791,7 @@ function ProductCardItem({
       </div>
 
       <div className="p-3.5 flex flex-col flex-1 justify-between gap-2">
-        <div onClick={onSelect} className="cursor-pointer">
+        <div onClick={onSelect} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(); } }} role="button" tabIndex={0} aria-label={isAr ? 'اختيار المنتج' : 'Select product'} className="cursor-pointer">
           <p className="text-[10px] text-gold-ink font-medium uppercase tracking-wider">{product.fabric}</p>
           <h3 className="font-display text-sm sm:text-base font-bold text-burgundy line-clamp-1 mt-0.5">
             {isAr && product.titleAr ? product.titleAr : product.title}

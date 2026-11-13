@@ -14,6 +14,8 @@ export interface PaymentMethodSelectorProps {
   receiptImage?: string;
   onReceiptImageChange?: (base64Url: string) => void;
   lang?: Language;
+  /** Optional grand total to make the payment context explicit before placing the order. */
+  totalQAR?: number;
 }
 
 export function PaymentMethodSelector({
@@ -24,6 +26,7 @@ export function PaymentMethodSelector({
   receiptImage,
   onReceiptImageChange,
   lang = 'ar',
+  totalQAR,
 }: PaymentMethodSelectorProps) {
   const isAr = lang === 'ar';
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -92,19 +95,30 @@ export function PaymentMethodSelector({
           <ShieldCheck className="w-5 h-5 text-gold-line" />
           <span>{isAr ? 'وسيلة الدفع المعتمدة' : 'Payment Rail Selection'}</span>
         </h3>
-        <span className="text-[10px] font-semibold text-burgundy bg-surface-peachSoft/50 px-2.5 py-0.5 rounded-full border border-gold-hairline">
-          {isAr ? 'بوابات قطرية متوافقة' : 'Qatar Compliant Rails'}
+        <span className="text-[10px] font-bold text-burgundy bg-surface-peachSoft/50 px-2.5 py-1 rounded-full border border-gold-hairline whitespace-nowrap tabular-nums">
+          {isAr ? 'الإجمالي:' : 'Total:'} {typeof totalQAR === 'number' ? `${totalQAR} ${isAr ? 'ر.ق' : 'QAR'}` : (isAr ? 'بوابات قطرية متوافقة' : 'Qatar Compliant Rails')}
         </span>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-3" role="radiogroup" aria-label={isAr ? 'وسيلة الدفع' : 'Payment method'}>
         {methods.map((m) => {
           const isSelected = selectedMethod === m.id;
           return (
             <div
               key={m.id}
+              role="radio"
+              aria-checked={isSelected}
+              aria-disabled={m.disabled || undefined}
+              tabIndex={m.disabled ? -1 : 0}
               onClick={() => !m.disabled && onChange(m.id)}
-              className={`p-4 rounded-xl border transition-all cursor-pointer ${
+              onKeyDown={(e) => {
+                if (m.disabled) return;
+                if (e.key === ' ' || e.key === 'Enter') {
+                  e.preventDefault();
+                  onChange(m.id);
+                }
+              }}
+              className={`p-4 rounded-xl border transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-burgundy focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ${
                 m.disabled
                   ? 'opacity-40 cursor-not-allowed bg-gray-50 border-gray-200'
                   : isSelected
@@ -113,23 +127,32 @@ export function PaymentMethodSelector({
               }`}
             >
               <div className="flex items-start gap-3.5">
+                {/* Radio indicator */}
+                <span
+                  aria-hidden="true"
+                  className={`mt-1 inline-flex w-5 h-5 rounded-full border-2 items-center justify-center shrink-0 transition-colors ${
+                    isSelected ? 'border-burgundy bg-burgundy' : 'border-gold-hairline bg-white'
+                  }`}
+                >
+                  {isSelected && <span className="w-2 h-2 rounded-full bg-white" />}
+                </span>
                 <div className="mt-0.5">{m.icon}</div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-sm text-slateText-body font-display">
+                    <span className="font-bold text-[13.5px] leading-snug text-slateText-body font-display">
                       {m.title}
                     </span>
                     <span className="text-[10px] font-bold text-burgundy bg-surface-peachSoft/50 px-2 py-0.5 rounded-md border border-gold-hairline">
                       {m.badge}
                     </span>
                   </div>
-                  <p className="text-xs text-slateText-secondary mt-0.5 leading-relaxed">
+                  <p className="text-[11.5px] text-slateText-secondary mt-0.5 leading-relaxed">
                     {m.description}
                   </p>
 
                   {/* Active Sub-inputs for Fawran */}
                   {isSelected && m.id === 'fawran' && (
-                    <div className="mt-3 pt-3 border-t border-gold-hairline/60 animate-fadeIn space-y-2">
+                    <div className="mt-3 pt-3 border-t border-gold-hairline/60 animate-fadeIn space-y-2" onKeyDown={(e) => e.stopPropagation()}>
                       <Input
                         label={isAr ? 'الاسم المستعار أو رقم الجوال في فوران (Fawran Alias) *' : 'Fawran Mobile Number / Alias *'}
                         placeholder="e.g. 50000974"
@@ -142,7 +165,7 @@ export function PaymentMethodSelector({
 
                   {/* Bank Transfer Details & Receipt Upload */}
                   {isSelected && m.id === 'bank_transfer' && (
-                    <div className="mt-3 pt-3 border-t border-gold-hairline/60 animate-fadeIn space-y-3 bg-canvas-warm/40 p-3.5 rounded-xl border border-gold-hairline">
+                    <div className="mt-3 pt-3 border-t border-gold-hairline/60 animate-fadeIn space-y-3 bg-canvas-warm/40 p-3.5 rounded-xl border border-gold-hairline" onKeyDown={(e) => e.stopPropagation()}>
                       <div className="text-xs space-y-1 text-slateText-body">
                         <p className="font-bold text-burgundy">
                           {isAr ? 'بيانات الحساب البنكي لمؤسسة بيرغندي:' : 'Official Qatari Bank Details:'}

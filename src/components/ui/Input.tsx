@@ -33,7 +33,7 @@ export function Input({
         className={twMerge(
           clsx(
             'w-full px-3.5 py-2.5 rounded-xl border bg-white/80 text-cocoa-dark placeholder:text-cocoa-light/60 transition-colors duration-150',
-            'focus:outline-none focus:ring-2 focus:ring-coral-warm/50 focus:border-coral-warm',
+            'focus:outline-none focus:ring-2 focus:ring-burgundy/40 focus:border-burgundy',
             error
               ? 'border-red-500 focus:ring-red-300'
               : 'border-peach-soft hover:border-peach-deep',
