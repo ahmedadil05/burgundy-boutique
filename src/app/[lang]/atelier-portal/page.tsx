@@ -36,8 +36,11 @@ import {
   FileText,
   Coins,
   ArrowUpRight,
+  Scale,
+  Star,
 } from 'lucide-react';
 import { Language } from '@/lib/i18n';
+import { ComplaintsTable } from '@/components/admin/ComplaintsTable';
 import { BurgundyLogo } from '@/components/brand/BurgundyLogo';
 import { useCatalogStore } from '@/lib/catalog-store';
 import { AddProductDrawer } from '@/components/admin/AddProductDrawer';
@@ -46,6 +49,30 @@ import { MobileProductList } from '@/components/admin/MobileProductList';
 // ==========================================
 // TYPES & DATA STRUCTURES (20-STYLE OBJECTS)
 // ==========================================
+
+interface PortalComplaint {
+  ticketId: string;
+  fullName: string;
+  phone: string;
+  email?: string;
+  orderNumber?: string;
+  complaintType: string;
+  message: string;
+  status: 'pending' | 'reviewing' | 'resolved';
+  createdAt: string;
+  resolvedAt?: string;
+}
+
+interface PortalReview {
+  id: string;
+  authorName: string;
+  rating: number;
+  item?: string;
+  text: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+  approvedAt?: string;
+}
 
 export interface VIPCustomer {
   id: string;
@@ -291,7 +318,7 @@ export default function AtelierPortalPage() {
   const [isLoadingAuth, setIsLoadingAuth] = useState(false);
 
   // Twenty Workspace Navigation Tab
-  type WorkspaceTab = 'overview' | 'crm' | 'commissions' | 'inventory' | 'products' | 'orders' | 'finance';
+  type WorkspaceTab = 'overview' | 'crm' | 'commissions' | 'inventory' | 'products' | 'orders' | 'reviews' | 'complaints' | 'finance';
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('overview');
 
   // CRM & ERP State
@@ -299,9 +326,14 @@ export default function AtelierPortalPage() {
   const [commissions, setCommissions] = useState<AtelierCommission[]>(INITIAL_COMMISSIONS);
   const [fabrics, setFabrics] = useState<FabricInventoryItem[]>(INITIAL_FABRICS);
   const [orders, setOrders] = useState<ServerOrder[]>([]);
+  const [complaints, setComplaints] = useState<PortalComplaint[]>([]);
+  const [reviews, setReviews] = useState<PortalReview[]>([]);
+  const [complaintFilter, setComplaintFilter] = useState<'all' | 'pending' | 'reviewing' | 'resolved'>('all');
+  const [reviewFilter, setReviewFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending');
   const { products, addProduct, updateProduct, updateStock, deleteProduct, removeSampleProducts } = useCatalogStore();
   const sampleCount = products.filter((p) => p.isSample).length;
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<(typeof products)[number] | null>(null);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
 
   // View & Filter State
@@ -321,6 +353,57 @@ export default function AtelierPortalPage() {
       })
       .catch(() => {});
   }, []);
+
+  // Fetch complaints & reviews when atelier session is known
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    fetch('/api/atelier/complaints')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.success && Array.isArray(data.complaints)) setComplaints(data.complaints);
+      })
+      .catch(() => {});
+    fetch('/api/atelier/reviews')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.success && Array.isArray(data.reviews)) setReviews(data.reviews);
+      })
+      .catch(() => {});
+  }, [isAuthenticated]);
+
+  const handleResolveComplaint = async (ticketId: string) => {
+    try {
+      const res = await fetch('/api/atelier/complaints', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ticketId, status: 'resolved' }),
+      });
+      const data = await res.json();
+      if (res.ok && data?.success) {
+        setComplaints((prev) =>
+          prev.map((c) => (c.ticketId === ticketId ? { ...c, status: 'resolved' } : c))
+        );
+      }
+    } catch {
+      alert(isAr ? 'فشل تحديث حالة الشكوى' : 'Failed to update complaint status');
+    }
+  };
+
+  const handleSetReviewStatus = async (id: string, status: 'pending' | 'approved' | 'rejected') => {
+    try {
+      const res = await fetch('/api/atelier/reviews', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status }),
+      });
+      const data = await res.json();
+      if (res.ok && data?.success) {
+        setReviews((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
+      }
+    } catch {
+      alert(isAr ? 'فشل تحديث حالة المراجعة' : 'Failed to update review status');
+    }
+  };
 
   // Fetch real 3NF orders when authenticated
   useEffect(() => {
@@ -695,6 +778,40 @@ export default function AtelierPortalPage() {
           </button>
 
           <button
+            onClick={() => { setActiveTab('reviews'); setSelectedRecord(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+              activeTab === 'reviews'
+                ? 'bg-burgundy text-white shadow-luxury'
+                : 'text-slateText-body hover:bg-surface-peachSoft/30 hover:text-burgundy'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Sparkles className="w-4 h-4" />
+              <span>{isAr ? 'الشهادات والمراجعات' : 'Testimonials & Reviews'}</span>
+            </div>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono ${activeTab === 'reviews' ? 'bg-white/20' : reviews.filter(r => r.status === 'pending').length > 0 ? 'bg-amber-200 text-amber-900' : 'bg-canvas-warm'}`}>
+              {reviews.filter(r => r.status === 'pending').length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => { setActiveTab('complaints'); setSelectedRecord(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+              activeTab === 'complaints'
+                ? 'bg-burgundy text-white shadow-luxury'
+                : 'text-slateText-body hover:bg-surface-peachSoft/30 hover:text-burgundy'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Scale className="w-4 h-4" />
+              <span>{isAr ? 'شكاوى المستهلكين' : 'Consumer Complaints'}</span>
+            </div>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono ${activeTab === 'complaints' ? 'bg-white/20' : complaints.filter(c => c.status === 'pending').length > 0 ? 'bg-amber-200 text-amber-900' : 'bg-canvas-warm'}`}>
+              {complaints.filter(c => c.status === 'pending').length}
+            </span>
+          </button>
+
+          <button
             onClick={() => { setActiveTab('finance'); setSelectedRecord(null); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-colors ${
               activeTab === 'finance'
@@ -788,6 +905,36 @@ export default function AtelierPortalPage() {
                       itemCount: Array.isArray(o.items) ? o.items.length : undefined,
                     })),
                     'burgundy_store_orders'
+                  );
+                if (activeTab === 'complaints')
+                  exportCSV(
+                    complaints.map((c) => ({
+                      ticketId: c.ticketId,
+                      fullName: c.fullName,
+                      phone: c.phone,
+                      email: c.email || '',
+                      orderNumber: c.orderNumber || '',
+                      complaintType: c.complaintType,
+                      message: c.message,
+                      status: c.status,
+                      createdAt: c.createdAt,
+                      resolvedAt: c.resolvedAt || '',
+                    })),
+                    'burgundy_complaints'
+                  );
+                if (activeTab === 'reviews')
+                  exportCSV(
+                    reviews.map((r) => ({
+                      id: r.id,
+                      authorName: r.authorName,
+                      rating: r.rating,
+                      item: r.item || '',
+                      text: r.text,
+                      status: r.status,
+                      createdAt: r.createdAt,
+                      approvedAt: r.approvedAt || '',
+                    })),
+                    'burgundy_reviews'
                   );
                 if (activeTab === 'products')
                   exportCSV(
@@ -1148,17 +1295,25 @@ export default function AtelierPortalPage() {
                 products={products}
                 onDeleteProduct={deleteProduct}
                 onUpdateStock={updateStock}
-                onEditProduct={(id, updates) => updateProduct(id, updates)}
+                onEditProduct={(product) => setEditingProduct(product)}
                 lang={lang}
               />
 
               {/* Add Product Drawer */}
               <AddProductDrawer
-                isOpen={isAddProductOpen}
-                onClose={() => setIsAddProductOpen(false)}
+                isOpen={isAddProductOpen || !!editingProduct}
+                onClose={() => {
+                  setIsAddProductOpen(false);
+                  setEditingProduct(null);
+                }}
+                initialProduct={editingProduct}
                 onAddProduct={(input) => {
                   addProduct(input);
                   setIsAddProductOpen(false);
+                }}
+                onUpdateProduct={(id, updates) => {
+                  updateProduct(id, updates);
+                  setEditingProduct(null);
                 }}
                 lang={lang}
               />
@@ -1226,6 +1381,192 @@ export default function AtelierPortalPage() {
           )}
 
           {/* TAB 6: FINANCE & PAYMENT AUDIT */}
+          {activeTab === 'reviews' && (
+            <div className="space-y-4">
+              {/* Reviews header */}
+              <div>
+                <h3 className="text-sm font-extrabold text-burgundy font-display">
+                  {isAr ? 'إدارة الشهادات والمراجعات' : 'Testimonials & Reviews Moderation'}
+                </h3>
+                <p className="text-[11px] text-slateText-secondary mt-0.5">
+                  {isAr
+                    ? `${reviews.filter((r) => r.status === 'pending').length} بانتظار المراجعة — الاعتماد ينشرها في الصفحة الرئيسية للمتجر.`
+                    : `${reviews.filter((r) => r.status === 'pending').length} awaiting review — approving publishes them on the homepage.`}
+                </p>
+              </div>
+
+              {/* Filter pills */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {(['pending', 'approved', 'rejected', 'all'] as const).map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setReviewFilter(f)}
+                    className={`px-3 py-1.5 rounded-full text-[11px] font-bold border transition-colors ${
+                      reviewFilter === f
+                        ? 'bg-burgundy text-white border-burgundy'
+                        : 'bg-white text-slateText-secondary border-gold-hairline hover:text-burgundy'
+                    }`}
+                  >
+                    {f === 'pending'
+                      ? isAr ? `بانتظار (${reviews.filter(r => r.status === 'pending').length})` : `Pending (${reviews.filter(r => r.status === 'pending').length})`
+                      : f === 'approved'
+                      ? isAr ? `معتمد (${reviews.filter(r => r.status === 'approved').length})` : `Approved (${reviews.filter(r => r.status === 'approved').length})`
+                      : f === 'rejected'
+                      ? isAr ? `مرفوض (${reviews.filter(r => r.status === 'rejected').length})` : `Rejected (${reviews.filter(r => r.status === 'rejected').length})`
+                      : isAr ? 'الكل' : 'All'}
+                  </button>
+                ))}
+              </div>
+
+              {/* Review cards */}
+              <div className="space-y-3">
+                {reviews
+                  .filter((r) => reviewFilter === 'all' || r.status === reviewFilter)
+                  .filter((r) =>
+                    searchQuery.trim()
+                      ? `${r.authorName} ${r.item || ''} ${r.text}`.toLowerCase().includes(searchQuery.trim().toLowerCase())
+                      : true
+                  )
+                  .map((r) => (
+                    <article
+                      key={r.id}
+                      className="bg-white rounded-2xl border border-gold-hairline p-4 sm:p-5 flex flex-col lg:flex-row lg:items-start justify-between gap-4"
+                    >
+                      <div className="space-y-2 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <div className="flex items-center gap-0.5 text-gold-ink" aria-label={`${r.rating}/5`}>
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`w-3.5 h-3.5 ${i < r.rating ? 'fill-gold-ink' : 'stroke-gold-ink/30'}`}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-[10px] text-slateText-secondary tabular-nums">
+                            {new Date(r.createdAt).toLocaleDateString(isAr ? 'ar-QA' : 'en-GB')}
+                          </span>
+                          <span
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                              r.status === 'approved'
+                                ? 'text-emerald-700 bg-emerald-50 border border-emerald-200'
+                                : r.status === 'rejected'
+                                ? 'text-rose-700 bg-rose-50 border border-rose-200'
+                                : 'text-amber-800 bg-amber-50 border border-amber-200'
+                            }`}
+                          >
+                            {r.status === 'approved'
+                              ? isAr ? 'منشورة' : 'Published'
+                              : r.status === 'rejected'
+                              ? isAr ? 'مرفوضة' : 'Rejected'
+                              : isAr ? 'بانتظار' : 'Pending'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slateText-body leading-relaxed">&ldquo;{r.text}&rdquo;</p>
+                        <div className="flex flex-wrap items-center gap-2 text-[10px] text-slateText-secondary">
+                          <strong className="text-burgundy">{r.authorName}</strong>
+                          {r.item && <span>• {r.item}</span>}
+                        </div>
+                      </div>
+                      <div className="flex flex-row lg:flex-col items-center gap-2 shrink-0">
+                        {r.status !== 'approved' && (
+                          <button
+                            onClick={() => handleSetReviewStatus(r.id, 'approved')}
+                            className="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold flex items-center gap-1.5 transition-colors"
+                          >
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            {isAr ? 'اعتماد ونشر' : 'Approve'}
+                          </button>
+                        )}
+                        {r.status !== 'rejected' && (
+                          <button
+                            onClick={() => handleSetReviewStatus(r.id, 'rejected')}
+                            className="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold flex items-center gap-1.5 transition-colors"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                            {isAr ? 'رفض' : 'Reject'}
+                          </button>
+                        )}
+                        {r.status !== 'pending' && (
+                          <button
+                            onClick={() => handleSetReviewStatus(r.id, 'pending')}
+                            className="px-3 py-2 rounded-xl border border-gold-hairline text-slateText-secondary hover:text-burgundy text-[11px] font-bold transition-colors"
+                          >
+                            {isAr ? 'إرجاع للانتظار' : 'Reset'}
+                          </button>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                {reviews.filter((r) => reviewFilter === 'all' || r.status === reviewFilter).length === 0 && (
+                  <div className="text-center py-10 text-xs text-cocoa-muted bg-white rounded-2xl border border-gold-hairline">
+                    {isAr ? 'لا توجد مراجعات في هذه الفئة.' : 'No reviews in this category.'}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'complaints' && (
+            <div className="space-y-4">
+              {/* Complaints header */}
+              <div>
+                <h3 className="text-sm font-extrabold text-burgundy font-display">
+                  {isAr ? 'شكاوى المستهلكين (رقابة MOCI)' : 'Consumer Complaints (MOCI Oversight)'}
+                </h3>
+                <p className="text-[11px] text-slateText-secondary mt-0.5">
+                  {isAr
+                    ? `${complaints.filter((c) => c.status === 'pending').length} بانتظار المعالجة — يتم التواصل مع المشتكية خلال 24-48 ساعة.`
+                    : `${complaints.filter((c) => c.status === 'pending').length} pending — customers are contacted within 24–48 hours.`}
+                </p>
+              </div>
+
+              {/* Filter pills */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {(['all', 'pending', 'reviewing', 'resolved'] as const).map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setComplaintFilter(f)}
+                    className={`px-3 py-1.5 rounded-full text-[11px] font-bold border transition-colors ${
+                      complaintFilter === f
+                        ? 'bg-burgundy text-white border-burgundy'
+                        : 'bg-white text-slateText-secondary border-gold-hairline hover:text-burgundy'
+                    }`}
+                  >
+                    {f === 'all'
+                      ? isAr ? 'الكل' : 'All'
+                      : f === 'pending'
+                      ? isAr ? `قيد الانتظار (${complaints.filter(c => c.status === 'pending').length})` : `Pending (${complaints.filter(c => c.status === 'pending').length})`
+                      : f === 'reviewing'
+                      ? isAr ? `قيد المتابعة (${complaints.filter(c => c.status === 'reviewing').length})` : `Reviewing (${complaints.filter(c => c.status === 'reviewing').length})`
+                      : isAr ? `تمت التسوية (${complaints.filter(c => c.status === 'resolved').length})` : `Resolved (${complaints.filter(c => c.status === 'resolved').length})`}
+                  </button>
+                ))}
+              </div>
+
+              <ComplaintsTable
+                complaints={complaints
+                  .filter((c) => complaintFilter === 'all' || c.status === complaintFilter)
+                  .filter((c) =>
+                    searchQuery.trim()
+                      ? `${c.fullName} ${c.phone} ${c.ticketId} ${c.message} ${c.complaintType}`
+                          .toLowerCase()
+                          .includes(searchQuery.trim().toLowerCase())
+                      : true
+                  )
+                  .map((c) => ({
+                    ticketId: c.ticketId,
+                    fullName: c.fullName,
+                    complaintType: c.complaintType,
+                    message: c.message,
+                    status: c.status,
+                    createdAt: c.createdAt,
+                  }))}
+                onResolve={handleResolveComplaint}
+                lang={lang}
+              />
+            </div>
+          )}
+
           {activeTab === 'finance' && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

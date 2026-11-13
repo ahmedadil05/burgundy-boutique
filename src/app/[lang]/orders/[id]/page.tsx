@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { OrderInvoice } from '@/lib/order-utils';
 import { Language } from '@/lib/i18n';
 import { InvoiceView } from '@/components/checkout/InvoiceView';
-import { CheckCircle2, ArrowRight, ArrowLeft, PackageCheck } from 'lucide-react';
+import { ReviewSubmitModal } from '@/components/reviews/ReviewSubmitModal';
+import { CheckCircle2, ArrowRight, ArrowLeft, PackageCheck, Sparkles } from 'lucide-react';
 
 export default function OrderConfirmationPage() {
   const params = useParams();
@@ -15,6 +16,7 @@ export default function OrderConfirmationPage() {
   const orderId = params?.id as string;
 
   const [order, setOrder] = useState<OrderInvoice | null>(null);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -100,6 +102,33 @@ export default function OrderConfirmationPage() {
 
         {/* Official Interactive Invoice View (Downloadable PDF & Print Friendly) */}
         <InvoiceView invoice={order} lang={lang} />
+
+        {/* Review Your Purchase (public moderation queue) */}
+        <div className="print:hidden bg-white border border-gold-hairline rounded-3xl p-6 sm:p-8 text-center space-y-3 shadow-sm">
+          <h3 className="text-base font-bold text-burgundy font-display">
+            {isAr ? 'ما رأيكِ في تجربتكِ؟' : 'How was your experience?'}
+          </h3>
+          <p className="text-xs text-slateText-secondary max-w-md mx-auto leading-relaxed">
+            {isAr
+              ? 'رأيكِ يساعدنا ويسعد عميلات أخريات. ستظهر المراجعة بعد اعتماد دار بيرغندي لها.'
+              : 'Your words matter — and help other clients choose. Reviews appear after BURGUNDY approval.'}
+          </p>
+          <button
+            type="button"
+            onClick={() => setReviewModalOpen(true)}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-burgundy text-white hover:bg-burgundy-hover text-xs font-bold transition-colors shadow-luxury focus:outline-none focus-visible:ring-2 focus-visible:ring-burgundy"
+          >
+            <Sparkles className="w-4 h-4 text-gold-line" />
+            {isAr ? 'شاركي تجربتكِ' : 'Share Your Review'}
+          </button>
+        </div>
+
+        <ReviewSubmitModal
+          isOpen={reviewModalOpen}
+          onClose={() => setReviewModalOpen(false)}
+          lang={lang}
+          itemHint={order.items?.[0]?.title}
+        />
 
         {/* Back to Shop link */}
         <div className="text-center pt-4 print:hidden">

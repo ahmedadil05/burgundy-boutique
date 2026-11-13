@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Language } from '@/lib/i18n';
-import { generateComplaintTicket } from './complaint-utils';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea, Select } from '@/components/ui/Controls';
@@ -25,23 +24,48 @@ export default function ComplaintsPage() {
     message: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const ticketId = generateComplaintTicket();
+    if (isSubmitting) return;
+    setError(null);
+    setIsSubmitting(true);
 
-    // Save complaint locally for admin panel
     try {
-      const existing = JSON.parse(localStorage.getItem('burgundy_complaints') || '[]');
-      existing.unshift({
-        ticketId,
-        ...formData,
-        status: 'pending',
-        createdAt: new Date().toISOString(),
+      const res = await fetch('/api/complaints', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: formData.fullName.trim(),
+          phone: formData.phone.trim(),
+          email: formData.email.trim() || undefined,
+          orderNumber: formData.orderNumber.trim() || undefined,
+          complaintType: formData.complaintType,
+          message: formData.message.trim(),
+        }),
       });
-      localStorage.setItem('burgundy_complaints', JSON.stringify(existing));
-    } catch {}
-
-    setSubmittedTicket(ticketId);
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data?.success && data?.ticketId) {
+        setSubmittedTicket(data.ticketId);
+      } else {
+        setError(
+          data?.error ||
+            (isAr
+              ? 'تعذر تسجيل الشكوى. حاولي مرة أخرى أو تواصلي معنا عبر واتساب.'
+              : 'Could not file the complaint. Please try again or reach us on WhatsApp.')
+        );
+      }
+    } catch {
+      setError(
+        isAr
+          ? 'تعذر الاتصال بالخادم. يرجى المحاولة مرة أخرى.'
+          : 'Could not reach the server. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -210,9 +234,23 @@ export default function ComplaintsPage() {
                 }
               />
 
+              {error && (
+                <div role="alert" className="p-3 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-xs font-medium text-center">
+                  {error}
+                </div>
+              )}
+
               <div className="pt-2">
-                <Button type="submit" variant="primary" size="lg" className="w-full bg-burgundy hover:bg-burgundy-hover text-white shadow-luxury py-3.5">
-                  {isAr ? 'إرسال الشكوى رسمياً' : 'Submit Formal Complaint'}
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  disabled={isSubmitting}
+                  className="w-full bg-burgundy hover:bg-burgundy-hover text-white shadow-luxury py-3.5"
+                >
+                  {isSubmitting
+                    ? isAr ? 'جاري تسجيل الطلب...' : 'Filing complaint…'
+                    : isAr ? 'إرسال الشكوى رسمياً' : 'Submit Formal Complaint'}
                 </Button>
               </div>
             </form>
