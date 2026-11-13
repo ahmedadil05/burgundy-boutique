@@ -66,10 +66,13 @@ const config: Config = {
         },
       },
       fontFamily: {
+        amiri: ['var(--font-amiri)', 'serif'],
+        almarai: ['var(--font-almarai)', 'sans-serif'],
+        cormorant: ['var(--font-cormorant)', 'serif'],
+        jakarta: ['var(--font-jakarta)', 'sans-serif'],
         cairo: ['var(--font-cairo)', 'sans-serif'],
         tajawal: ['var(--font-tajawal)', 'sans-serif'],
         playfair: ['var(--font-playfair)', 'serif'],
-        cormorant: ['var(--font-cormorant)', 'var(--font-playfair)', 'serif'],
         inter: ['var(--font-inter)', 'sans-serif'],
       },
       boxShadow: {

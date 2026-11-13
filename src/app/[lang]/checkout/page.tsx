@@ -143,6 +143,31 @@ export default function CheckoutPage() {
         localStorage.setItem('burgundy_orders', JSON.stringify(existingOrders));
         // Also keep fallback key for backward compatibility
         localStorage.setItem('kandaka_orders', JSON.stringify(existingOrders));
+
+        // Sync with Server 3NF Database Repository
+        await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customer: {
+              name: formData.fullName,
+              phone: formData.phone,
+              email: formData.email,
+              municipality: formData.municipality,
+              addressLine: `${formData.municipality}, Zone ${formData.zone}, Street ${formData.street}, Building ${formData.building}`,
+            },
+            items: cart.map((i) => ({
+              productId: i.id,
+              title: i.title[lang],
+              quantity: i.quantity,
+              unitPriceQAR: i.priceQAR,
+              sizeCode: i.size,
+            })),
+            paymentMethod,
+            receiptImageUrl: receiptImage,
+            notes: formData.notes,
+          }),
+        }).catch(() => {});
       } catch {}
 
       // 4. Save lead in CRM automatically

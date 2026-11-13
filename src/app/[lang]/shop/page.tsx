@@ -4,7 +4,8 @@ import React, { useState, useMemo, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useCatalogStore } from '@/lib/catalog-store';
 import { filterProducts, searchProducts } from '@/lib/catalog-utils';
-import { ProductCard } from '@/components/ui/ProductCard';
+import { ProductCard, ProductItem } from '@/components/ui/ProductCard';
+import { ProductQuickViewModal } from '@/components/product/ProductQuickViewModal';
 import { FilterSidebar } from '@/components/shop/FilterSidebar';
 import { SortDropdown } from '@/components/shop/SortDropdown';
 import { SponsoredGridSlot } from '@/components/ads/SponsoredGridSlot';
@@ -29,6 +30,7 @@ function ShopContent() {
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'newest'>('featured');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const [quickViewProduct, setQuickViewProduct] = useState<ProductItem | null>(null);
 
   const { products } = useCatalogStore();
 
@@ -174,6 +176,7 @@ function ShopContent() {
                     <ProductCard
                       product={product}
                       lang={lang}
+                      onQuickView={setQuickViewProduct}
                     />
                     {/* Insert Sponsored Grid Slot at position 2 if present */}
                     {idx === 2 && <SponsoredGridSlot lang={lang} />}
@@ -184,6 +187,14 @@ function ShopContent() {
           </div>
         </div>
       </div>
+
+      {/* Interactive Quick View Modal */}
+      <ProductQuickViewModal
+        product={quickViewProduct}
+        isOpen={!!quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+        lang={lang}
+      />
     </div>
   );
 }

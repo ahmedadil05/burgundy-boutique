@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from '../ui/Button';
 import { Language, getDictionary } from '../../lib/i18n';
-import { Mail, CheckCircle2, Instagram, ArrowUpRight } from 'lucide-react';
+import { Mail, CheckCircle2, Instagram, ArrowUpRight, Send, Sparkles } from 'lucide-react';
 
 export function NewsletterSection({ lang = 'ar' }: { lang?: Language }) {
   const [email, setEmail] = useState('');
@@ -13,112 +13,131 @@ export function NewsletterSection({ lang = 'ar' }: { lang?: Language }) {
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email.trim()) {
+    if (email.trim() && email.includes('@')) {
       setIsSubmitted(true);
       setEmail('');
+      try {
+        const existing = JSON.parse(localStorage.getItem('burgundy_newsletter') || '[]');
+        existing.push({ email, date: new Date().toISOString() });
+        localStorage.setItem('burgundy_newsletter', JSON.stringify(existing));
+      } catch {}
     }
   };
 
   const instagramPosts = [
     {
-      img: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80',
-      title: isAr ? 'أناقة الفوال الملكي' : 'Royal Voile Elegance',
+      img: '/brand/teaser-clean.jpg',
+      title: isAr ? 'فخامة الفوال السويسري الملكي' : 'Royal Swiss Voile',
     },
     {
-      img: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80',
-      title: isAr ? 'كولكشن الجلابيات التراثية' : 'Heritage Jalabiyas',
+      img: '/brand/teaser-post.jpg',
+      title: isAr ? 'رسم يدوي متفرد على الحرير الطبيعي' : 'Artisanal Silk Brushwork',
     },
     {
-      img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80',
-      title: isAr ? 'جلسات تصوير الدوحة' : 'Doha Editorial',
+      img: '/brand/burgundy-avatar.jpg',
+      title: isAr ? 'جلسات تصوير الدوحة الخاصة' : 'Doha Private Editorial',
     },
     {
-      img: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&q=80',
-      title: isAr ? 'تفاصيل التطريز المذهب' : 'Gilded Stitch Details',
+      img: '/brand/teaser-clean.jpg',
+      title: isAr ? 'تفاصيل التطريز المذهب لأعراس قطر' : 'Bridal Gilded Needlework',
     },
   ];
 
   return (
-    <section className="py-14 bg-cream">
-      {/* Instagram Grid (Linking back to site) */}
+    <section className="py-16 bg-canvas border-t border-gold-hairline">
+      {/* Instagram Grid (Linking back to official Instagram @burgundy974_) */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
-            <span className="text-xs font-bold text-coral-warm uppercase tracking-wider flex items-center gap-1.5">
-              <Instagram className="w-3.5 h-3.5" />
-              <span>@kandaka.qa</span>
-            </span>
-            <h3 className="text-xl sm:text-2xl font-bold text-cocoa-dark font-cairo">
-              {isAr ? 'شاركينا إطلالتكِ في قطر' : 'Kandaka on Instagram'}
+            <a
+              href="https://www.instagram.com/burgundy974_"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-bold text-burgundy uppercase tracking-wider flex items-center gap-1.5 hover:underline"
+            >
+              <Instagram className="w-4 h-4 text-burgundy" />
+              <span dir="ltr">@burgundy974_</span>
+            </a>
+            <h3 className="text-xl sm:text-3xl font-extrabold text-burgundy font-cairo mt-1">
+              {isAr ? 'عالم بيرغندي على إنستغرام' : 'BURGUNDY on Instagram'}
             </h3>
           </div>
-          <span className="text-xs text-cocoa-muted hidden sm:inline-block">
-            {isAr
-              ? 'تتم جميع عمليات الشراء حصرياً عبر موقعنا المرخص'
-              : 'All purchases fulfilled exclusively through our licensed web store'}
-          </span>
+          <a
+            href="https://www.instagram.com/burgundy974_"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-bold text-burgundy hover:text-burgundy-hover flex items-center gap-1 px-4 py-2 rounded-full border border-gold-hairline bg-white hover:bg-canvas transition-colors shadow-sm"
+          >
+            <span>{isAr ? 'متابعة الحساب الرسمي' : 'Follow @burgundy974_'}</span>
+            <ArrowUpRight className="w-3.5 h-3.5 text-gold-line" />
+          </a>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {instagramPosts.map((post, idx) => (
-            <div
+            <a
               key={idx}
-              className="group relative aspect-square rounded-2xl overflow-hidden border border-peach-soft shadow-sm"
+              href="https://www.instagram.com/burgundy974_"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative aspect-[4/5] rounded-2xl overflow-hidden border border-gold-hairline shadow-sm hover:shadow-luxury transition-all bg-white"
             >
               <img
                 src={post.img}
                 alt={post.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-cocoa-dark/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 text-center text-white">
-                <Instagram className="w-6 h-6 mb-1 text-peach-soft" />
-                <span className="text-xs font-bold">{post.title}</span>
+              <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                <span className="text-white text-xs font-bold font-cairo line-clamp-1">
+                  {post.title}
+                </span>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
 
-      {/* Newsletter Box */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-blush-surface via-cream to-peach-soft/50 border border-peach-soft p-8 sm:p-12 text-center shadow-warm">
-          <div className="w-12 h-12 bg-white text-coral-warm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
-            <Mail className="w-6 h-6" />
+      {/* Newsletter Signup Box */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-canvas-warm rounded-3xl p-8 sm:p-12 border border-gold-line/40 text-center space-y-4 shadow-sm">
+          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto border border-gold-hairline text-burgundy">
+            <Mail className="w-5 h-5 text-burgundy" />
           </div>
 
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-cocoa-dark font-cairo">
+          <h3 className="text-xl sm:text-3xl font-extrabold text-burgundy font-cairo">
             {dict.home.newsletterTitle}
           </h3>
-          <p className="mt-2 text-xs sm:text-sm text-cocoa-muted max-w-md mx-auto">
+
+          <p className="text-xs sm:text-sm text-slateText-secondary max-w-md mx-auto leading-relaxed font-tajawal">
             {dict.home.newsletterSubtitle}
           </p>
 
-          {isSubmitted ? (
-            <div className="mt-6 p-4 bg-emerald-100 text-emerald-800 rounded-2xl text-xs font-bold flex items-center justify-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>{dict.home.subscribed}</span>
-            </div>
-          ) : (
-            <form onSubmit={handleSubscribe} className="mt-6 flex flex-col sm:flex-row gap-2.5 max-w-md mx-auto">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={dict.home.newsletterPlaceholder}
-                className="flex-1 px-4 py-3 rounded-full border border-peach-soft bg-white text-xs text-cocoa-dark focus:outline-none focus:ring-2 focus:ring-coral-warm"
-              />
-              <Button type="submit" variant="primary">
-                {dict.home.subscribe}
-              </Button>
-            </form>
-          )}
-
-          <p className="mt-3 text-[10px] text-cocoa-muted">
-            {isAr
-              ? 'نحترم خصوصيتكِ ولا نرسل رسائل مزعجة إطلاقاً.'
-              : 'We respect your privacy under Qatar Law No. 13 of 2016. Unsubscribe anytime.'}
-          </p>
+          <div className="pt-2 max-w-md mx-auto">
+            {isSubmitted ? (
+              <div className="flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-white text-burgundy font-bold text-xs border border-gold-line shadow-sm">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>{dict.home.subscribed}</span>
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={dict.home.newsletterPlaceholder}
+                  required
+                  className="flex-1 px-5 py-3 rounded-full border border-gold-hairline bg-white text-xs text-slateText-body focus:outline-none focus:ring-2 focus:ring-burgundy/40 shadow-sm"
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-3 rounded-full bg-burgundy hover:bg-burgundy-hover text-white text-xs font-bold uppercase tracking-wider transition-all shadow-luxury flex items-center justify-center gap-2"
+                >
+                  <span>{dict.home.subscribe}</span>
+                  <Send className="w-3.5 h-3.5 rtl-flip" />
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </div>
     </section>

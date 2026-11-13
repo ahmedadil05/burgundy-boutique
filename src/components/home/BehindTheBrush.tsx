@@ -18,8 +18,8 @@ export function BehindTheBrush({ lang }: BehindTheBrushProps) {
       icon: Compass,
       title: isRtl ? 'انتقاء القماش الفاخر' : 'Noble Fabric Selection',
       desc: isRtl
-        ? 'نختار أجود أنواع الفوال السويسري والحرير الخالص المنسوج خصيصاً ليتحمل الرسم الدقيق والحرارة بلطافة وانسيابية.'
-        : 'Selecting the purest Swiss cotton voile and raw silk specifically woven to support delicate brushwork and fluid movement.',
+        ? 'نختار أجود أنواع الفوال السويسري والحرير الخالص المنسوج خصيصاً في سانت غالن ليتحمل الرسم الدقيق والحرارة بلطافة وانسيابية.'
+        : 'Selecting the purest Swiss cotton voile and raw silk specifically woven in St. Gallen to support delicate brushwork and fluid movement.',
     },
     {
       num: '02',
@@ -34,27 +34,27 @@ export function BehindTheBrush({ lang }: BehindTheBrushProps) {
       icon: Feather,
       title: isRtl ? 'الرسم اليدوي والتثبيت' : 'Hand-Guided Brushwork',
       desc: isRtl
-        ? 'كل قطعة تمر بمراحل رسم يدوي دقيق يستغرق أياماً متواصلة لضمان تفرد كل ثوب وجلابية وعدم تكرار تفاصيلها.'
+        ? 'كل قطعة تمر بمراحل رسم يدوي دقيق يستغرق أياماً متواصلة بأنامل فنانات متخصصات لضمان تفرد كل ثوب وجلابية وعدم تكرار تفاصيلها.'
         : 'Each toub is hand-painted over several days by master artisans, guaranteeing that no two pieces are ever identical.',
     },
   ];
 
   return (
-    <section className="py-20 bg-surface-cream border-y border-gold-hairline relative overflow-hidden leaf-shadow-bg">
+    <section className="py-20 lg:py-28 bg-canvas border-b border-gold-hairline/60 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-gold-hairline text-burgundy text-[11px] font-semibold tracking-widest uppercase">
-            <Sparkles className="w-3.5 h-3.5 text-gold-line" />
-            <span>{isRtl ? 'حرفية وفن' : 'CRAFTSMANSHIP'}</span>
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white border border-gold-hairline text-burgundy text-[11px] font-semibold tracking-widest uppercase shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-gold" />
+            <span className="font-cairo">{isRtl ? 'حرفية المرسم والتراث' : 'ATELIER CRAFTSMANSHIP'}</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-burgundy font-cairo">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-burgundy font-cairo tracking-tight">
             {dict.home.behindTheBrushTitle}
           </h2>
 
-          <p className="text-sm text-slateText-body font-normal leading-relaxed">
+          <p className="text-sm sm:text-base text-slateText-body font-normal leading-relaxed font-tajawal max-w-xl mx-auto">
             {dict.home.behindTheBrushSubtitle}
           </p>
         </div>
@@ -66,24 +66,33 @@ export function BehindTheBrush({ lang }: BehindTheBrushProps) {
             return (
               <div
                 key={idx}
-                className="bg-white/90 backdrop-blur-sm p-6 sm:p-7 rounded-2xl border border-gold-hairline shadow-soft hover:shadow-luxury transition-all duration-300 flex flex-col items-start relative group"
+                className="bg-white p-8 rounded-2xl border border-gold-hairline shadow-sm hover:shadow-luxury hover:border-burgundy/40 transition-all duration-300 flex flex-col justify-between group relative"
               >
-                {/* Step Number with Gold Tone */}
-                <span className="text-3xl font-extrabold font-playfair text-gold-shimmer/40 group-hover:text-gold-shimmer transition-colors mb-4 block">
-                  {step.num}
-                </span>
+                <div>
+                  {/* Top Row: Icon + Step Number */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 rounded-xl bg-burgundy/5 border border-gold-hairline/40 text-burgundy flex items-center justify-center group-hover:bg-burgundy group-hover:text-white transition-colors">
+                      <Icon className="w-5 h-5" strokeWidth={1.75} />
+                    </div>
 
-                <div className="w-10 h-10 rounded-xl bg-burgundy/10 text-burgundy flex items-center justify-center mb-4 group-hover:bg-burgundy group-hover:text-white transition-colors">
-                  <Icon className="w-5 h-5" />
+                    <span className="text-4xl font-extrabold font-playfair text-gold/40 group-hover:text-gold transition-colors">
+                      {step.num}
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg font-bold text-burgundy mb-3 font-cairo">
+                    {step.title}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-slateText-body leading-relaxed font-tajawal">
+                    {step.desc}
+                  </p>
                 </div>
 
-                <h3 className="text-base font-bold text-burgundy mb-2 font-cairo">
-                  {step.title}
-                </h3>
-
-                <p className="text-xs sm:text-sm text-slateText-body leading-relaxed">
-                  {step.desc}
-                </p>
+                <div className="pt-6 mt-6 border-t border-gold-hairline/40 flex items-center justify-between text-[11px] text-gold font-semibold uppercase tracking-wider">
+                  <span>{isRtl ? 'مرحلة أصيلة' : 'Authentic Stage'}</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold" />
+                </div>
               </div>
             );
           })}

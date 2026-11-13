@@ -39,7 +39,7 @@ export function StickyPurchasePanel({
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
-  const { addToCart, isInWishlist, toggleWishlist } = useStore();
+  const { addToCart, isInWishlist, toggleWishlist, openCart } = useStore();
   const { settings } = useStoreSettings();
   const router = useRouter();
   const dict = getDictionary(lang);
@@ -60,7 +60,10 @@ export function StickyPurchasePanel({
       quantity
     );
     setIsAdded(true);
-    setTimeout(() => setIsAdded(false), 2000);
+    setTimeout(() => {
+      setIsAdded(false);
+      openCart();
+    }, 450);
   };
 
   const handleBuyNow = () => {

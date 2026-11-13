@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Instagram, Send, CheckCircle2, MessageCircle, Sparkles, ArrowRight, Eye, Shield } from 'lucide-react';
 import { useStoreSettings } from '../../lib/settings-store';
 import { Language, getDictionary } from '../../lib/i18n';
+import { BurgundyLogo } from '../brand/BurgundyLogo';
 
 interface PreLaunchTeaserProps {
   lang: Language;
@@ -51,19 +52,10 @@ export function PreLaunchTeaser({ lang }: PreLaunchTeaserProps) {
       {/* Main Container constrained to mobile 390px baseline, scaling elegantly */}
       <div className="relative z-10 w-full max-w-[420px] mx-auto text-center flex flex-col items-center">
         
-        {/* Subtle Badge */}
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/80 border border-gold-hairline text-burgundy text-[11px] font-semibold tracking-widest uppercase mb-6 shadow-soft backdrop-blur-sm">
-          <Sparkles className="w-3.5 h-3.5 text-gold-line" />
-          <span>{isRtl ? 'دار بيرغندي للأزياء الفاخرة' : 'BURGUNDY ATELIER'}</span>
+        {/* Bespoke Regal Logo & Monogram */}
+        <div className="mb-6">
+          <BurgundyLogo variant="full" size="lg" lang={lang} />
         </div>
-
-        {/* High-Contrast Luxury Serif Wordmark */}
-        <h1 className="brand-wordmark text-4xl sm:text-5xl text-burgundy tracking-[0.2em] font-extrabold mb-1 drop-shadow-sm">
-          {settings.storeName.en}
-        </h1>
-        <p className="text-sm font-cairo text-slateText-secondary tracking-widest uppercase font-medium mb-8">
-          {settings.storeName.ar} • قطر
-        </p>
 
         {/* Client Supplied Teaser Banner Card with Leaf Shadows & Draped Fabric */}
         <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden shadow-luxury border border-gold-hairline bg-white mb-8 group">

@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   ShoppingBag,
@@ -12,26 +11,51 @@ import {
   X,
   Globe,
   Coins,
-  ShieldCheck,
   Palette,
-  Megaphone,
+  MessageCircle,
+  ShieldCheck,
+  ChevronRight,
+  ChevronLeft,
+  Sparkles,
 } from 'lucide-react';
 import { useStore } from '../../lib/store';
 import { useStoreSettings } from '../../lib/settings-store';
 import { Language, getDictionary } from '../../lib/i18n';
 import { Currency } from '../../lib/currency';
+import { BurgundyLogo } from '../brand/BurgundyLogo';
 
 export function Header({ lang = 'ar' }: { lang?: Language }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { cartCount, wishlist, currency, setCurrency, setLanguage } = useStore();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const { cartCount, wishlist, currency, setCurrency, setLanguage, openCart } = useStore();
   const { settings } = useStoreSettings();
   const router = useRouter();
   const pathname = usePathname();
   const dict = getDictionary(lang);
-
   const isRtl = lang === 'ar';
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   const toggleLanguage = () => {
     const nextLang = lang === 'ar' ? 'en' : 'ar';
@@ -48,158 +72,199 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
     }
   };
 
+  const navLinks = [
+    { href: `/${lang}/shop`, label: isRtl ? 'المتجر الكامل' : 'All Collections' },
+    { href: `/${lang}/shop?category=toubs`, label: isRtl ? 'ثياب سودانية' : 'Sudanese Toubs' },
+    { href: `/${lang}/shop?category=jalabiyas`, label: isRtl ? 'جلابيات راقية' : 'Luxury Jalabiyas' },
+    { href: `/${lang}/custom-order`, label: isRtl ? 'تفصيل ورسم خاص' : 'Bespoke Atelier', highlight: true },
+    { href: `/${lang}/about`, label: isRtl ? 'قصة الدار' : 'Atelier Story' },
+    { href: `/${lang}/tracking`, label: isRtl ? 'تتبع طلبك' : 'Track Order' },
+  ];
+
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gold-hairline transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 gap-4">
+    <>
+      <header
+        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+          isScrolled
+            ? 'bg-canvas/95 backdrop-blur-md shadow-[0_4px_20px_rgba(95,15,64,0.04)] border-b border-gold-hairline'
+            : 'bg-canvas/90 backdrop-blur-sm border-b border-gold-hairline/60'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Mobile Menu Button */}
-          <div className="flex items-center lg:hidden">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-xl text-slateText-body hover:bg-surface-peachSoft/40 focus:outline-none"
-              aria-label="Toggle navigation menu"
-            >
-              {isMobileMenuOpen ? <X className="w-6 h-6 text-burgundy" /> : <Menu className="w-6 h-6 text-burgundy" />}
-            </button>
-          </div>
+          {/* ========================================================= */}
+          {/* 1. DESKTOP HEADER (lg and above)                          */}
+          {/* ========================================================= */}
+          <div className="hidden lg:flex items-center justify-between h-20 gap-8">
+            {/* Left Nav Links */}
+            <nav className="flex items-center gap-6">
+              {navLinks.slice(0, 3).map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-xs font-semibold uppercase tracking-wider text-slateText-body hover:text-burgundy transition-colors relative py-1 group"
+                >
+                  <span>{link.label}</span>
+                  <span className="absolute bottom-0 start-0 w-0 h-[1.5px] bg-gold-line group-hover:w-full transition-all duration-300" />
+                </Link>
+              ))}
+            </nav>
 
-          {/* Brand Logo / Wordmark in High-Contrast Serif */}
-          <Link href={`/${lang}`} className="flex flex-col items-center group">
-            {settings.logoMode === 'image' && settings.logoUrl ? (
-              <div className="relative w-28 h-10">
-                <Image
-                  src={settings.logoUrl}
-                  alt={settings.storeName.en}
-                  fill
-                  className="object-contain"
-                />
-              </div>
-            ) : (
-              <span className="brand-wordmark text-2xl sm:text-3xl text-burgundy group-hover:text-burgundy-hover transition-colors">
-                {settings.storeName.en}
-              </span>
-            )}
-            <span className="text-[10px] tracking-widest uppercase font-semibold text-gold-shimmer -mt-0.5">
-              {isRtl ? 'أزياء سودانية فاخرة • قطر' : 'Sudanese Couture • Qatar'}
-            </span>
-          </Link>
-
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-6">
-            <Link
-              href={`/${lang}`}
-              className="text-xs font-semibold text-slateText-body hover:text-burgundy transition-colors uppercase tracking-wider"
-            >
-              {dict.nav.home}
-            </Link>
-            <Link
-              href={`/${lang}/shop?category=toubs`}
-              className="text-xs font-semibold text-slateText-body hover:text-burgundy transition-colors uppercase tracking-wider"
-            >
-              {dict.nav.toubs}
-            </Link>
-            <Link
-              href={`/${lang}/shop?category=jalabiyas`}
-              className="text-xs font-semibold text-slateText-body hover:text-burgundy transition-colors uppercase tracking-wider"
-            >
-              {dict.nav.jalabiyas}
-            </Link>
-            <Link
-              href={`/${lang}/shop?category=scarves`}
-              className="text-xs font-semibold text-slateText-body hover:text-burgundy transition-colors uppercase tracking-wider"
-            >
-              {dict.nav.accessories}
-            </Link>
-            <Link
-              href={`/${lang}/custom-order`}
-              className="text-xs font-semibold text-burgundy hover:text-burgundy-hover transition-colors uppercase tracking-wider flex items-center gap-1"
-            >
-              <Palette className="w-3.5 h-3.5" />
-              <span>{dict.nav.customOrder}</span>
-            </Link>
-            <Link
-              href={`/${lang}/advertise`}
-              className="text-xs font-semibold text-gold-shimmer hover:text-burgundy transition-colors uppercase tracking-wider flex items-center gap-1"
-            >
-              <Megaphone className="w-3.5 h-3.5" />
-              <span>{dict.nav.advertise}</span>
-            </Link>
-            <Link
-              href={`/${lang}/about`}
-              className="text-xs font-semibold text-slateText-body hover:text-burgundy transition-colors uppercase tracking-wider"
-            >
-              {dict.nav.about}
-            </Link>
-          </nav>
-
-          {/* Right Actions: Currency, Language, Search, Wishlist, Cart */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Currency Selector */}
-            <div className="hidden sm:flex items-center text-xs font-semibold text-slateText-body bg-white border border-gold-hairline rounded-full px-2.5 py-1 shadow-sm">
-              <Coins className="w-3.5 h-3.5 text-gold-line me-1.5 shrink-0" />
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value as Currency)}
-                className="bg-transparent focus:outline-none cursor-pointer"
-                aria-label="Select currency"
-              >
-                <option value="QAR">QAR (ر.ق)</option>
-                <option value="USD">USD ($)</option>
-                <option value="SDG">SDG (ج.س)</option>
-              </select>
+            {/* Centered Brand Emblem & Wordmark */}
+            <div className="shrink-0 flex items-center justify-center">
+              <BurgundyLogo
+                variant="full"
+                size="md"
+                href={`/${lang}`}
+                lang={lang}
+              />
             </div>
 
-            {/* Language Switcher */}
+            {/* Right Nav Links & Utilities */}
+            <div className="flex items-center gap-5">
+              <nav className="flex items-center gap-5">
+                {navLinks.slice(3).map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`text-xs font-semibold uppercase tracking-wider transition-colors relative py-1 group ${
+                      link.highlight
+                        ? 'text-burgundy font-bold hover:text-burgundy-hover flex items-center gap-1'
+                        : 'text-slateText-body hover:text-burgundy'
+                    }`}
+                  >
+                    {link.highlight && <Sparkles className="w-3.5 h-3.5 text-gold-line" />}
+                    <span>{link.label}</span>
+                    <span className="absolute bottom-0 start-0 w-0 h-[1.5px] bg-gold-line group-hover:w-full transition-all duration-300" />
+                  </Link>
+                ))}
+              </nav>
+
+              <div className="h-4 w-[1px] bg-gold-hairline" />
+
+              {/* Action Buttons: Currency, Lang, Search, Wishlist, Cart */}
+              <div className="flex items-center gap-2">
+                {/* Currency Switcher */}
+                <div className="flex items-center text-[11px] font-semibold text-slateText-secondary bg-white border border-gold-hairline rounded-full px-2.5 py-1">
+                  <Coins className="w-3.5 h-3.5 text-gold-line me-1" />
+                  <select
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value as Currency)}
+                    className="bg-transparent focus:outline-none cursor-pointer"
+                    aria-label="Currency"
+                  >
+                    <option value="QAR">QAR (ر.ق)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="SDG">SDG (ج.س)</option>
+                  </select>
+                </div>
+
+                {/* Language Switcher */}
+                <button
+                  type="button"
+                  onClick={toggleLanguage}
+                  className="flex items-center gap-1 text-[11px] font-bold text-slateText-body hover:text-burgundy bg-white border border-gold-hairline rounded-full px-2.5 py-1 transition-colors"
+                  aria-label="Switch Language"
+                >
+                  <Globe className="w-3.5 h-3.5 text-gold-line" />
+                  <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
+                </button>
+
+                {/* Search */}
+                <button
+                  type="button"
+                  onClick={() => setIsSearchOpen(!isSearchOpen)}
+                  className="p-2 text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-full transition-colors"
+                  aria-label="Search"
+                >
+                  <Search className="w-4 h-4" />
+                </button>
+
+                {/* Wishlist */}
+                <Link
+                  href={`/${lang}/wishlist`}
+                  className="relative p-2 text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-full transition-colors"
+                  aria-label="Wishlist"
+                >
+                  <Heart className="w-4 h-4" />
+                  {wishlist.length > 0 && (
+                    <span className="absolute top-1 end-1 min-w-[14px] h-3.5 px-0.5 text-[9px] font-bold bg-burgundy text-white rounded-full flex items-center justify-center">
+                      {wishlist.length}
+                    </span>
+                  )}
+                </Link>
+
+                {/* Bag CTA (Opens Slide-over Cart Drawer) */}
+                <button
+                  type="button"
+                  onClick={openCart}
+                  className="relative inline-flex items-center gap-1.5 bg-burgundy hover:bg-burgundy-hover text-white text-xs font-bold rounded-full px-3.5 py-1.5 transition-colors shadow-luxury focus:outline-none"
+                  aria-label="Open Shopping Bag"
+                >
+                  <ShoppingBag className="w-3.5 h-3.5" />
+                  <span>{cartCount}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* ========================================================= */}
+          {/* 2. PHONE / MOBILE HEADER (under lg)                       */}
+          {/* ========================================================= */}
+          <div className="flex lg:hidden items-center justify-between h-16">
+            {/* Mobile Hamburger Drawer Trigger */}
             <button
               type="button"
-              onClick={toggleLanguage}
-              className="flex items-center gap-1 text-xs font-bold text-slateText-body hover:text-burgundy bg-white border border-gold-hairline rounded-full px-2.5 py-1 transition-colors"
-              aria-label="Switch language"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="p-2 -ms-2 touch-target-48 rounded-xl text-burgundy hover:bg-surface-peachSoft/30 flex items-center justify-center focus:outline-none"
+              aria-label="Open mobile navigation menu"
             >
-              <Globe className="w-3.5 h-3.5 text-gold-line" />
-              <span>{lang === 'ar' ? 'English' : 'العربية'}</span>
+              <Menu className="w-6 h-6 stroke-[1.8]" />
             </button>
 
-            {/* Search Trigger */}
-            <button
-              type="button"
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="p-2 text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-full transition-colors"
-              aria-label="Search products"
-            >
-              <Search className="w-5 h-5" />
-            </button>
+            {/* Compact Brand Logo */}
+            <div className="flex-1 flex justify-center">
+              <BurgundyLogo
+                variant="compact"
+                size="sm"
+                href={`/${lang}`}
+                lang={lang}
+              />
+            </div>
 
-            {/* Wishlist Link */}
-            <Link
-              href={`/${lang}/wishlist`}
-              className="relative p-2 text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-full transition-colors"
-              aria-label="Wishlist"
-            >
-              <Heart className="w-5 h-5" />
-              {wishlist.length > 0 && (
-                <span className="absolute top-1 end-1 w-4 h-4 text-[10px] font-bold bg-burgundy text-white rounded-full flex items-center justify-center">
-                  {wishlist.length}
-                </span>
-              )}
-            </Link>
+            {/* Mobile Actions: Search & Quick Bag */}
+            <div className="flex items-center gap-1 -me-2">
+              <button
+                type="button"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="p-2 touch-target-48 text-slateText-body hover:text-burgundy flex items-center justify-center"
+                aria-label="Search"
+              >
+                <Search className="w-5 h-5" />
+              </button>
 
-            {/* Cart Link */}
-            <Link
-              href={`/${lang}/cart`}
-              className="relative flex items-center gap-1.5 p-2 bg-burgundy text-white hover:bg-burgundy-hover rounded-full px-3 py-1.5 transition-colors shadow-luxury"
-              aria-label="Cart"
-            >
-              <ShoppingBag className="w-4 h-4" />
-              <span className="text-xs font-bold">{cartCount}</span>
-            </Link>
+              <button
+                type="button"
+                onClick={openCart}
+                className="relative p-2 touch-target-48 text-burgundy flex items-center justify-center focus:outline-none"
+                aria-label="Open Shopping Bag"
+              >
+                <div className="relative">
+                  <ShoppingBag className="w-5 h-5" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -end-1 min-w-[15px] h-3.5 px-0.5 text-[9px] font-bold bg-burgundy text-white rounded-full flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  )}
+                </div>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Search Input Bar (Dropdown) */}
+        {/* Global Search Bar Dropdown */}
         {isSearchOpen && (
-          <div className="py-3 pb-4 border-t border-gold-hairline animate-fadeIn">
+          <div className="py-3 px-4 pb-4 border-t border-gold-hairline/60 bg-white/95 backdrop-blur-md animate-fadeIn">
             <form onSubmit={handleSearchSubmit} className="relative max-w-xl mx-auto flex items-center">
               <input
                 type="text"
@@ -219,74 +284,155 @@ export function Header({ lang = 'ar' }: { lang?: Language }) {
             </form>
           </div>
         )}
+      </header>
 
-        {/* Mobile Flyout Navigation Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-gold-hairline space-y-3 animate-fadeIn">
-            <div className="flex flex-col space-y-2">
-              <Link
-                href={`/${lang}`}
+      {/* ========================================================= */}
+      {/* 3. MOBILE EDITORIAL SLIDE-OUT DRAWER                      */}
+      {/* ========================================================= */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-burgundy-deep/60 backdrop-blur-sm transition-opacity"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+
+          {/* Drawer Panel */}
+          <div
+            dir={isRtl ? 'rtl' : 'ltr'}
+            className="relative w-full max-w-xs sm:max-w-sm bg-canvas h-full flex flex-col shadow-2xl border-e border-gold-hairline z-10 overflow-y-auto"
+          >
+            {/* Drawer Header */}
+            <div className="p-5 border-b border-gold-hairline flex items-center justify-between bg-white">
+              <BurgundyLogo variant="compact" size="sm" lang={lang} />
+              <button
+                type="button"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 text-sm font-bold text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-xl"
+                className="p-2 rounded-full text-slateText-body hover:bg-surface-peachSoft/40 touch-target-48 flex items-center justify-center"
+                aria-label="Close menu"
               >
-                {dict.nav.home}
-              </Link>
-              <Link
-                href={`/${lang}/shop?category=toubs`}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 text-sm font-bold text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-xl"
+                <X className="w-5 h-5 text-burgundy" />
+              </button>
+            </div>
+
+            {/* WhatsApp VIP Concierge Action */}
+            <div className="p-4 bg-surface-cream border-b border-gold-hairline">
+              <a
+                href={`https://wa.me/97450000974?text=${encodeURIComponent(
+                  isRtl
+                    ? 'مرحباً دار بيرغندي للأزياء، أود الاستفسار عن التشكيلة الخاصة وحجز استشارة.'
+                    : 'Hello BURGUNDY Haute Couture Atelier, I would like to inquire about bespoke collections.'
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 rounded-2xl bg-white border border-gold-line shadow-sm hover:border-burgundy transition-all"
               >
-                {dict.nav.toubs}
-              </Link>
-              <Link
-                href={`/${lang}/shop?category=jalabiyas`}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 text-sm font-bold text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-xl"
-              >
-                {dict.nav.jalabiyas}
-              </Link>
-              <Link
-                href={`/${lang}/shop?category=scarves`}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 text-sm font-bold text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-xl"
-              >
-                {dict.nav.accessories}
-              </Link>
-              <Link
-                href={`/${lang}/custom-order`}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 text-sm font-bold text-burgundy hover:bg-surface-peachSoft/40 rounded-xl flex items-center gap-2"
-              >
-                <Palette className="w-4 h-4" />
-                <span>{dict.nav.customOrder}</span>
-              </Link>
-              <Link
-                href={`/${lang}/advertise`}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 text-sm font-bold text-gold-shimmer hover:bg-surface-peachSoft/40 rounded-xl flex items-center gap-2"
-              >
-                <Megaphone className="w-4 h-4" />
-                <span>{dict.nav.advertise}</span>
-              </Link>
-              <Link
-                href={`/${lang}/about`}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 text-sm font-bold text-slateText-body hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-xl"
-              >
-                {dict.nav.about}
-              </Link>
-              <Link
-                href={`/${lang}/admin`}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 text-sm font-bold text-slateText-secondary hover:text-burgundy hover:bg-surface-peachSoft/40 rounded-xl flex items-center gap-2"
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>{dict.nav.admin}</span>
-              </Link>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <MessageCircle className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-burgundy block">
+                      {isRtl ? 'خدمة كبار الشخصيات VIP' : 'VIP Concierge Desk'}
+                    </span>
+                    <span className="text-[10px] text-slateText-secondary">
+                      {isRtl ? 'واتساب مباشر مع الأتيليه' : 'Direct WhatsApp Atelier'}
+                    </span>
+                  </div>
+                </div>
+                {isRtl ? (
+                  <ChevronLeft className="w-4 h-4 text-gold-line" />
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-gold-line" />
+                )}
+              </a>
+            </div>
+
+            {/* Navigation Category List */}
+            <div className="flex-1 p-4 space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-gold px-3 mb-2 block">
+                {isRtl ? 'التصاميم والتشكيلات' : 'Collections & Atelier'}
+              </span>
+
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between px-3 py-3 rounded-xl text-sm font-semibold text-slateText-body hover:text-burgundy hover:bg-white border border-transparent hover:border-gold-hairline transition-all"
+                >
+                  <span className={link.highlight ? 'text-burgundy font-bold flex items-center gap-1.5' : ''}>
+                    {link.highlight && <Sparkles className="w-4 h-4 text-gold-line" />}
+                    {link.label}
+                  </span>
+                  {isRtl ? (
+                    <ChevronLeft className="w-4 h-4 text-slateText-secondary/50" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-slateText-secondary/50" />
+                  )}
+                </Link>
+              ))}
+
+              <div className="pt-4 mt-4 border-t border-gold-hairline/60">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-gold px-3 mb-2 block">
+                  {isRtl ? 'الإدارة والخدمات' : 'Management & Portal'}
+                </span>
+
+                <Link
+                  href={`/${lang}/atelier-portal`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between px-3 py-3 rounded-xl text-sm font-semibold text-burgundy hover:bg-white border border-transparent hover:border-gold-hairline"
+                >
+                  <span>{isRtl ? 'بوابة إدارة الأتيليه (ERP/CRM)' : 'Atelier Admin Portal'}</span>
+                  {isRtl ? (
+                    <ChevronLeft className="w-4 h-4 text-slateText-secondary/50" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-slateText-secondary/50" />
+                  )}
+                </Link>
+              </div>
+            </div>
+
+            {/* Drawer Footer: Language & Currency Switchers */}
+            <div className="p-4 bg-white border-t border-gold-hairline space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                {/* Language Switch */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    toggleLanguage();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-gold-hairline text-xs font-bold text-slateText-body hover:text-burgundy bg-canvas"
+                >
+                  <Globe className="w-4 h-4 text-gold-line" />
+                  <span>{lang === 'ar' ? 'English Version' : 'النسخة العربية'}</span>
+                </button>
+
+                {/* Currency Switch */}
+                <div className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl border border-gold-hairline text-xs font-semibold text-slateText-body bg-canvas">
+                  <Coins className="w-3.5 h-3.5 text-gold-line" />
+                  <select
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value as Currency)}
+                    className="bg-transparent text-xs font-bold focus:outline-none cursor-pointer"
+                  >
+                    <option value="QAR">QAR (ر.ق)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="SDG">SDG (ج.س)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Legal Note */}
+              <div className="text-[10px] text-slateText-secondary text-center flex items-center justify-center gap-1.5 pt-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-gold-line shrink-0" />
+                <span>{isRtl ? 'بوتيك مرخص رسمياً في دولة قطر' : 'Official Licensed Qatar Boutique'}</span>
+              </div>
             </div>
           </div>
-        )}
-      </div>
-    </header>
+        </div>
+      )}
+    </>
   );
 }

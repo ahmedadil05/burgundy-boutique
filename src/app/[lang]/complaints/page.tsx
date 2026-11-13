@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea, Select } from '@/components/ui/Controls';
 import { complianceConfig } from '@/config/compliance';
-import { ShieldAlert, CheckCircle, Scale, Clock, Phone, Mail } from 'lucide-react';
+import { ShieldAlert, CheckCircle, Scale, ShieldCheck } from 'lucide-react';
 
 export default function ComplaintsPage() {
   const params = useParams();
@@ -31,70 +31,72 @@ export default function ComplaintsPage() {
 
     // Save complaint locally for admin panel
     try {
-      const existing = JSON.parse(localStorage.getItem('kandaka_complaints') || '[]');
+      const existing = JSON.parse(localStorage.getItem('burgundy_complaints') || '[]');
       existing.unshift({
         ticketId,
         ...formData,
         status: 'pending',
         createdAt: new Date().toISOString(),
       });
-      localStorage.setItem('kandaka_complaints', JSON.stringify(existing));
+      localStorage.setItem('burgundy_complaints', JSON.stringify(existing));
     } catch {}
 
     setSubmittedTicket(ticketId);
   };
 
   return (
-    <div className="min-h-screen bg-cream py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-canvas py-14 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blush-surface text-coral-warm mb-3 border border-peach-soft">
-            <Scale className="w-3.5 h-3.5" />
-            {isAr
-              ? 'بوابة الشكاوى وحماية المستهلك — وزارة التجارة والصناعة بقطر'
-              : 'Consumer Complaints Portal — Qatar MOCI Decision 25/2026'}
+        <div className="text-center mb-10 space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-white text-burgundy border border-gold-hairline shadow-sm">
+            <Scale className="w-3.5 h-3.5 text-gold-line" />
+            <span>
+              {isAr
+                ? 'بوابة الشكاوى وحماية المستهلك — وزارة التجارة والصناعة بقطر'
+                : 'Consumer Complaints Portal — Qatar MOCI Decision 25/2026'}
+            </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-cocoa-dark font-cairo">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-cairo">
             {isAr ? 'تقديم شكوى أو استفسار رسمي' : 'File a Formal Consumer Complaint'}
           </h1>
-          <p className="mt-2 text-xs sm:text-sm text-cocoa-muted max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-slateText-secondary max-w-xl mx-auto leading-relaxed">
             {isAr
-              ? 'نلتزم بالرد على جميع الشكاوى خلال 24 ساعة عمل مع منحكِ رقم تتبع رسمي للشكوى.'
-              : 'We commit to responding to all formal inquiries within 24 working hours with an official ticket.'}
+              ? 'تلتزم دار بيرغندي بالرد على جميع الشكاوى خلال 24 ساعة عمل مع منحكِ رقم تتبع رسمي للشكوى.'
+              : 'BURGUNDY commits to resolving all formal consumer inquiries within 24 working hours with an official MOCI ticket.'}
           </p>
         </div>
 
         {submittedTicket ? (
-          <div className="bg-white/90 border-2 border-emerald-500/40 rounded-3xl p-8 sm:p-10 text-center shadow-lg animate-scaleUp">
-            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-9 h-9" />
+          <div className="bg-white border border-gold-hairline rounded-3xl p-8 sm:p-10 text-center shadow-luxury animate-scaleUp">
+            <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-200">
+              <CheckCircle className="w-8 h-8" />
             </div>
-            <h2 className="text-xl font-bold text-cocoa-dark font-cairo mb-2">
+            <h2 className="text-xl font-bold text-burgundy font-cairo mb-2">
               {isAr ? 'تم تسجيل شكواكِ بنجاح' : 'Complaint Successfully Registered'}
             </h2>
-            <p className="text-xs text-cocoa-muted mb-6">
+            <p className="text-xs text-slateText-secondary mb-6">
               {isAr
-                ? 'تم إرسال نسخة إلى بريدكِ الإلكتروني ومسؤول الجودة بمتجر كنداكة.'
-                : 'A confirmation has been logged with our customer care quality desk.'}
+                ? 'تم إرسال نسخة إلى بريدكِ الإلكتروني وإدارة الجودة بدار بيرغندي.'
+                : 'A confirmation has been logged with our luxury quality & compliance desk.'}
             </p>
 
-            <div className="inline-block bg-cream border border-peach-deep p-4 rounded-2xl mb-6">
-              <p className="text-xs text-cocoa-muted mb-1 font-semibold">
+            <div className="inline-block bg-canvas-warm/50 border border-gold-hairline p-5 rounded-2xl mb-6">
+              <p className="text-xs text-slateText-secondary mb-1 font-semibold">
                 {isAr ? 'رقم تذكرة الشكوى الرسمي:' : 'Official Ticket Reference:'}
               </p>
-              <p className="text-2xl font-mono font-extrabold text-coral-warm tracking-wider">
+              <p className="text-2xl font-mono font-extrabold text-burgundy tracking-wider">
                 {submittedTicket}
               </p>
             </div>
 
-            <div className="text-xs text-cocoa-muted space-y-1 mb-8 max-w-md mx-auto">
+            <div className="text-xs text-slateText-secondary space-y-1 mb-8 max-w-md mx-auto">
               <p>
                 {isAr
                   ? 'سيقوم فريق الدعم بالتواصل معكِ عبر الهاتف المسجل خلال ساعات الدوام الرسمية.'
                   : 'Our customer protection team will reach out via registered phone within official hours.'}
               </p>
-              <p className="font-semibold text-cocoa-dark">
+              <p className="font-semibold text-burgundy">
                 {complianceConfig.customerServiceHours[lang]}
               </p>
             </div>
@@ -112,12 +114,13 @@ export default function ComplaintsPage() {
                   message: '',
                 });
               }}
+              className="border-gold-hairline text-burgundy hover:bg-canvas-warm"
             >
               {isAr ? 'تقديم استفسار آخر' : 'Submit Another Inquiry'}
             </Button>
           </div>
         ) : (
-          <div className="bg-white/85 border border-peach-soft rounded-3xl p-6 sm:p-10 shadow-sm">
+          <div className="bg-white border border-gold-hairline rounded-3xl p-6 sm:p-10 shadow-luxury">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Input
@@ -154,7 +157,7 @@ export default function ComplaintsPage() {
                 />
                 <Input
                   label={isAr ? 'رقم الطلب (إن وُجد)' : 'Order Reference (optional)'}
-                  placeholder="#KAND-2026-001"
+                  placeholder="#BURG-2026-001"
                   value={formData.orderNumber}
                   onChange={(e) =>
                     setFormData({ ...formData, orderNumber: e.target.value })
@@ -175,7 +178,7 @@ export default function ComplaintsPage() {
                   },
                   {
                     value: 'defect',
-                    label: isAr ? 'ملاحظة على جودة التطريز أو عيب مصنعي' : 'Craftsmanship or Defect Concern',
+                    label: isAr ? 'ملاحظة على جودة التطريز أو الرسم' : 'Craftsmanship or Brushwork Concern',
                   },
                   {
                     value: 'refund',
@@ -208,17 +211,17 @@ export default function ComplaintsPage() {
               />
 
               <div className="pt-2">
-                <Button type="submit" variant="primary" size="lg" className="w-full">
+                <Button type="submit" variant="primary" size="lg" className="w-full bg-burgundy hover:bg-burgundy-hover text-white shadow-luxury py-3.5">
                   {isAr ? 'إرسال الشكوى رسمياً' : 'Submit Formal Complaint'}
                 </Button>
               </div>
             </form>
 
             {/* Legal Notice Footer Box */}
-            <div className="mt-8 p-4 rounded-2xl bg-cream border border-peach-soft text-xs text-cocoa-muted flex items-start gap-3">
-              <ShieldAlert className="w-5 h-5 text-coral-warm shrink-0 mt-0.5" />
+            <div className="mt-8 p-4 rounded-2xl bg-canvas-warm/40 border border-gold-hairline text-xs text-slateText-secondary flex items-start gap-3">
+              <ShieldAlert className="w-5 h-5 text-gold-line shrink-0 mt-0.5" />
               <div className="leading-relaxed">
-                <p className="font-bold text-cocoa-dark mb-0.5">
+                <p className="font-bold text-burgundy mb-0.5 font-cairo">
                   {isAr ? 'ضمان حماية المستهلك' : 'Consumer Protection Assurance'}
                 </p>
                 <p>

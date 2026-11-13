@@ -136,7 +136,7 @@ export default function AdvertisePage() {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl border border-surface-peachMuted/50 text-sm focus:outline-none focus:ring-2 focus:ring-burgundy/40"
+                className="w-full px-4 py-2.5 rounded-xl border border-gold-hairline bg-canvas/30 text-xs text-slateText-body focus:outline-none focus:ring-2 focus:ring-burgundy/40"
               />
             </div>
 
@@ -149,7 +149,7 @@ export default function AdvertisePage() {
                 required
                 value={formData.companyName}
                 onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl border border-surface-peachMuted/50 text-sm focus:outline-none focus:ring-2 focus:ring-burgundy/40"
+                className="w-full px-4 py-2.5 rounded-xl border border-gold-hairline bg-canvas/30 text-xs text-slateText-body focus:outline-none focus:ring-2 focus:ring-burgundy/40"
               />
             </div>
 
@@ -165,7 +165,7 @@ export default function AdvertisePage() {
                   dir="ltr"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-surface-peachMuted/50 text-sm focus:outline-none focus:ring-2 focus:ring-burgundy/40"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gold-hairline bg-canvas/30 text-xs text-slateText-body focus:outline-none focus:ring-2 focus:ring-burgundy/40"
                 />
               </div>
 
@@ -178,7 +178,7 @@ export default function AdvertisePage() {
                   dir="ltr"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-surface-peachMuted/50 text-sm focus:outline-none focus:ring-2 focus:ring-burgundy/40"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gold-hairline bg-canvas/30 text-xs text-slateText-body focus:outline-none focus:ring-2 focus:ring-burgundy/40"
                 />
               </div>
             </div>
@@ -190,7 +190,7 @@ export default function AdvertisePage() {
               <select
                 value={formData.placement}
                 onChange={(e) => setFormData({ ...formData, placement: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl border border-surface-peachMuted/50 text-sm focus:outline-none focus:ring-2 focus:ring-burgundy/40 bg-white"
+                className="w-full px-4 py-2.5 rounded-xl border border-gold-hairline bg-canvas/30 text-xs text-slateText-body focus:outline-none focus:ring-2 focus:ring-burgundy/40"
               >
                 <option value="home_banner">{isRtl ? 'شريط الصفحة الرئيسية (Home Banner)' : 'Home Page Banner'}</option>
                 <option value="shop_grid">{isRtl ? 'سلوت شبكة المتجر (Shop Grid Slot)' : 'Shop Grid Slot'}</option>
@@ -207,7 +207,7 @@ export default function AdvertisePage() {
                 value={formData.details}
                 onChange={(e) => setFormData({ ...formData, details: e.target.value })}
                 placeholder={isRtl ? 'أخبرونا عن مدة الحملة والجمهور المستهدف...' : 'Tell us about your timing and audience goals...'}
-                className="w-full px-4 py-2.5 rounded-xl border border-surface-peachMuted/50 text-sm focus:outline-none focus:ring-2 focus:ring-burgundy/40"
+                className="w-full px-4 py-2.5 rounded-xl border border-gold-hairline bg-canvas/30 text-xs text-slateText-body focus:outline-none focus:ring-2 focus:ring-burgundy/40"
               />
             </div>
 

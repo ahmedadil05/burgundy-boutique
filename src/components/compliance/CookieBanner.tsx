@@ -11,7 +11,7 @@ export function CookieBanner({ lang = 'ar' }: { lang?: Language }) {
 
   useEffect(() => {
     try {
-      const consented = localStorage.getItem('kandaka_cookie_consent');
+      const consented = localStorage.getItem('burgundy_cookie_consent');
       if (!consented) {
         setIsVisible(true);
       }
@@ -20,7 +20,7 @@ export function CookieBanner({ lang = 'ar' }: { lang?: Language }) {
 
   const handleAccept = () => {
     try {
-      localStorage.setItem('kandaka_cookie_consent', 'accepted');
+      localStorage.setItem('burgundy_cookie_consent', 'accepted');
     } catch {}
     setIsVisible(false);
   };
@@ -28,25 +28,25 @@ export function CookieBanner({ lang = 'ar' }: { lang?: Language }) {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-4 inset-x-4 max-w-xl mx-auto z-50 bg-cream/95 backdrop-blur-md border-2 border-peach-deep/40 rounded-3xl p-5 shadow-2xl animate-scaleUp">
+    <div className="fixed bottom-20 lg:bottom-4 inset-x-4 max-w-xl mx-auto z-40 bg-white/95 backdrop-blur-md border border-gold-hairline rounded-3xl p-5 shadow-2xl animate-scaleUp">
       <div className="flex items-start gap-3.5">
-        <ShieldCheck className="w-5 h-5 text-coral-warm shrink-0 mt-0.5" />
+        <ShieldCheck className="w-5 h-5 text-gold-line shrink-0 mt-0.5" />
         <div className="flex-1">
-          <p className="text-xs text-cocoa-dark font-medium leading-relaxed">
+          <p className="text-xs text-slateText-body font-medium leading-relaxed">
             {dict.compliance.cookieNotice}
           </p>
           <div className="mt-3 flex items-center gap-3">
-            <Button size="sm" variant="primary" onClick={handleAccept}>
+            <Button size="sm" variant="primary" onClick={handleAccept} className="bg-burgundy text-white hover:bg-burgundy-hover">
               {dict.compliance.acceptCookies}
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => setIsVisible(false)}>
+            <Button size="sm" variant="ghost" onClick={() => setIsVisible(false)} className="text-slateText-secondary hover:text-burgundy">
               {dict.compliance.cookieSettings}
             </Button>
           </div>
         </div>
         <button
           onClick={() => setIsVisible(false)}
-          className="text-cocoa-muted hover:text-cocoa-dark p-1"
+          className="text-slateText-secondary hover:text-burgundy p-1"
           aria-label="Dismiss cookie banner"
         >
           <X className="w-4 h-4" />

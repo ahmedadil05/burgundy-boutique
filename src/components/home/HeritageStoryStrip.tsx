@@ -1,78 +1,81 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { Button } from '../ui/Button';
 import { Language, getDictionary } from '../../lib/i18n';
-import { Crown, Sparkles, HeartHandshake, ShieldCheck } from 'lucide-react';
+import { Crown, Sparkles, HeartHandshake, ArrowLeft, ArrowRight } from 'lucide-react';
 
 export function HeritageStoryStrip({ lang = 'ar' }: { lang?: Language }) {
   const dict = getDictionary(lang);
   const isAr = lang === 'ar';
 
   return (
-    <section className="my-14 bg-blush-surface border-y border-peach-soft py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background Soft Henna Ring Accent */}
-      <div className="absolute end-0 top-0 w-96 h-96 bg-radial-gradient from-peach-soft/30 to-transparent rounded-full blur-3xl pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-        <div className="lg:col-span-7 space-y-5 text-center lg:text-start">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/80 text-coral-warm border border-peach-deep/30">
-            <Crown className="w-3.5 h-3.5 text-[#CBA05C]" />
-            <span>{isAr ? 'قصة كنداكة والتراث' : 'The Kandaka Legacy'}</span>
+    <section className="my-16 bg-canvas-warm/50 border-y border-gold-hairline py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+        <div className="lg:col-span-7 space-y-6 text-center lg:text-start">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-burgundy border border-gold-hairline shadow-sm">
+            <Crown className="w-3.5 h-3.5 text-gold" />
+            <span className="font-cairo">{isAr ? 'إرث ملكات كنداكة وسحر النيل' : 'The Kandaka Queen Legacy'}</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-cocoa-dark font-cairo leading-tight">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-burgundy font-cairo leading-tight">
             {dict.home.heritageTitle}
           </h2>
 
-          <p className="text-xs sm:text-sm text-cocoa-muted leading-relaxed max-w-xl mx-auto lg:mx-0">
+          <p className="text-sm text-slateText-body leading-relaxed max-w-xl mx-auto lg:mx-0 font-tajawal">
             {dict.home.heritageText}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 max-w-lg mx-auto lg:mx-0 text-start">
-            <div className="flex items-start gap-3 p-3 bg-white/70 rounded-2xl border border-peach-soft/60">
-              <Sparkles className="w-5 h-5 text-coral-warm shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-5 bg-white rounded-2xl border border-gold-hairline shadow-sm">
+              <Sparkles className="w-5 h-5 text-gold shrink-0 mt-0.5" />
               <div>
-                <strong className="block text-xs font-bold text-cocoa-dark">
+                <strong className="block text-xs font-bold text-burgundy font-cairo">
                   {isAr ? 'فوال سويسري أصلي 100%' : '100% Swiss Voile'}
                 </strong>
-                <span className="text-[11px] text-cocoa-muted">
-                  {isAr ? 'نعومة استثنائية وبريق ملكي دائم' : 'Heirloom weave softness'}
+                <span className="text-[11px] text-slateText-secondary">
+                  {isAr ? 'منسوج في سانت غالن بنعومة تدوم طويلاً' : 'Heirloom Swiss cotton weave'}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 bg-white/70 rounded-2xl border border-peach-soft/60">
-              <HeartHandshake className="w-5 h-5 text-coral-warm shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-5 bg-white rounded-2xl border border-gold-hairline shadow-sm">
+              <HeartHandshake className="w-5 h-5 text-gold shrink-0 mt-0.5" />
               <div>
-                <strong className="block text-xs font-bold text-cocoa-dark">
-                  {isAr ? 'تطريز يدوي بأيادٍ سودانية' : 'Artisanal Embroidery'}
+                <strong className="block text-xs font-bold text-burgundy font-cairo">
+                  {isAr ? 'رسم وتطريز يدوي' : 'Artisanal Needlework'}
                 </strong>
-                <span className="text-[11px] text-cocoa-muted">
-                  {isAr ? 'دعم مستمر للحرفيات في السودان' : 'Supporting female artisans'}
+                <span className="text-[11px] text-slateText-secondary">
+                  {isAr ? 'دعم مستمر للحرفيات في السودان والدوحة' : 'Ethical patronage sustaining artisans'}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="pt-3">
+          <div className="pt-3 flex justify-center lg:justify-start">
             <Link href={`/${lang}/about`}>
-              <Button variant="secondary">
-                {isAr ? 'قراءة القصة كاملة' : 'Read Our Full Story'}
+              <Button size="lg" className="bg-burgundy hover:bg-burgundy-hover text-white font-bold shadow-luxury px-8 py-3.5 rounded-full border border-gold-hairline/40">
+                {isAr ? 'قراءة قصة الدار كاملة' : 'Read Our Full Story'}
+                {isAr ? <ArrowLeft className="w-4 h-4 ms-2" /> : <ArrowRight className="w-4 h-4 ms-2" />}
               </Button>
             </Link>
           </div>
         </div>
 
-        {/* Visual Composition Image */}
-        <div className="lg:col-span-5 relative">
-          <div className="relative aspect-square max-w-sm mx-auto rounded-3xl overflow-hidden border-2 border-peach-soft shadow-warm">
-            <img
-              src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80"
-              alt="Sudanese Heritage Needlework"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-cocoa-dark/60 via-transparent to-transparent flex items-end p-6 text-white text-xs font-bold">
-              <span>{isAr ? 'دقة الخيوط الذهبية ونقوش الحناء' : 'Gold Thread Craft & Henna Inlay'}</span>
+        {/* Right Visual Image */}
+        <div className="lg:col-span-5 relative aspect-[3/4] rounded-2xl overflow-hidden border border-gold-hairline shadow-luxury bg-white group">
+          <img
+            src="/brand/teaser-clean.jpg"
+            alt="Sudanese Toub Heirloom Piece"
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep/75 via-transparent to-transparent flex items-end p-6">
+            <div className="space-y-1">
+              <span className="text-[10px] uppercase tracking-widest text-gold font-bold">ATELIER HERITAGE • إرث الدار</span>
+              <p className="text-white text-xs sm:text-sm font-semibold font-cairo">
+                {isAr ? 'أصالة الثوب السوداني برؤية معاصرة في قطر' : 'Sudanese Toub Crafted for Qatar'}
+              </p>
             </div>
           </div>
         </div>

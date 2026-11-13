@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Language, getDictionary } from '../../lib/i18n';
-import { Filter, X, RotateCcw } from 'lucide-react';
-import { Button } from '../ui/Button';
+import { Language } from '../../lib/i18n';
+import { Filter, RotateCcw, Check } from 'lucide-react';
 
 export interface FilterSidebarProps {
   selectedCategory: string;
@@ -37,9 +36,9 @@ export function FilterSidebar({
   const categories = [
     { id: 'all', label: isAr ? 'جميع التصاميم' : 'All Collections' },
     { id: 'toubs', label: isAr ? 'ثياب سودانية (Toubs)' : 'Sudanese Toubs' },
-    { id: 'jalabiyas', label: isAr ? 'جلابيات (Jalabiyas)' : 'Jalabiyas' },
-    { id: 'daraas', label: isAr ? 'دراعات (Dara’as)' : 'Dara’as' },
-    { id: 'dresses', label: isAr ? 'فساتين عصرية (Dresses)' : 'Modern Dresses' },
+    { id: 'jalabiyas', label: isAr ? 'جلابيات راقية (Jalabiyas)' : 'Luxury Jalabiyas' },
+    { id: 'daraas', label: isAr ? 'دراعات وعبايات' : 'Dara’as & Abayas' },
+    { id: 'dresses', label: isAr ? 'فساتين عصرية' : 'Modern Dresses' },
     { id: 'accessories', label: isAr ? 'شيلان وإكسسوارات' : 'Scarves & Accessories' },
   ];
 
@@ -58,15 +57,15 @@ export function FilterSidebar({
   ];
 
   return (
-    <div className="bg-white/80 rounded-3xl p-6 border border-peach-soft shadow-sm space-y-6">
-      <div className="flex items-center justify-between pb-3 border-b border-peach-soft">
-        <span className="flex items-center gap-2 text-sm font-bold text-cocoa-dark font-cairo">
-          <Filter className="w-4 h-4 text-coral-warm" />
+    <div className="bg-white rounded-3xl p-6 border border-gold-hairline shadow-sm space-y-6">
+      <div className="flex items-center justify-between pb-3 border-b border-gold-hairline">
+        <span className="flex items-center gap-2 text-sm font-bold text-burgundy font-cairo">
+          <Filter className="w-4 h-4 text-gold-line" />
           <span>{isAr ? 'تصفية المنتجات' : 'Filter Catalog'}</span>
         </span>
         <button
           onClick={onResetFilters}
-          className="text-xs text-cocoa-muted hover:text-coral-warm flex items-center gap-1 font-semibold"
+          className="text-xs text-slateText-secondary hover:text-burgundy flex items-center gap-1 font-semibold transition-colors"
         >
           <RotateCcw className="w-3 h-3" />
           <span>{isAr ? 'إعادة ضبط' : 'Reset'}</span>
@@ -75,7 +74,7 @@ export function FilterSidebar({
 
       {/* Categories */}
       <div className="space-y-2.5">
-        <h4 className="text-xs font-bold text-cocoa-dark font-cairo uppercase tracking-wider">
+        <h4 className="text-xs font-bold text-burgundy font-cairo uppercase tracking-wider">
           {isAr ? 'التصنيف' : 'Category'}
         </h4>
         <div className="space-y-1">
@@ -83,21 +82,22 @@ export function FilterSidebar({
             <button
               key={c.id}
               onClick={() => onSelectCategory(c.id)}
-              className={`w-full text-start px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`w-full text-start px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between ${
                 selectedCategory === c.id
-                  ? 'bg-coral-warm text-white shadow-sm'
-                  : 'text-cocoa-muted hover:text-cocoa-dark hover:bg-blush-surface'
+                  ? 'bg-burgundy text-white shadow-sm'
+                  : 'text-slateText-body hover:text-burgundy hover:bg-canvas-warm/50'
               }`}
             >
-              {c.label}
+              <span>{c.label}</span>
+              {selectedCategory === c.id && <Check className="w-3.5 h-3.5" />}
             </button>
           ))}
         </div>
       </div>
 
       {/* Fabric */}
-      <div className="space-y-2.5 pt-2 border-t border-peach-soft/60">
-        <h4 className="text-xs font-bold text-cocoa-dark font-cairo uppercase tracking-wider">
+      <div className="space-y-2.5 pt-3 border-t border-gold-hairline/60">
+        <h4 className="text-xs font-bold text-burgundy font-cairo uppercase tracking-wider">
           {isAr ? 'نوع القماش' : 'Fabric Type'}
         </h4>
         <div className="space-y-1">
@@ -105,21 +105,22 @@ export function FilterSidebar({
             <button
               key={f.id}
               onClick={() => onSelectFabric(f.id)}
-              className={`w-full text-start px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`w-full text-start px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between ${
                 selectedFabric === f.id
-                  ? 'bg-peach-deep text-cocoa-dark shadow-sm'
-                  : 'text-cocoa-muted hover:text-cocoa-dark hover:bg-blush-surface'
+                  ? 'bg-burgundy text-white shadow-sm'
+                  : 'text-slateText-body hover:text-burgundy hover:bg-canvas-warm/50'
               }`}
             >
-              {f.label}
+              <span>{f.label}</span>
+              {selectedFabric === f.id && <Check className="w-3.5 h-3.5" />}
             </button>
           ))}
         </div>
       </div>
 
       {/* Price Range */}
-      <div className="space-y-2.5 pt-2 border-t border-peach-soft/60">
-        <h4 className="text-xs font-bold text-cocoa-dark font-cairo uppercase tracking-wider">
+      <div className="space-y-2.5 pt-3 border-t border-gold-hairline/60">
+        <h4 className="text-xs font-bold text-burgundy font-cairo uppercase tracking-wider">
           {isAr ? 'نطاق السعر (ر.ق)' : 'Price Range (QAR)'}
         </h4>
         <div className="space-y-1">
@@ -127,33 +128,34 @@ export function FilterSidebar({
             <button
               key={pr.id}
               onClick={() => onSelectPriceRange(pr.id)}
-              className={`w-full text-start px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`w-full text-start px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between ${
                 selectedPriceRange === pr.id
-                  ? 'bg-peach-deep text-cocoa-dark shadow-sm'
-                  : 'text-cocoa-muted hover:text-cocoa-dark hover:bg-blush-surface'
+                  ? 'bg-burgundy text-white shadow-sm'
+                  : 'text-slateText-body hover:text-burgundy hover:bg-canvas-warm/50'
               }`}
             >
-              {pr.label}
+              <span>{pr.label}</span>
+              {selectedPriceRange === pr.id && <Check className="w-3.5 h-3.5" />}
             </button>
           ))}
         </div>
       </div>
 
       {/* In-Stock Only */}
-      <div className="pt-2 border-t border-peach-soft/60">
-        <label className="flex items-center gap-2.5 text-xs text-cocoa-dark font-semibold cursor-pointer select-none">
+      <div className="pt-3 border-t border-gold-hairline/60">
+        <label className="flex items-center gap-2.5 text-xs text-slateText-body font-semibold cursor-pointer select-none">
           <input
             type="checkbox"
             checked={inStockOnly}
             onChange={(e) => onToggleInStock(e.target.checked)}
-            className="w-4 h-4 text-coral-warm rounded border-peach-deep/60 focus:ring-coral-warm accent-coral-warm"
+            className="w-4 h-4 text-burgundy rounded border-gold-hairline focus:ring-burgundy accent-burgundy"
           />
           <span>{isAr ? 'القطع المتوفرة فورياً فقط' : 'In Stock Only'}</span>
         </label>
       </div>
 
       {/* Result Count Indicator */}
-      <div className="pt-2 text-center text-xs text-cocoa-muted">
+      <div className="pt-2 text-center text-xs text-slateText-secondary border-t border-gold-hairline/40">
         <span>
           {isAr
             ? `عرض ${totalCount} من القطع المختارة`

@@ -1,8 +1,45 @@
 import type { Metadata } from 'next';
-import { Cairo, Tajawal, Playfair_Display, Inter } from 'next/font/google';
+import {
+  Cairo,
+  Tajawal,
+  Playfair_Display,
+  Inter,
+  Amiri,
+  Almarai,
+  Cormorant_Garamond,
+  Plus_Jakarta_Sans,
+} from 'next/font/google';
 import '../styles/globals.css';
 import { siteConfig } from '../config/site';
 import { SettingsProvider } from '../lib/settings-store';
+
+const amiri = Amiri({
+  subsets: ['arabic', 'latin'],
+  variable: '--font-amiri',
+  display: 'swap',
+  weight: ['400', '700'],
+});
+
+const almarai = Almarai({
+  subsets: ['arabic'],
+  variable: '--font-almarai',
+  display: 'swap',
+  weight: ['300', '400', '700', '800'],
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  variable: '--font-cormorant',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-jakarta',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+});
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
@@ -51,7 +88,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html className={`${cairo.variable} ${tajawal.variable} ${playfair.variable} ${inter.variable}`}>
+    <html
+      className={`${amiri.variable} ${almarai.variable} ${cormorant.variable} ${jakarta.variable} ${cairo.variable} ${tajawal.variable} ${playfair.variable} ${inter.variable}`}
+    >
       <body className="min-h-screen flex flex-col bg-canvas text-slateText-body selection:bg-peach-sorbet selection:text-burgundy antialiased">
         <SettingsProvider>
           {children}

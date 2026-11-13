@@ -99,12 +99,12 @@ export default function OrderConfirmationPage() {
               <span className="w-2 h-2 rounded-full bg-burgundy" />
               <span>{isAr ? 'تم التأكيد' : 'Confirmed'}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-surface-peachMuted" />
+            <div className="flex items-center gap-1.5 text-slateText-secondary">
+              <span className="w-2 h-2 rounded-full bg-gold-hairline" />
               <span>{isAr ? 'تجهيز القطعة' : 'Atelier Prep'}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-surface-peachMuted" />
+            <div className="flex items-center gap-1.5 text-slateText-secondary">
+              <span className="w-2 h-2 rounded-full bg-gold-hairline" />
               <span>{isAr ? 'جاري الشحن' : 'Shipped'}</span>
             </div>
           </div>

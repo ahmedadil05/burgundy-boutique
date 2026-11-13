@@ -20,6 +20,11 @@ export interface StoreState {
   currency: Currency;
   cart: CartItem[];
   wishlist: string[]; // product IDs
+  isCartOpen: boolean;
+  setIsCartOpen: (open: boolean) => void;
+  openCart: () => void;
+  closeCart: () => void;
+  toggleCart: () => void;
   setLanguage: (lang: Language) => void;
   setCurrency: (curr: Currency) => void;
   addToCart: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
@@ -45,6 +50,11 @@ export function StoreProvider({
   const [currency, setCurrencyState] = useState<Currency>('QAR');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
+  const toggleCart = () => setIsCartOpen((prev) => !prev);
 
   // Load from local storage on mount
   useEffect(() => {
@@ -142,6 +152,11 @@ export function StoreProvider({
         currency,
         cart,
         wishlist,
+        isCartOpen,
+        setIsCartOpen,
+        openCart,
+        closeCart,
+        toggleCart,
         setLanguage,
         setCurrency,
         addToCart,
@@ -168,6 +183,11 @@ export function useStore(): StoreState {
       currency: 'QAR',
       cart: [],
       wishlist: [],
+      isCartOpen: false,
+      setIsCartOpen: () => {},
+      openCart: () => {},
+      closeCart: () => {},
+      toggleCart: () => {},
       setLanguage: () => {},
       setCurrency: () => {},
       addToCart: () => {},

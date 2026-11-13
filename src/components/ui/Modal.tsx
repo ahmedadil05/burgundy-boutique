@@ -44,22 +44,22 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-cocoa-dark/60 backdrop-blur-sm animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn"
       role="dialog"
       aria-modal="true"
       onClick={onClose}
     >
       <div
-        className={`w-full ${maxWidthStyles[maxWidth]} bg-cream border border-peach-soft rounded-3xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto animate-scaleUp`}
+        className={`w-full ${maxWidthStyles[maxWidth]} bg-canvas border border-gold-hairline rounded-3xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto animate-scaleUp`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between pb-3 mb-4 border-b border-peach-soft/60">
+        <div className="flex items-center justify-between pb-3 mb-4 border-b border-gold-hairline">
           {title && (
-            <h3 className="text-lg font-bold text-cocoa-dark">{title}</h3>
+            <h3 className="text-lg font-bold text-burgundy font-cairo">{title}</h3>
           )}
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full hover:bg-blush-surface text-cocoa-muted hover:text-cocoa-dark transition-colors ms-auto focus:outline-none focus:ring-2 focus:ring-coral-warm"
+            className="p-1.5 rounded-full hover:bg-canvas-warm text-slateText-secondary hover:text-burgundy transition-colors ms-auto focus:outline-none focus:ring-2 focus:ring-burgundy"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />

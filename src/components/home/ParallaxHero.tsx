@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles, Gem, ShieldCheck } from 'lucide-react';
 import { Language, getDictionary } from '../../lib/i18n';
 import { useStoreSettings } from '../../lib/settings-store';
 
@@ -18,7 +18,6 @@ export function ParallaxHero({ lang }: ParallaxHeroProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
-    // Check user preference for motion
     if (typeof window !== 'undefined') {
       const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
       setPrefersReducedMotion(mediaQuery.matches);
@@ -26,7 +25,6 @@ export function ParallaxHero({ lang }: ParallaxHeroProps) {
       const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
       mediaQuery.addEventListener('change', handleChange);
 
-      // Lightweight scroll listener throttled via requestAnimationFrame
       let ticking = false;
       const handleScroll = () => {
         if (!ticking) {
@@ -47,55 +45,56 @@ export function ParallaxHero({ lang }: ParallaxHeroProps) {
   }, []);
 
   const isRtl = lang === 'ar';
-  // Compute parallax offsets (clamped for mobile safety)
-  const depthSlow = prefersReducedMotion ? 0 : Math.min(scrollY * 0.15, 60);
-  const depthMedium = prefersReducedMotion ? 0 : Math.min(scrollY * 0.3, 100);
+  const depthSlow = prefersReducedMotion ? 0 : Math.min(scrollY * 0.12, 50);
+  const depthMedium = prefersReducedMotion ? 0 : Math.min(scrollY * 0.25, 80);
 
   return (
-    <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden bg-canvas leaf-shadow-bg px-4 sm:px-6 lg:px-8 py-16">
-      {/* Parallax Layer 1: Ambient leaf-shadow and warm blush orbs (Slow depth) */}
+    <section className="relative min-h-[85vh] sm:min-h-[88vh] flex items-center justify-center overflow-hidden bg-canvas px-4 sm:px-6 lg:px-8 py-16 lg:py-24 border-b border-gold-hairline/60">
+      {/* Clean Subtle Radial Ambient Backdrop */}
       <div
-        className="absolute inset-0 pointer-events-none overflow-hidden parallax-layer-slow"
-        style={{ transform: `translateY(${depthSlow * 0.5}px)` }}
+        className="absolute inset-0 pointer-events-none opacity-40"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 75% 25%, rgba(217, 185, 122, 0.12) 0%, transparent 60%), radial-gradient(circle at 20% 80%, rgba(95, 15, 64, 0.05) 0%, transparent 50%)',
+        }}
         aria-hidden="true"
-      >
-        <div className="absolute top-10 -start-24 w-80 h-80 rounded-full bg-surface-peachSoft/30 blur-3xl" />
-        <div className="absolute bottom-10 -end-24 w-96 h-96 rounded-full bg-peach-sorbet/25 blur-3xl" />
-      </div>
+      />
 
-      <div className="relative max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div className="relative max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
         
-        {/* Left Column: Typography, Poetry & CTAs (Mobile 390px first) */}
+        {/* Left Column: Typography, Poetry & CTAs */}
         <div
           className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-start z-10 space-y-6"
-          style={{ transform: `translateY(-${depthSlow * 0.3}px)` }}
+          style={{ transform: `translateY(-${depthSlow * 0.25}px)` }}
         >
-          {/* Eyebrow Label with Gold Hairline */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/80 border border-gold-hairline shadow-soft backdrop-blur-sm text-burgundy text-xs font-semibold tracking-widest uppercase">
-            <Sparkles className="w-3.5 h-3.5 text-gold-line" />
-            <span>{isRtl ? 'أناقة الثوب السوداني في قطر' : 'Sudanese Couture in Qatar'}</span>
+          {/* Eyebrow Label with Delicate Gold Hairline Pill */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-gold-hairline shadow-sm text-burgundy text-xs font-semibold tracking-widest uppercase">
+            <Gem className="w-3.5 h-3.5 text-gold" strokeWidth={1.75} />
+            <span className="font-cairo">
+              {isRtl ? 'دار بيرغندي للأزياء الراقية • الدوحة' : 'BURGUNDY HAUTE COUTURE • DOHA'}
+            </span>
           </div>
 
-          {/* High-Contrast Luxury Serif Wordmark */}
-          <div className="space-y-1">
-            <span className="brand-wordmark text-sm sm:text-base text-gold-shimmer tracking-[0.3em] uppercase block font-semibold">
-              {settings.storeName.en}
+          {/* High-Contrast Luxury Serif Wordmark & Headline */}
+          <div className="space-y-3">
+            <span className="brand-wordmark text-xs sm:text-sm text-gold tracking-[0.35em] uppercase block font-semibold">
+              {settings.storeName.en} • ATELIER DE LUXE
             </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-burgundy tracking-tight leading-[1.2]">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-burgundy tracking-tight leading-[1.25] font-cairo">
               {dict.home.heroTitle}
             </h1>
           </div>
 
-          {/* Warm Poetic Body Copy */}
-          <p className="max-w-xl text-sm sm:text-base text-slateText-body font-normal leading-relaxed">
+          {/* Warm Poetic Body Copy with Generous Breathing Room */}
+          <p className="max-w-xl text-sm sm:text-base text-slateText-body font-normal leading-relaxed font-tajawal">
             {dict.home.heroSubtitle}
           </p>
 
           {/* Action CTAs: Shop Now & Custom Order */}
-          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto pt-2">
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto pt-3">
             <Link
               href={`/${lang}/shop`}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-burgundy hover:bg-burgundy-hover text-white text-xs sm:text-sm font-bold tracking-wider uppercase transition-all shadow-luxury flex items-center justify-center gap-2.5 active:scale-[0.98]"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-burgundy hover:bg-burgundy-hover text-white text-xs sm:text-sm font-bold tracking-widest uppercase transition-all shadow-luxury flex items-center justify-center gap-3 active:scale-[0.98] border border-gold-hairline/40"
             >
               <span>{dict.common.shopNow}</span>
               {isRtl ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
@@ -103,54 +102,66 @@ export function ParallaxHero({ lang }: ParallaxHeroProps) {
 
             <Link
               href={`/${lang}/custom-order`}
-              className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-white hover:bg-surface-peachSoft/40 text-slateText-body hover:text-burgundy border border-gold-hairline text-xs sm:text-sm font-semibold transition-all shadow-soft flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-white hover:bg-canvas-warm text-burgundy border border-gold-hairline text-xs sm:text-sm font-bold tracking-wider transition-all shadow-sm flex items-center justify-center gap-2 hover:border-burgundy/40"
             >
-              <span>{dict.nav.customOrder}</span>
+              <span>{isRtl ? 'حجز موعد تفصيل خاص' : 'Bespoke Atelier Booking'}</span>
             </Link>
           </div>
 
-          {/* Brand Guarantee Micro-tokens */}
-          <div className="flex items-center gap-6 pt-4 text-[11px] text-slateText-secondary border-t border-gold-hairline/60 w-full justify-center lg:justify-start">
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-gold-line" />
-              <span>{isRtl ? 'رسم يدوي أصيل' : 'Hand-Painted'}</span>
+          {/* Provenance & Craft Pillars */}
+          <div className="grid grid-cols-3 gap-4 pt-6 text-[11px] text-slateText-secondary border-t border-gold-hairline/60 w-full max-w-lg">
+            <div className="flex flex-col items-center lg:items-start space-y-0.5">
+              <span className="font-bold text-burgundy font-cairo">{isRtl ? 'فوال سويسري' : 'Swiss Voile'}</span>
+              <span className="text-[10px] text-slateText-secondary">{isRtl ? 'قطن أصلي 100%' : '100% St. Gallen'}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-gold-line" />
-              <span>{isRtl ? 'توصيل داخل قطر' : 'Qatar Delivery'}</span>
+            <div className="flex flex-col items-center lg:items-start space-y-0.5 border-x border-gold-hairline/60 px-2">
+              <span className="font-bold text-burgundy font-cairo">{isRtl ? 'رسم يدوي أصيل' : 'Hand-Guided'}</span>
+              <span className="text-[10px] text-slateText-secondary">{isRtl ? 'قطعة فنية فريدة' : 'One of a Kind'}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-gold-line" />
-              <span>{isRtl ? 'فوال سويسري وحرير' : 'Swiss Voile & Silk'}</span>
+            <div className="flex flex-col items-center lg:items-start space-y-0.5">
+              <span className="font-bold text-burgundy font-cairo">{isRtl ? 'توصيل قطر' : 'Qatar Express'}</span>
+              <span className="text-[10px] text-slateText-secondary">{isRtl ? 'خلال 24-48 ساعة' : '24-48h Delivery'}</span>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Hero Visual with Layered Parallax (Medium Depth) */}
+        {/* Right Column: Hero Visual with Double Gold Hairline Frame */}
         <div
-          className="lg:col-span-5 relative w-full aspect-[4/5] sm:aspect-[3/4] max-w-[420px] mx-auto z-10"
-          style={{ transform: `translateY(${depthMedium * 0.4}px)` }}
+          className="lg:col-span-5 relative w-full aspect-[3/4] max-w-[420px] mx-auto z-10"
+          style={{ transform: `translateY(${depthMedium * 0.3}px)` }}
         >
-          {/* Framed Card with Gold Hairline and Draped Toub */}
+          {/* Outer Decorative Gold Hairline Ring */}
+          <div className="absolute -inset-2.5 rounded-[26px] border border-gold-hairline/50 pointer-events-none" />
+
+          {/* Main Visual Frame */}
           <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-luxury border border-gold-hairline bg-white group">
             <Image
               src="/brand/teaser-clean.jpg"
-              alt="BURGUNDY Hand-painted Toub"
+              alt="BURGUNDY Haute Couture Toub"
               fill
               priority
               className="object-cover object-center group-hover:scale-105 transition-transform duration-1000 ease-out"
               sizes="(max-width: 640px) 100vw, 420px"
             />
-            {/* Subtle light overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep/40 via-transparent to-transparent pointer-events-none" />
+            
+            {/* Subtle Gradient Veil */}
+            <div className="absolute inset-0 bg-gradient-to-t from-burgundy-deep/60 via-transparent to-transparent pointer-events-none" />
 
-            {/* Floating Atelier Badge on Visual */}
-            <div className="absolute bottom-4 start-4 end-4 p-3 rounded-xl bg-white/90 backdrop-blur-md border border-gold-hairline text-start shadow-soft">
-              <p className="text-[10px] tracking-widest uppercase font-semibold text-gold-shimmer">
-                ATELIER PIECE • قطعة حصرية
+            {/* Floating Luxury Atelier Seal */}
+            <div className="absolute top-4 start-4 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-gold-hairline shadow-soft flex items-center gap-1.5">
+              <Sparkles className="w-3 h-3 text-gold" />
+              <span className="text-[10px] font-bold text-burgundy tracking-widest uppercase">
+                {isRtl ? 'مجموعة الدوحة الملكية' : 'Doha Royal Edition'}
+              </span>
+            </div>
+
+            {/* Bottom Atelier Caption */}
+            <div className="absolute bottom-4 start-4 end-4 p-4 rounded-xl bg-white/95 backdrop-blur-md border border-gold-hairline text-start shadow-luxury space-y-1">
+              <p className="text-[10px] tracking-widest uppercase font-bold text-gold">
+                HAUTE COUTURE MASTERPIECE
               </p>
-              <p className="text-xs font-bold text-burgundy truncate">
-                {isRtl ? 'ثوب حرير مشغول يدوياً بأنامل فنية' : 'Hand-Painted Silk Toub Atelier Release'}
+              <p className="text-xs sm:text-sm font-bold text-burgundy truncate font-cairo">
+                {isRtl ? 'ثوب فوال سويسري مرسوم بحناء عصرية وذهب سائل' : 'Swiss Voile Toub • Liquid Gold & Henna Brushwork'}
               </p>
             </div>
           </div>

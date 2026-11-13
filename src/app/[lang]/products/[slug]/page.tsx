@@ -8,7 +8,7 @@ import { DeliveryEstimator } from '@/components/product/DeliveryEstimator';
 import { Accordion } from '@/components/ui/Accordion';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { Language, getDictionary } from '@/lib/i18n';
-import { ShieldCheck, RotateCcw, Sparkles, Check, Globe } from 'lucide-react';
+import { ShieldCheck, RotateCcw, Sparkles } from 'lucide-react';
 
 export function generateStaticParams() {
   const languages = ['ar', 'en'];
@@ -49,17 +49,17 @@ export default async function ProductDetailPage({
       id: 'details',
       title: isAr ? 'تفاصيل الحياكة والمنشأ التراثي' : 'Craftsmanship & Heritage Origin',
       content: (
-        <div className="space-y-2">
+        <div className="space-y-2 text-slateText-body">
           <p className="leading-relaxed">{product.description[currentLang]}</p>
-          <div className="pt-2 border-t border-peach-soft/60 space-y-1">
+          <div className="pt-2 border-t border-gold-hairline/60 space-y-1 text-xs">
             <p>
-              <strong>{dict.common.fabric}:</strong> {product.fabric[currentLang]}
+              <strong className="text-burgundy">{dict.common.fabric}:</strong> {product.fabric[currentLang]}
             </p>
             <p>
-              <strong>{dict.common.origin}:</strong> {product.origin[currentLang]}
+              <strong className="text-burgundy">{dict.common.origin}:</strong> {product.origin[currentLang]}
             </p>
           </div>
-          <ul className="list-disc list-inside space-y-1 text-cocoa-muted pt-1">
+          <ul className="list-disc list-inside space-y-1 text-slateText-secondary pt-1 text-xs">
             {product.features.map((f, i) => (
               <li key={i}>{f[currentLang]}</li>
             ))}
@@ -71,14 +71,14 @@ export default async function ProductDetailPage({
       id: 'care',
       title: isAr ? 'إرشادات الغسيل والعناية بالأقمشة' : 'Fabric & Care Instructions',
       content: (
-        <p className="leading-relaxed">{product.careInstructions[currentLang]}</p>
+        <p className="leading-relaxed text-slateText-body text-xs">{product.careInstructions[currentLang]}</p>
       ),
     },
     {
       id: 'returns',
       title: isAr ? 'سياسة الاستبدال والضمان (وزارة التجارة)' : 'Exchange & Guarantee Policy (MOCI)',
       content: (
-        <div className="space-y-1.5 leading-relaxed">
+        <div className="space-y-1.5 leading-relaxed text-slateText-body text-xs">
           <p>
             {isAr
               ? 'يحق لكِ استبدال أو استرجاع المنتج خلال 14 يوماً من الاستلام بحالته الأصلية وفق لوائح وزارة التجارة والصناعة بدولة قطر.'
@@ -86,7 +86,7 @@ export default async function ProductDetailPage({
           </p>
           <Link
             href={`/${currentLang}/policies/returns`}
-            className="text-coral-warm font-semibold underline block pt-1"
+            className="text-burgundy font-semibold underline block pt-1 hover:text-burgundy-hover"
           >
             {isAr ? 'قراءة السياسة كاملة' : 'Read Full Return Policy'}
           </Link>
@@ -96,22 +96,22 @@ export default async function ProductDetailPage({
   ];
 
   return (
-    <div className="min-h-screen bg-cream py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-canvas py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-16">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs text-cocoa-muted">
-          <Link href={`/${currentLang}`} className="hover:text-coral-warm">
+        <nav className="flex items-center gap-2 text-xs text-slateText-secondary">
+          <Link href={`/${currentLang}`} className="hover:text-burgundy">
             {dict.nav.home}
           </Link>
           <span>/</span>
           <Link
             href={`/${currentLang}/shop?category=${product.category}`}
-            className="hover:text-coral-warm"
+            className="hover:text-burgundy"
           >
             {(dict.nav as Record<string, string>)[product.category] || product.category}
           </Link>
           <span>/</span>
-          <span className="text-cocoa-dark font-semibold line-clamp-1">
+          <span className="text-burgundy font-semibold line-clamp-1">
             {product.title[currentLang]}
           </span>
         </nav>
@@ -128,8 +128,8 @@ export default async function ProductDetailPage({
             />
 
             {/* Accordion Specs */}
-            <div className="bg-white/70 rounded-3xl p-6 border border-peach-soft shadow-sm">
-              <h2 className="text-base font-bold text-cocoa-dark mb-3 font-cairo">
+            <div className="bg-white rounded-3xl p-6 border border-gold-hairline shadow-sm">
+              <h2 className="text-base font-bold text-burgundy mb-3 font-cairo">
                 {dict.product.fabricAndCare}
               </h2>
               <Accordion items={accordionItems} defaultOpenId="details" />
@@ -137,31 +137,31 @@ export default async function ProductDetailPage({
 
             {/* Heritage Trust Badges */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-              <div className="p-4 rounded-2xl bg-blush-surface/60 border border-peach-soft text-center">
-                <Sparkles className="w-5 h-5 text-coral-warm mx-auto mb-1.5" />
-                <span className="block text-xs font-bold text-cocoa-dark">
+              <div className="p-4 rounded-2xl bg-canvas-warm/40 border border-gold-hairline text-center">
+                <Sparkles className="w-5 h-5 text-gold-line mx-auto mb-1.5" />
+                <span className="block text-xs font-bold text-burgundy">
                   {isAr ? 'أصالة 100%' : '100% Authentic'}
                 </span>
-                <span className="text-[10px] text-cocoa-muted">
-                  {isAr ? 'تطريز سوداني يدوي' : 'Sudanese Needlework'}
+                <span className="text-[10px] text-slateText-secondary">
+                  {isAr ? 'رسم وتطريز يدوي' : 'Hand-Painted & Needlework'}
                 </span>
               </div>
-              <div className="p-4 rounded-2xl bg-blush-surface/60 border border-peach-soft text-center">
-                <RotateCcw className="w-5 h-5 text-coral-warm mx-auto mb-1.5" />
-                <span className="block text-xs font-bold text-cocoa-dark">
+              <div className="p-4 rounded-2xl bg-canvas-warm/40 border border-gold-hairline text-center">
+                <RotateCcw className="w-5 h-5 text-gold-line mx-auto mb-1.5" />
+                <span className="block text-xs font-bold text-burgundy">
                   {isAr ? 'استبدال 14 يوماً' : '14-Day Returns'}
                 </span>
-                <span className="text-[10px] text-cocoa-muted">
-                  {isAr ? 'بموجب القانون القطري' : 'Qatar MOCI Governed'}
+                <span className="text-[10px] text-slateText-secondary">
+                  {isAr ? 'وفق القانون القطري' : 'Qatar MOCI Governed'}
                 </span>
               </div>
-              <div className="p-4 rounded-2xl bg-blush-surface/60 border border-peach-soft text-center">
-                <ShieldCheck className="w-5 h-5 text-coral-warm mx-auto mb-1.5" />
-                <span className="block text-xs font-bold text-cocoa-dark">
+              <div className="p-4 rounded-2xl bg-canvas-warm/40 border border-gold-hairline text-center">
+                <ShieldCheck className="w-5 h-5 text-gold-line mx-auto mb-1.5" />
+                <span className="block text-xs font-bold text-burgundy">
                   {isAr ? 'دفع آمن ومرخص' : 'Licensed Gateway'}
                 </span>
-                <span className="text-[10px] text-cocoa-muted">
-                  {isAr ? 'QPay / فوران / فيزا' : 'QPay / Fawran / Visa'}
+                <span className="text-[10px] text-slateText-secondary">
+                  {isAr ? 'QPay / فوران / بطاقات' : 'QPay / Fawran / Cards'}
                 </span>
               </div>
             </div>
@@ -175,12 +175,12 @@ export default async function ProductDetailPage({
         </div>
 
         {/* You May Also Like Section */}
-        <section className="pt-10 border-t border-peach-soft">
+        <section className="pt-10 border-t border-gold-hairline">
           <div className="text-center mb-8">
-            <span className="text-xs font-bold text-coral-warm uppercase tracking-wider">
+            <span className="text-xs font-bold text-coral uppercase tracking-wider">
               {isAr ? 'تشكيلات مكملة' : 'Curated For You'}
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-cocoa-dark font-cairo">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-cairo mt-1">
               {dict.product.similarProducts}
             </h2>
           </div>

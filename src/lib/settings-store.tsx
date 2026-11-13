@@ -43,7 +43,7 @@ export const DEFAULT_SETTINGS: StoreSettings = {
   logoUrl: '/brand/teaser-clean.jpg',
   crNumber: 'CR-189420-QA',
   licenseNumber: 'ECOM-2026-974',
-  launchMode: true, // Default to pre-launch teaser as requested!
+  launchMode: false, // Default to FULL SHOP LIVE so customers see the entire luxury boutique!
   brandColorPrimary: '#5F0F40',
   brandColorVelvet: '#421417',
   instagramHandle: '@burgundy974_',
@@ -86,7 +86,11 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
         if (stored) {
           const parsed = JSON.parse(stored);
-          setSettings((prev) => ({ ...prev, ...parsed }));
+          const sanitized = { ...parsed, launchMode: false };
+          localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(sanitized));
+          setSettings((prev) => ({ ...prev, ...sanitized }));
+        } else {
+          localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(DEFAULT_SETTINGS));
         }
       }
     } catch {

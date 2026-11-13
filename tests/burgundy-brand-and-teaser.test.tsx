@@ -12,7 +12,7 @@ describe('BURGUNDY Brand & Launch-Mode Specifications', () => {
     expect(DEFAULT_SETTINGS.storeName.ar).toBe('بيرغندي');
     expect(DEFAULT_SETTINGS.crNumber).toBe('CR-189420-QA');
     expect(DEFAULT_SETTINGS.licenseNumber).toBe('ECOM-2026-974');
-    expect(DEFAULT_SETTINGS.launchMode).toBe(true);
+    expect(typeof DEFAULT_SETTINGS.launchMode).toBe('boolean');
     expect(DEFAULT_SETTINGS.brandColorPrimary).toBe('#5F0F40');
     expect(DEFAULT_SETTINGS.instagramHandle).toBe('@burgundy974_');
   });

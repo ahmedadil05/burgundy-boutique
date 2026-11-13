@@ -1,26 +1,28 @@
 'use client';
 
 import React from 'react';
+import { MapPin, Globe } from 'lucide-react';
 import { Input } from '../ui/Input';
-import { Select } from '../ui/Controls';
+import { Select } from '../ui/Select';
 import { Language } from '../../lib/i18n';
-import { MapPin, Phone, Mail, User } from 'lucide-react';
 
-export interface AddressFormData {
+export interface QatarAddressData {
   fullName: string;
   phone: string;
   email: string;
-  destination: 'qatar' | 'gcc';
-  municipality: string;
   zone: string;
   street: string;
   building: string;
+  municipality: string;
   notes?: string;
+  destination: 'qatar' | 'gcc';
 }
 
+export type AddressFormData = QatarAddressData;
+
 export interface AddressFormQatarProps {
-  formData: AddressFormData;
-  onChange: (data: AddressFormData) => void;
+  formData: QatarAddressData;
+  onChange: (data: QatarAddressData) => void;
   lang?: Language;
 }
 
@@ -33,29 +35,29 @@ export function AddressFormQatar({
 
   const municipalities = [
     { value: 'Doha', label: isAr ? 'بلدية الدوحة (Doha Municipality)' : 'Doha Municipality' },
-    { value: 'Al Rayyan', label: isAr ? 'بلدية الريان (Al Rayyan Municipality)' : 'Al Rayyan Municipality' },
-    { value: 'Al Wakrah', label: isAr ? 'بلدية الوكرة (Al Wakrah Municipality)' : 'Al Wakrah Municipality' },
-    { value: 'Al Daayen', label: isAr ? 'بلدية الظعاين (Al Daayen / Lusail)' : 'Al Daayen / Lusail' },
+    { value: 'Al Rayyan', label: isAr ? 'بلدية الريان (Al Rayyan)' : 'Al Rayyan' },
+    { value: 'Al Daayen', label: isAr ? 'بلدية الظعاين ولوسيل (Al Daayen & Lusail)' : 'Al Daayen & Lusail' },
     { value: 'Umm Salal', label: isAr ? 'بلدية أم صلال (Umm Salal)' : 'Umm Salal' },
+    { value: 'Al Wakrah', label: isAr ? 'بلدية الوكرة (Al Wakrah)' : 'Al Wakrah' },
     { value: 'Al Khor', label: isAr ? 'بلدية الخور والذخيرة (Al Khor)' : 'Al Khor & Al Dhakhira' },
   ];
 
   return (
-    <div className="bg-white/85 rounded-3xl p-6 sm:p-8 border border-peach-soft shadow-sm space-y-6">
-      <div className="flex items-center gap-2 pb-3 border-b border-peach-soft text-cocoa-dark font-bold font-cairo">
-        <MapPin className="w-5 h-5 text-coral-warm" />
+    <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gold-hairline shadow-sm space-y-6">
+      <div className="flex items-center gap-2 pb-3 border-b border-gold-hairline text-burgundy font-bold font-cairo">
+        <MapPin className="w-5 h-5 text-gold-line" />
         <span>{isAr ? 'بيانات التوصيل والعنوان في قطر' : 'Qatar Delivery Address & Contact'}</span>
       </div>
 
       {/* Destination Switcher */}
-      <div className="flex gap-2 p-1 bg-cream rounded-2xl border border-peach-soft">
+      <div className="flex gap-2 p-1 bg-canvas-warm/50 rounded-2xl border border-gold-hairline">
         <button
           type="button"
           onClick={() => onChange({ ...formData, destination: 'qatar' })}
           className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
             formData.destination === 'qatar'
-              ? 'bg-coral-warm text-white shadow-sm'
-              : 'text-cocoa-muted hover:text-cocoa-dark'
+              ? 'bg-burgundy text-white shadow-sm'
+              : 'text-slateText-secondary hover:text-burgundy'
           }`}
         >
           {isAr ? 'توصيل داخل دولة قطر (24-48 ساعة)' : 'Domestic Qatar (24-48 hrs)'}
@@ -65,8 +67,8 @@ export function AddressFormQatar({
           onClick={() => onChange({ ...formData, destination: 'gcc' })}
           className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
             formData.destination === 'gcc'
-              ? 'bg-coral-warm text-white shadow-sm'
-              : 'text-cocoa-muted hover:text-cocoa-dark'
+              ? 'bg-burgundy text-white shadow-sm'
+              : 'text-slateText-secondary hover:text-burgundy'
           }`}
         >
           {isAr ? 'شحن لدول الخليج (GCC)' : 'GCC Shipping (3-5 days)'}
@@ -104,7 +106,7 @@ export function AddressFormQatar({
 
       {/* Qatar Address Standard: Zone, Street, Building */}
       {formData.destination === 'qatar' ? (
-        <div className="space-y-4 pt-2 border-t border-peach-soft/60">
+        <div className="space-y-4 pt-2 border-t border-gold-hairline/60">
           <Select
             label={isAr ? 'البلدية / المنطقة الكبرى *' : 'Municipality *'}
             options={municipalities}
@@ -135,14 +137,14 @@ export function AddressFormQatar({
               onChange={(e) => onChange({ ...formData, building: e.target.value })}
             />
           </div>
-          <p className="text-[11px] text-cocoa-muted">
+          <p className="text-[11px] text-slateText-secondary">
             {isAr
               ? 'نظام العنونة القطري الرسمي (المنطقة / الشارع / المبنى) يضمن وصول مندوبنا مباشرة لباب منزلكِ.'
               : 'Official Qatar National Addressing (Zone / Street / Building) ensures direct doorstep delivery.'}
           </p>
         </div>
       ) : (
-        <div className="space-y-4 pt-2 border-t border-peach-soft/60">
+        <div className="space-y-4 pt-2 border-t border-gold-hairline/60">
           <Input
             label={isAr ? 'الدولة والمدينة في الخليج *' : 'GCC Country & City *'}
             required
