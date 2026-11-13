@@ -14,6 +14,9 @@ import {
   Tag,
   ExternalLink,
   Layers,
+  Pencil,
+  Check,
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -21,17 +24,21 @@ export function MobileProductList({
   products,
   onDeleteProduct,
   onUpdateStock,
+  onEditProduct,
   lang = 'ar',
 }: {
   products: Product[];
   onDeleteProduct?: (id: string) => void;
   onUpdateStock?: (id: string, deltaOrCount: number, isAbsolute?: boolean) => void;
+  onEditProduct?: (id: string, updates: Partial<Product>) => void;
   lang?: Language;
 }) {
   const isAr = lang === 'ar';
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [priceDraft, setPriceDraft] = useState('');
 
   const filteredProducts = products.filter((p) => {
     const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
@@ -226,15 +233,77 @@ export function MobileProductList({
                     )}
                   </div>
 
-                  {/* Delete Button */}
-                  <button
-                    type="button"
-                    onClick={() => setProductToDelete(product)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-rose-700 bg-rose-50/70 hover:bg-rose-100 border border-rose-200 text-xs font-semibold transition-colors"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>{isAr ? 'حذف' : 'Delete'}</span>
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    {/* Edit price quick action */}
+                    {editingId === product.id ? (
+                      <div className="inline-flex items-center gap-1.5">
+                        <input
+                          type="number"
+                          min="1"
+                          step="5"
+                          value={priceDraft}
+                          autoFocus
+                          onChange={(e) => setPriceDraft(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              const n = Number(priceDraft);
+                              if (Number.isFinite(n) && n > 0 && onEditProduct) {
+                                onEditProduct(product.id, { priceQAR: Math.round(n) });
+                              }
+                              setEditingId(null);
+                            }
+                            if (e.key === 'Escape') setEditingId(null);
+                          }}
+                          className="w-16 h-7 px-1.5 rounded-lg border border-burgundy/40 text-xs text-center font-mono focus:outline-none focus:ring-1 focus:ring-burgundy"
+                          aria-label={isAr ? 'السعر الجديد' : 'New price'}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const n = Number(priceDraft);
+                            if (Number.isFinite(n) && n > 0 && onEditProduct) {
+                              onEditProduct(product.id, { priceQAR: Math.round(n) });
+                            }
+                            setEditingId(null);
+                          }}
+                          className="w-7 h-7 flex items-center justify-center rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200"
+                          aria-label={isAr ? 'حفظ السعر' : 'Save price'}
+                        >
+                          <Check className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditingId(null)}
+                          className="w-7 h-7 flex items-center justify-center rounded-lg text-cocoa-muted hover:bg-cream-100"
+                          aria-label={isAr ? 'إلغاء' : 'Cancel'}
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingId(product.id);
+                          setPriceDraft(String(product.priceQAR));
+                        }}
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-burgundy bg-surface-peachSoft/40 hover:bg-surface-peachSoft/70 border border-peach-soft text-xs font-semibold transition-colors"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                        <span>{isAr ? 'السعر' : 'Price'}</span>
+                      </button>
+                    )}
+
+                    {/* Delete Button */}
+                    <button
+                      type="button"
+                      onClick={() => setProductToDelete(product)}
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-rose-700 bg-rose-50/70 hover:bg-rose-100 border border-rose-200 text-xs font-semibold transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>{isAr ? 'حذف' : 'Delete'}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             );

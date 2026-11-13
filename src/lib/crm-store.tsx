@@ -193,22 +193,30 @@ export function CRMProvider({ children }: { children: React.ReactNode }) {
     [customers]
   );
 
+  const escapeCSVCell = (value: unknown): string => {
+    if (value === null || value === undefined) return '""';
+    const str = typeof value === 'object' ? JSON.stringify(value) : String(value);
+    return `"${str.replace(/"/g, '""')}"`;
+  };
+
   const exportCRMToCSV = useCallback(() => {
     if (typeof window === 'undefined') return;
     const headers = ['ID', 'Type', 'Name', 'Phone', 'Email', 'Status', 'Date', 'Details', 'Notes'];
     const rows = leads.map((l) => [
-      `"${l.id}"`,
-      `"${l.type}"`,
-      `"${l.name}"`,
-      `"${l.phone}"`,
-      `"${l.email}"`,
-      `"${l.status}"`,
-      `"${l.createdAt}"`,
-      `"${(l.details || '').replace(/"/g, '""')}"`,
-      `"${(l.notes || '').replace(/"/g, '""')}"`,
+      l.id,
+      l.type,
+      l.name,
+      l.phone,
+      l.email,
+      l.status,
+      l.createdAt,
+      l.details || '',
+      l.notes || '',
     ]);
 
-    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const csvContent =
+      '\uFEFF' +
+      [headers.map(escapeCSVCell).join(','), ...rows.map((r) => r.map(escapeCSVCell).join(','))].join('\r\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -217,6 +225,7 @@ export function CRMProvider({ children }: { children: React.ReactNode }) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   }, [leads]);
 
   return (

@@ -10,9 +10,29 @@ interface InvoiceViewProps {
   lang?: Language;
 }
 
+const PAYMENT_RAIL_LABELS: Record<string, string> = {
+  fawran: 'Fawran Instant (QCB)',
+  qpay: 'QPay / NAPS Debit',
+  card: 'Visa / Mastercard',
+  bank_transfer: 'Bank Wire Transfer',
+  cod: 'Cash on Delivery',
+};
+
+const formatQAR = (n: number) =>
+  Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
+
 export function InvoiceView({ invoice, lang = 'ar' }: InvoiceViewProps) {
   const isRtl = lang === 'ar';
   const invoiceRef = useRef<HTMLDivElement>(null);
+
+  // Verification checksum — lets support validate an invoice by phone/WhatsApp:
+  // BUR-##### derived from order id, total and CR number.
+  const verifySource = `${invoice.orderId}|${invoice.totals.total}|${invoice.crNumber}`;
+  let verifyHash = 5381;
+  for (let i = 0; i < verifySource.length; i++) {
+    verifyHash = ((verifyHash << 5) + verifyHash + verifySource.charCodeAt(i)) >>> 0;
+  }
+  const verificationCode = `BUR-${String(verifyHash % 100000).padStart(5, '0')}`;
 
   const handlePrint = () => {
     if (typeof window !== 'undefined') {
@@ -22,7 +42,7 @@ export function InvoiceView({ invoice, lang = 'ar' }: InvoiceViewProps) {
 
   const handleShareWhatsApp = () => {
     const text = encodeURIComponent(
-      `فاتورة دار بيرغندي / BURGUNDY Invoice: ${invoice.invoiceNumber}\nالمجموع / Total: ${invoice.totals.total} QAR\nرقم الطلب / Order: ${invoice.orderId}`
+      `فاتورة دار بيرغندي / BURGUNDY Invoice: ${invoice.invoiceNumber}\nالمجموع / Total: ${formatQAR(invoice.totals.total)} QAR\nرقم الطلب / Order: ${invoice.orderId}`
     );
     window.open(`https://wa.me/${invoice.customer.phone.replace(/[^0-9]/g, '')}?text=${text}`, '_blank');
   };
@@ -141,7 +161,7 @@ export function InvoiceView({ invoice, lang = 'ar' }: InvoiceViewProps) {
               </p>
               <p>
                 <span className="text-slateText-secondary">{isRtl ? 'طريقة الدفع:' : 'Payment Rail:'}</span>{' '}
-                <span className="font-semibold uppercase">{invoice.paymentMethod}</span>
+                <span className="font-semibold">{PAYMENT_RAIL_LABELS[invoice.paymentMethod] || invoice.paymentMethod}</span>
               </p>
               <p>
                 <span className="text-slateText-secondary">{isRtl ? 'حالة السداد:' : 'Payment Status:'}</span>{' '}
@@ -173,9 +193,9 @@ export function InvoiceView({ invoice, lang = 'ar' }: InvoiceViewProps) {
                   </td>
                   <td className="py-3 text-center text-slateText-secondary">{item.size || 'Free Size'}</td>
                   <td className="py-3 text-center font-bold text-slateText-body">{item.quantity}</td>
-                  <td className="py-3 text-end font-mono">{item.priceQAR}</td>
+                  <td className="py-3 text-end font-mono">{formatQAR(item.priceQAR)}</td>
                   <td className="py-3 text-end font-bold font-mono text-burgundy">
-                    {item.priceQAR * item.quantity}
+                    {formatQAR(item.priceQAR * item.quantity)}
                   </td>
                 </tr>
               ))}
@@ -187,7 +207,7 @@ export function InvoiceView({ invoice, lang = 'ar' }: InvoiceViewProps) {
         <div className="flex flex-col items-end space-y-1.5 pt-4 border-t border-gold-hairline text-xs">
           <div className="flex justify-between w-64 text-slateText-secondary">
             <span>{isRtl ? 'المجموع الفرعي:' : 'Subtotal:'}</span>
-            <span className="font-mono">{invoice.totals.subtotal} QAR</span>
+            <span className="font-mono">{formatQAR(invoice.totals.subtotal)} QAR</span>
           </div>
 
           <div className="flex justify-between w-64 text-slateText-secondary">
@@ -195,20 +215,20 @@ export function InvoiceView({ invoice, lang = 'ar' }: InvoiceViewProps) {
             <span className="font-mono">
               {invoice.totals.deliveryFee === 0
                 ? isRtl ? 'مجاني' : 'FREE'
-                : `${invoice.totals.deliveryFee} QAR`}
+                : `${formatQAR(invoice.totals.deliveryFee)} QAR`}
             </span>
           </div>
 
           {invoice.totals.taxAmount > 0 && (
             <div className="flex justify-between w-64 text-slateText-secondary">
               <span>{isRtl ? `الضريبة (${invoice.totals.taxPercent}%):` : `Tax (${invoice.totals.taxPercent}%):`}</span>
-              <span className="font-mono">{invoice.totals.taxAmount} QAR</span>
+              <span className="font-mono">{formatQAR(invoice.totals.taxAmount)} QAR</span>
             </div>
           )}
 
           <div className="flex justify-between w-64 pt-2 border-t border-gold-hairline font-bold text-sm text-burgundy">
             <span>{isRtl ? 'الإجمالي النهائي:' : 'Grand Total:'}</span>
-            <span className="font-mono text-base">{invoice.totals.total} QAR</span>
+            <span className="font-mono text-base">{formatQAR(invoice.totals.total)} QAR</span>
           </div>
         </div>
 
@@ -218,6 +238,13 @@ export function InvoiceView({ invoice, lang = 'ar' }: InvoiceViewProps) {
             {isRtl
               ? 'شكراً لتسوقكم من دار بيرغندي للأزياء الفاخرة. للاستبدال أو الاسترجاع يرجى مراجعة سياسة المتجر خلال 14 يوماً.'
               : 'Thank you for choosing BURGUNDY. Pursuant to Qatar consumer protection laws, returns/exchanges are valid within 14 days.'}
+          </p>
+          <p className="font-semibold text-burgundy flex items-center justify-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-gold-line" aria-hidden="true" />
+            <span>
+              {isRtl ? 'رمز التحقق من صحة الفاتورة:' : 'Invoice Verification Code:'}{' '}
+              <span className="font-mono tracking-widest">{verificationCode}</span>
+            </span>
           </p>
           <p className="font-semibold text-burgundy">
             www.burgundy.com.qa • care@burgundy.com.qa • +974 5000 0974

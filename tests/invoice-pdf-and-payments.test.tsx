@@ -37,7 +37,7 @@ describe('Invoice PDF Generator & Qatar Rails', () => {
     expect(htmlAr).toContain(sampleInvoice.invoiceNumber);
     expect(htmlAr).toContain('CR-189420-QA');
     expect(htmlAr).toContain('ECOM-2026-974');
-    expect(htmlAr).toContain('1650');
+    expect(htmlAr).toContain('1,650');
     expect(htmlAr).toContain('QAR');
     expect(htmlAr).toContain('طباعة / حفظ PDF');
 

@@ -39,6 +39,9 @@ import {
 } from 'lucide-react';
 import { Language } from '@/lib/i18n';
 import { BurgundyLogo } from '@/components/brand/BurgundyLogo';
+import { useCatalogStore } from '@/lib/catalog-store';
+import { AddProductDrawer } from '@/components/admin/AddProductDrawer';
+import { MobileProductList } from '@/components/admin/MobileProductList';
 
 // ==========================================
 // TYPES & DATA STRUCTURES (20-STYLE OBJECTS)
@@ -288,7 +291,7 @@ export default function AtelierPortalPage() {
   const [isLoadingAuth, setIsLoadingAuth] = useState(false);
 
   // Twenty Workspace Navigation Tab
-  type WorkspaceTab = 'overview' | 'crm' | 'commissions' | 'inventory' | 'orders' | 'finance';
+  type WorkspaceTab = 'overview' | 'crm' | 'commissions' | 'inventory' | 'products' | 'orders' | 'finance';
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('overview');
 
   // CRM & ERP State
@@ -296,6 +299,9 @@ export default function AtelierPortalPage() {
   const [commissions, setCommissions] = useState<AtelierCommission[]>(INITIAL_COMMISSIONS);
   const [fabrics, setFabrics] = useState<FabricInventoryItem[]>(INITIAL_FABRICS);
   const [orders, setOrders] = useState<ServerOrder[]>([]);
+  const { products, addProduct, updateProduct, updateStock, deleteProduct, removeSampleProducts } = useCatalogStore();
+  const sampleCount = products.filter((p) => p.isSample).length;
+  const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
 
   // View & Filter State
@@ -429,20 +435,29 @@ export default function AtelierPortalPage() {
     window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  // CSV Export for records
+  // CSV Export for records — RFC-4180-safe cells (quote, comma, CR/LF, and
+  // object/array values) with a BOM so Excel reads Arabic correctly.
+  const escapeCSVCell = (value: unknown): string => {
+    if (value === null || value === undefined) return '""';
+    const str = typeof value === 'object' ? JSON.stringify(value) : String(value);
+    return `"${str.replace(/"/g, '""')}"`;
+  };
+
   const exportCSV = (data: any[], filename: string) => {
     if (!data.length) return;
     const headers = Object.keys(data[0]);
-    const rows = data.map((item) =>
-      headers.map((h) => `"${item[h] !== undefined ? String(item[h]).replace(/"/g, '""') : ''}"`).join(',')
-    );
-    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows].join('\n');
+    const rows = data.map((item) => headers.map((h) => escapeCSVCell(item[h])).join(','));
+    const csvContent =
+      '\uFEFF' + [headers.map(escapeCSVCell).join(','), ...rows].join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
-    link.href = encodeURI(csvContent);
+    const url = URL.createObjectURL(blob);
+    link.href = url;
     link.download = `${filename}_${new Date().toISOString().split('T')[0]}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   // Computed KPIs
@@ -646,6 +661,23 @@ export default function AtelierPortalPage() {
           </button>
 
           <button
+            onClick={() => { setActiveTab('products'); setSelectedRecord(null); }}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+              activeTab === 'products'
+                ? 'bg-burgundy text-white shadow-luxury'
+                : 'text-slateText-body hover:bg-surface-peachSoft/30 hover:text-burgundy'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Boxes className="w-4 h-4" />
+              <span>{isAr ? 'كتالوج المنتجات والأسعار' : 'Products & Pricing'}</span>
+            </div>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono ${activeTab === 'products' ? 'bg-white/20' : 'bg-canvas-warm'}`}>
+              {products.length}
+            </span>
+          </button>
+
+          <button
             onClick={() => { setActiveTab('orders'); setSelectedRecord(null); }}
             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-colors ${
               activeTab === 'orders'
@@ -701,6 +733,7 @@ export default function AtelierPortalPage() {
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Action Bar (Twenty Style Search & Filter) */}
         <header className="bg-white border-b border-gold-hairline px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          {activeTab !== 'products' && (
           <div className="relative w-full sm:w-80">
             <Search className="w-4 h-4 absolute start-3 top-3 text-slateText-secondary" />
             <input
@@ -717,6 +750,7 @@ export default function AtelierPortalPage() {
               className="w-full ps-9 pe-4 py-2 border border-gold-hairline rounded-xl text-xs bg-canvas focus:outline-none focus:ring-1 focus:ring-burgundy"
             />
           </div>
+          )}
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
             {activeTab === 'crm' && (
@@ -737,7 +771,40 @@ export default function AtelierPortalPage() {
                 if (activeTab === 'crm') exportCSV(customers, 'burgundy_vip_patrons');
                 if (activeTab === 'commissions') exportCSV(commissions, 'burgundy_commissions');
                 if (activeTab === 'inventory') exportCSV(fabrics, 'burgundy_fabrics_inventory');
-                if (activeTab === 'orders') exportCSV(orders, 'burgundy_store_orders');
+                if (activeTab === 'orders')
+                  exportCSV(
+                    orders.map((o) => ({
+                      orderNumber: o.orderNumber,
+                      createdAt: o.createdAt,
+                      customer_name: o.customer?.name,
+                      customer_phone: o.customer?.phone,
+                      municipality: o.customer?.municipality,
+                      paymentMethod: o.paymentMethod,
+                      paymentStatus: o.paymentStatus,
+                      status: o.status,
+                      subtotalQAR: o.subtotalQAR,
+                      deliveryFeeQAR: o.deliveryFeeQAR,
+                      totalQAR: o.totalQAR,
+                      itemCount: Array.isArray(o.items) ? o.items.length : undefined,
+                    })),
+                    'burgundy_store_orders'
+                  );
+                if (activeTab === 'products')
+                  exportCSV(
+                    products.map((p) => ({
+                      id: p.id,
+                      slug: p.slug,
+                      title_ar: p.title.ar,
+                      title_en: p.title.en,
+                      category: p.category,
+                      fabric_ar: p.fabric.ar,
+                      priceQAR: p.priceQAR,
+                      stockCount: p.stockCount,
+                      inStock: p.inStock ? 'yes' : 'no',
+                      badge: p.badge || '',
+                    })),
+                    'burgundy_products_catalog'
+                  );
               }}
               className="px-3 py-2 border border-gold-hairline rounded-xl text-xs font-bold text-slateText-body hover:text-burgundy bg-white hover:bg-canvas flex items-center gap-1.5 transition-colors"
             >
@@ -1034,6 +1101,70 @@ export default function AtelierPortalPage() {
           )}
 
           {/* TAB 5: ORDERS & FULFILLMENT (3NF LIVE SYNC) */}
+          {activeTab === 'products' && (
+            <div className="space-y-4">
+              {/* Products header + quick actions */}
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-sm font-extrabold text-burgundy font-display">
+                    {isAr ? 'كتالوج المنتجات وإدارة المخزون' : 'Product Catalog & Stock Control'}
+                  </h3>
+                  <p className="text-[11px] text-slateText-secondary mt-0.5">
+                    {products.length} {isAr ? 'قطعة في الكتالوج' : 'pieces in catalog'} •{' '}
+                    {products.filter((p) => p.inStock).length} {isAr ? 'متوفر حالياً' : 'in stock'}
+                    {sampleCount > 0 ? ` • ${sampleCount} ${isAr ? 'عينات تجريبية' : 'sample pieces'}` : ''}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  {sampleCount > 0 && (
+                    <button
+                      onClick={() => {
+                        if (window.confirm(
+                          isAr
+                            ? `إزالة ${sampleCount} عينات تجريبية نهائياً؟`
+                            : `Remove ${sampleCount} sample products permanently?`
+                        )) {
+                          removeSampleProducts();
+                        }
+                      }}
+                      className="px-3 py-2 rounded-xl border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 text-[11px] font-bold flex items-center gap-1.5 transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>{isAr ? `إزالة العينات (${sampleCount})` : `Remove Samples (${sampleCount})`}</span>
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setIsAddProductOpen(true)}
+                    className="px-4 py-2.5 rounded-xl bg-burgundy hover:bg-burgundy-hover text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-luxury"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>{isAr ? 'إضافة قطعة جديدة' : 'Add Product'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Mobile-first touch inventory — search, filter, stock stepper, delete */}
+              <MobileProductList
+                products={products}
+                onDeleteProduct={deleteProduct}
+                onUpdateStock={updateStock}
+                onEditProduct={(id, updates) => updateProduct(id, updates)}
+                lang={lang}
+              />
+
+              {/* Add Product Drawer */}
+              <AddProductDrawer
+                isOpen={isAddProductOpen}
+                onClose={() => setIsAddProductOpen(false)}
+                onAddProduct={(input) => {
+                  addProduct(input);
+                  setIsAddProductOpen(false);
+                }}
+                lang={lang}
+              />
+            </div>
+          )}
+
           {activeTab === 'orders' && (
             <div className="bg-white rounded-2xl border border-gold-hairline shadow-sm overflow-hidden">
               <div className="p-4 border-b border-gold-hairline/60 flex items-center justify-between">
