@@ -1,43 +1,77 @@
-import React from 'react';
-import { Star, Quote, CheckCircle2, Sparkles } from 'lucide-react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { Star, Quote, CheckCircle2, Sparkles, PenLine } from 'lucide-react';
 import { Language, getDictionary } from '../../lib/i18n';
+import { ReviewSubmitModal } from '../reviews/ReviewSubmitModal';
+
+interface ReviewCard {
+  id: string;
+  author: string;
+  location?: string;
+  rating: number;
+  item?: string;
+  text: string;
+}
+
+const SEED_REVIEWS: ReviewCard[] = [
+  {
+    id: 'seed-1',
+    author: 'د. مريم النعيمي',
+    location: 'الدوحة — اللؤلؤة',
+    rating: 5,
+    item: 'ثوب سويسري ملكي مطرز بالذهب',
+    text: 'خامة الفوال السويسري تفوق الوصف في النعومة والانسيابية! وصلني الطلب خلال 24 ساعة فقط في اللؤلؤة مع تغليف قماشي فاخر يحفظ بريق التطريز.',
+  },
+  {
+    id: 'seed-2',
+    author: 'أروى عثمان',
+    location: 'الدوحة — لوسيل',
+    rating: 5,
+    item: 'درّاعة كتان الجزيرة مع حرير',
+    text: 'كتان بارد ومثالي لأجواء قطر وتطريز الحناء على الأكمام شديد النعومة والدقة. تعامل راقٍ وخدمة كونسيرج متميزة عبر واتساب.',
+  },
+  {
+    id: 'seed-3',
+    author: 'فاطمة الكواري',
+    location: 'الدوحة — الخليج الغربي',
+    rating: 5,
+    item: 'ثوب حرير كريب صيني مرسوم يدوياً',
+    text: 'ارتديته في حفل زفاف عائلي بالدوحة ونال إعجاب الجميع! دقة التفاصيل النوبية ونقاء الألوان كانت لافتة جداً.',
+  },
+];
 
 export function CustomerReviews({ lang = 'ar' }: { lang?: Language }) {
   const dict = getDictionary(lang);
   const isAr = lang === 'ar';
+  const [reviews, setReviews] = useState<ReviewCard[]>(SEED_REVIEWS);
+  const [isLive, setIsLive] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const reviews = [
-    {
-      id: 'rev-1',
-      author: isAr ? 'د. مريم النعيمي' : 'Dr. Maryam Al-Naimi',
-      location: isAr ? 'الدوحة — اللؤلؤة' : 'Doha — The Pearl',
-      rating: 5,
-      item: isAr ? 'ثوب سويسري ملكي مطرز بالذهب' : 'Royal Swiss Voile Toub',
-      text: isAr
-        ? 'خامة الفوال السويسري تفوق الوصف في النعومة والانسيابية! وصلني الطلب خلال 24 ساعة فقط في اللؤلؤة مع تغليف قماشي فاخر يحفظ بريق التطريز.'
-        : 'The Swiss voile drape is breathtaking! Delivery arrived at The Pearl in under 24 hours in signature protective dust-bag packaging.',
-    },
-    {
-      id: 'rev-2',
-      author: isAr ? 'أروى عثمان' : 'Arwa Osman',
-      location: isAr ? 'الدوحة — لوسيل' : 'Doha — Lusail',
-      rating: 5,
-      item: isAr ? 'درّاعة كتان الجزيرة مع حرير' : 'Gezira Silk & Linen Dara’a',
-      text: isAr
-        ? 'كتان بارد ومثالي لأجواء قطر وتطريز الحناء على الأكمام شديد النعومة والدقة. تعامل راقٍ وخدمة كونسيرج متميزة عبر واتساب.'
-        : 'Cool, breathable linen perfect for Qatar climate. The henna needlework on the cuffs is exquisite. Highly recommended boutique.',
-    },
-    {
-      id: 'rev-3',
-      author: isAr ? 'فاطمة الكواري' : 'Fatima Al-Kuwari',
-      location: isAr ? 'الدوحة — الخليج الغربي' : 'Doha — West Bay',
-      rating: 5,
-      item: isAr ? 'ثوب حرير كريب صيني مرسوم يدوياً' : 'Hand-Painted Silk Crepe Toub',
-      text: isAr
-        ? 'ارتديته في حفل زفاف عائلي بالدوحة ونال إعجاب الجميع! دقة التفاصيل النوبية ونقاء الألوان كانت لافتة جداً.'
-        : 'Wore it to a family wedding in Doha and received endless compliments! The Nubian motifs and pure silk drape were immaculate.',
-    },
-  ];
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/reviews')
+      .then((res) => res.json())
+      .then((data) => {
+        if (cancelled) return;
+        if (data?.success && Array.isArray(data.reviews) && data.reviews.length > 0) {
+          setReviews(
+            data.reviews.map((r: any) => ({
+              id: r.id,
+              author: r.authorName,
+              rating: r.rating,
+              item: r.item,
+              text: r.text,
+            }))
+          );
+          setIsLive(true);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -53,6 +87,17 @@ export function CustomerReviews({ lang = 'ar' }: { lang?: Language }) {
         <p className="text-xs sm:text-sm text-slateText-secondary font-body leading-relaxed">
           {dict.home.reviewsSubtitle}
         </p>
+
+        <div className="pt-2">
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-burgundy text-white hover:bg-burgundy-hover text-xs font-bold transition-colors shadow-luxury focus:outline-none focus-visible:ring-2 focus-visible:ring-burgundy"
+          >
+            <PenLine className="w-4 h-4" />
+            {isAr ? 'اكتبي مراجعتكِ' : 'Write Your Review'}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -65,7 +110,7 @@ export function CustomerReviews({ lang = 'ar' }: { lang?: Language }) {
               {/* Star Rating & Quote Accent */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-gold-ink">
-                  {[...Array(r.rating)].map((_, i) => (
+                  {[...Array(Math.max(0, Math.min(5, Math.round(r.rating))))].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-current text-gold-line" />
                   ))}
                 </div>
@@ -76,6 +121,11 @@ export function CustomerReviews({ lang = 'ar' }: { lang?: Language }) {
               <p className="text-xs sm:text-sm text-slateText-body leading-relaxed font-body">
                 &ldquo;{r.text}&rdquo;
               </p>
+              {r.item && (
+                <p className="text-[11px] font-semibold text-gold-ink">
+                  {isAr ? 'بخصوص: ' : 'For: '}{r.item}
+                </p>
+              )}
             </div>
 
             {/* Author Meta */}
@@ -84,7 +134,9 @@ export function CustomerReviews({ lang = 'ar' }: { lang?: Language }) {
                 <strong className="block text-xs font-bold text-burgundy font-display">
                   {r.author}
                 </strong>
-                <span className="text-[11px] text-slateText-secondary">{r.location}</span>
+                {r.location && (
+                  <span className="text-[11px] text-slateText-secondary">{r.location}</span>
+                )}
               </div>
               <div className="flex items-center gap-1 text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
                 <CheckCircle2 className="w-3 h-3 text-emerald-600" />
@@ -94,6 +146,8 @@ export function CustomerReviews({ lang = 'ar' }: { lang?: Language }) {
           </div>
         ))}
       </div>
+
+      <ReviewSubmitModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} lang={lang} />
     </section>
   );
 }

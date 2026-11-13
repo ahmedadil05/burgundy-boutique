@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Language } from '../../lib/i18n';
 import { compressImageFile } from '../../lib/image-utils';
 import { NewProductInput } from '../../lib/catalog-store';
+import { Product } from '../../data/products';
 import {
   X,
   Camera,
@@ -20,7 +21,12 @@ import {
 export interface AddProductDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddProduct: (product: NewProductInput) => void;
+  /** Add-mode save (used when no initialProduct is provided) */
+  onAddProduct?: (product: NewProductInput) => void;
+  /** Edit-mode save — receives the product id and updates */
+  onUpdateProduct?: (id: string, updates: Partial<Product>) => void;
+  /** When provided, the drawer opens in edit mode with this product prefilled */
+  initialProduct?: Product | null;
   lang?: Language;
 }
 
@@ -48,8 +54,12 @@ export function AddProductDrawer({
   isOpen,
   onClose,
   onAddProduct,
+  onUpdateProduct,
+  initialProduct = null,
   lang = 'ar',
 }: AddProductDrawerProps) {
+  const isEditing = !!initialProduct;
+
   const isAr = lang === 'ar';
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -78,6 +88,50 @@ export function AddProductDrawer({
   const [isCompressing, setIsCompressing] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  // Prefill form when opening in edit mode; clear for add mode
+  useEffect(() => {
+    if (!isOpen) return;
+    if (initialProduct) {
+      setTitleAr(initialProduct.title.ar);
+      setTitleEn(initialProduct.title.en);
+      setPriceQAR(String(initialProduct.priceQAR));
+      setOriginalPriceQAR(initialProduct.originalPriceQAR ? String(initialProduct.originalPriceQAR) : '');
+      setCategory(initialProduct.category);
+      setStockCount(String(initialProduct.stockCount));
+      setFabricAr(initialProduct.fabric?.ar ?? '');
+      setFabricEn(initialProduct.fabric?.en ?? '');
+      setOriginAr(initialProduct.origin?.ar ?? '');
+      setOriginEn(initialProduct.origin?.en ?? '');
+      setDescriptionAr(initialProduct.description?.ar ?? '');
+      setDescriptionEn(initialProduct.description?.en ?? '');
+      setSelectedSizes(initialProduct.sizes?.map((sz) => sz.id) ?? ['free']);
+      setSelectedColors(
+        initialProduct.colors?.map((c) => ({ id: c.id, name: c.name, hex: c.hex })) ?? []
+      );
+      setImages(initialProduct.images ?? []);
+      setErrorMsg('');
+    } else {
+      // Fresh form for add mode
+      setTitleAr('');
+      setTitleEn('');
+      setPriceQAR('');
+      setOriginalPriceQAR('');
+      setCategory('toubs');
+      setStockCount('5');
+      setFabricAr('فوال سويسري قطن 100%');
+      setFabricEn('100% Swiss Cotton Voile');
+      setOriginAr('صنع ومطرز يدوياً في الخرطوم، السودان');
+      setOriginEn('Handcrafted in Khartoum, Sudan');
+      setDescriptionAr('');
+      setDescriptionEn('');
+      setSelectedSizes(['free']);
+      setSelectedColors([PRESET_COLORS[0], PRESET_COLORS[1]]);
+      setImages([]);
+      setErrorMsg('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, initialProduct]);
+
   if (!isOpen) return null;
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,6 +159,16 @@ export function AddProductDrawer({
 
   const removeImage = (indexToRemove: number) => {
     setImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
+  const moveImage = (idx: number, direction: 'up' | 'down') => {
+    setImages((prev) => {
+      const swapWith = direction === 'up' ? idx - 1 : idx + 1;
+      if (swapWith < 0 || swapWith >= prev.length) return prev;
+      const next = [...prev];
+      [next[idx], next[swapWith]] = [next[swapWith], next[idx]];
+      return next;
+    });
   };
 
   const toggleSize = (sizeId: string) => {
@@ -161,7 +225,7 @@ export function AddProductDrawer({
       return;
     }
 
-    const newProduct: NewProductInput = {
+    const baseProduct = {
       title: { ar: titleAr.trim(), en: titleEn.trim() },
       subtitle: {
         ar: fabricAr || 'أزياء سودانية راقية',
@@ -174,15 +238,10 @@ export function AddProductDrawer({
       priceQAR: priceNum,
       originalPriceQAR: originalPriceQAR ? parseFloat(originalPriceQAR) : undefined,
       category,
-      badge: 'new',
       stockCount: stockNum,
       inStock: stockNum > 0,
       fabric: { ar: fabricAr.trim(), en: fabricEn.trim() },
       origin: { ar: originAr.trim(), en: originEn.trim() },
-      careInstructions: {
-        ar: 'غسيل جاف فقط. الكي بحرارة متوسطة من الداخل.',
-        en: 'Dry clean only. Iron on medium setting from reverse.',
-      },
       colors: selectedColors.length > 0 ? selectedColors : [PRESET_COLORS[0]],
       sizes: selectedSizes.map((sId) => ({
         id: sId,
@@ -194,7 +253,30 @@ export function AddProductDrawer({
       ],
     };
 
-    onAddProduct(newProduct);
+    if (isEditing && initialProduct) {
+      onUpdateProduct?.(initialProduct.id, {
+        ...baseProduct,
+        // Preserve curated badge and care instructions in edit mode
+        badge: initialProduct.badge || 'new',
+        careInstructions: initialProduct.careInstructions || {
+          ar: 'غسيل جاف فقط. الكي بحرارة متوسطة من الداخل.',
+          en: 'Dry clean only. Iron on medium setting from reverse.',
+        },
+      });
+      onClose();
+      return;
+    }
+
+    if (onAddProduct) {
+      onAddProduct({
+        ...baseProduct,
+        badge: 'new',
+        careInstructions: {
+          ar: 'غسيل جاف فقط. الكي بحرارة متوسطة من الداخل.',
+          en: 'Dry clean only. Iron on medium setting from reverse.',
+        },
+      });
+    }
     onClose();
   };
 
@@ -209,10 +291,14 @@ export function AddProductDrawer({
             </div>
             <div>
               <h3 className="font-bold text-sm text-cocoa-dark font-display">
-                {isAr ? 'إضافة قطعة أو ثوب جديد' : 'Add New Garment / Product'}
+                {isEditing
+                  ? isAr ? 'تعديل القطعة والصور' : 'Edit Product & Photos'
+                  : isAr ? 'إضافة قطعة أو ثوب جديد' : 'Add New Garment / Product'}
               </h3>
               <p className="text-[11px] text-cocoa-muted">
-                {isAr ? 'تصوير أو رفع محلي مع ضبط المقاسات والألوان' : 'Local upload with sizes, colors and stock'}
+                {isEditing
+                  ? isAr ? 'تحديث السعر، المخزون، الوصف والصور — ستنعكس في المتجر فوراً' : 'Update price, stock, copy and photos — reflected in the shop instantly'
+                  : isAr ? 'تصوير أو رفع محلي مع ضبط المقاسات والألوان' : 'Local upload with sizes, colors and stock'}
               </p>
             </div>
           </div>
@@ -260,6 +346,28 @@ export function AddProductDrawer({
                     <span className="absolute bottom-1 start-1 text-[9px] bg-coral-ink text-white px-1.5 py-0.5 rounded-md font-bold">
                       {isAr ? 'الرئيسية' : 'Cover'}
                     </span>
+                  )}
+                  {images.length > 1 && (
+                    <div className="absolute bottom-1 end-1 flex gap-0.5">
+                      <button
+                        type="button"
+                        onClick={() => moveImage(idx, 'up')}
+                        disabled={idx === 0}
+                        className="p-0.5 rounded-md bg-white/85 text-cocoa-dark hover:text-burgundy text-[10px] font-black disabled:opacity-30 disabled:pointer-events-none"
+                        aria-label="Move earlier"
+                      >
+                        ‹
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveImage(idx, 'down')}
+                        disabled={idx === images.length - 1}
+                        className="p-0.5 rounded-md bg-white/85 text-cocoa-dark hover:text-burgundy text-[10px] font-black disabled:opacity-30 disabled:pointer-events-none"
+                        aria-label="Move later"
+                      >
+                        ›
+                      </button>
+                    </div>
                   )}
                 </div>
               ))}
@@ -354,7 +462,7 @@ export function AddProductDrawer({
               <input
                 type="number"
                 min="1"
-                step="5"
+                step="1"
                 required
                 value={priceQAR}
                 onChange={(e) => setPriceQAR(e.target.value)}
@@ -371,7 +479,7 @@ export function AddProductDrawer({
               <input
                 type="number"
                 min="1"
-                step="5"
+                step="1"
                 value={originalPriceQAR}
                 onChange={(e) => setOriginalPriceQAR(e.target.value)}
                 placeholder="1750"
@@ -530,7 +638,7 @@ export function AddProductDrawer({
               className="flex-2 py-3 px-4 rounded-2xl bg-coral-ink hover:bg-coral-ink/90 text-white font-bold text-xs shadow-sm transition-transform active:scale-[0.98] flex items-center justify-center gap-1.5"
             >
               <Check className="w-4 h-4" />
-              <span>{isAr ? 'حفظ ونشر القطعة' : 'Save & Publish Product'}</span>
+              <span>{isEditing ? (isAr ? 'حفظ التعديلات' : 'Save Changes') : isAr ? 'حفظ ونشر القطعة' : 'Save & Publish Product'}</span>
             </button>
           </div>
         </form>

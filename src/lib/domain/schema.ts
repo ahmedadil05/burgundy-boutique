@@ -146,6 +146,37 @@ export interface Payment {
   createdAt: string;
 }
 
+// 12. Consumer Complaints Table (Qatar MOCI consumer protection)
+export type ComplaintStatus = 'pending' | 'reviewing' | 'resolved';
+
+export interface Complaint {
+  id: string;
+  ticketId: string; // QA-COMP-XXXXXX
+  fullName: string;
+  phone: string;
+  email?: string;
+  orderNumber?: string;
+  complaintType: string;
+  message: string;
+  status: ComplaintStatus;
+  createdAt: string;
+  resolvedAt?: string;
+}
+
+// 13. Client Testimonials / Reviews Table (moderated — approved renders publicly)
+export type ReviewStatus = 'pending' | 'approved' | 'rejected';
+
+export interface Review {
+  id: string;
+  authorName: string;
+  rating: number; // 1-5
+  item?: string;
+  text: string;
+  status: ReviewStatus;
+  createdAt: string;
+  approvedAt?: string;
+}
+
 // Composite Aggregate Types for Callers (Leverage at the boundary)
 export interface ProductDetailAggregate extends Product {
   category: Category;

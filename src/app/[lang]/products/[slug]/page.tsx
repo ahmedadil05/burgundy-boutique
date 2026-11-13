@@ -1,7 +1,10 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { products, getProductBySlug } from '@/data/products';
+import { products as seedProducts } from '@/data/products';
+import { useCatalogStore } from '@/lib/catalog-store';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { StickyPurchasePanel } from '@/components/product/StickyPurchasePanel';
 import { DeliveryEstimator } from '@/components/product/DeliveryEstimator';
@@ -10,37 +13,45 @@ import { ProductCard } from '@/components/ui/ProductCard';
 import { Language, getDictionary } from '@/lib/i18n';
 import { ShieldCheck, RotateCcw, Sparkles } from 'lucide-react';
 
-export function generateStaticParams() {
-  const languages = ['ar', 'en'];
-  const params: Array<{ lang: string; slug: string }> = [];
-
-  languages.forEach((lang) => {
-    products.forEach((p) => {
-      params.push({ lang, slug: p.slug });
-    });
-  });
-
-  return params;
-}
-
-export default async function ProductDetailPage({
+export default function ProductDetailPage({
   params,
 }: {
   params: Promise<{ lang: string; slug: string }>;
 }) {
-  const { lang, slug } = await params;
-  const currentLang = (lang === 'en' ? 'en' : 'ar') as Language;
-  const product = getProductBySlug(slug);
+  const [langSlug, setLangSlug] = useState<{ lang: string; slug: string } | null>(null);
 
-  if (!product) {
+  useEffect(() => {
+    params.then(setLangSlug);
+  }, [params]);
+
+  const currentLang = (langSlug?.lang === 'en' ? 'en' : 'ar') as Language;
+  const isAr = currentLang === 'ar';
+  const dict = getDictionary(currentLang || 'ar');
+
+  const catalog = useCatalogStore();
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => { setHydrated(true); }, []);
+
+  // Seeded products are used for immediate SSR render; after hydration the
+  // client catalog (from localStorage) takes over so admin edits show up.
+  const source = hydrated ? catalog.products : seedProducts;
+  const product = langSlug ? source.find((p) => p.slug === langSlug.slug) ?? seedProducts.find((p) => p.slug === langSlug.slug) ?? null : null;
+
+  if (langSlug && !product) {
     notFound();
   }
 
-  const dict = getDictionary(currentLang);
-  const isAr = currentLang === 'ar';
+  if (!langSlug || !product) {
+    return (
+      <div className="min-h-screen bg-canvas py-20 flex items-center justify-center">
+        <p className="text-xs text-slateText-secondary">{isAr ? 'جاري التحميل...' : 'Loading...'}</p>
+      </div>
+    );
+  }
 
   // Recommendations: Other products from same or related category
-  const recommendations = products
+  const recommendations = catalog.products
     .filter((p) => p.id !== product.id)
     .slice(0, 4);
 
@@ -108,93 +119,93 @@ export default async function ProductDetailPage({
             href={`/${currentLang}/shop?category=${product.category}`}
             className="hover:text-burgundy"
           >
-            {(dict.nav as Record<string, string>)[product.category] || product.category}
+            {dict.nav.shop}
           </Link>
           <span>/</span>
-          <span className="text-burgundy font-semibold line-clamp-1">
-            {product.title[currentLang]}
-          </span>
+          <span className="text-burgundy font-medium line-clamp-1">{product.title[currentLang]}</span>
         </nav>
 
-        {/* Main 2-Column Product Showcase */}
+        {/* Main Product Section */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          {/* Left Column: Gallery & Accordion (7 cols) */}
-          <div className="lg:col-span-7 space-y-8">
+          {/* Product Gallery (col-span-7) */}
+          <div className="lg:col-span-7">
             <ProductGallery
               images={product.images}
               title={product.title[currentLang]}
               badge={product.badge}
               lang={currentLang}
             />
-
-            {/* Accordion Specs */}
-            <div className="bg-white rounded-3xl p-6 border border-gold-hairline shadow-sm">
-              <h2 className="text-base font-bold text-burgundy mb-3 font-display">
-                {dict.product.fabricAndCare}
-              </h2>
-              <Accordion items={accordionItems} defaultOpenId="details" />
-            </div>
-
-            {/* Heritage Trust Badges */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-              <div className="p-4 rounded-2xl bg-canvas-warm/40 border border-gold-hairline text-center">
-                <Sparkles className="w-5 h-5 text-gold-line mx-auto mb-1.5" />
-                <span className="block text-xs font-bold text-burgundy">
-                  {isAr ? 'أصالة 100%' : '100% Authentic'}
-                </span>
-                <span className="text-[10px] text-slateText-secondary">
-                  {isAr ? 'رسم وتطريز يدوي' : 'Hand-Painted & Needlework'}
-                </span>
-              </div>
-              <div className="p-4 rounded-2xl bg-canvas-warm/40 border border-gold-hairline text-center">
-                <RotateCcw className="w-5 h-5 text-gold-line mx-auto mb-1.5" />
-                <span className="block text-xs font-bold text-burgundy">
-                  {isAr ? 'استبدال 14 يوماً' : '14-Day Returns'}
-                </span>
-                <span className="text-[10px] text-slateText-secondary">
-                  {isAr ? 'وفق القانون القطري' : 'Qatar MOCI Governed'}
-                </span>
-              </div>
-              <div className="p-4 rounded-2xl bg-canvas-warm/40 border border-gold-hairline text-center">
-                <ShieldCheck className="w-5 h-5 text-gold-line mx-auto mb-1.5" />
-                <span className="block text-xs font-bold text-burgundy">
-                  {isAr ? 'دفع آمن ومرخص' : 'Licensed Gateway'}
-                </span>
-                <span className="text-[10px] text-slateText-secondary">
-                  {isAr ? 'QPay / فوران / بطاقات' : 'QPay / Fawran / Cards'}
-                </span>
-              </div>
-            </div>
           </div>
 
-          {/* Right Column: Sticky Purchase Panel & Delivery (5 cols) */}
+          {/* Purchase Panel (col-span-5) */}
           <div className="lg:col-span-5 space-y-6">
+            <div className="space-y-2">
+              <span className="text-xs uppercase tracking-widest text-gold-ink font-bold">
+                {product.category.replace('-', ' ')}
+              </span>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-burgundy font-display leading-tight">
+                {product.title[currentLang]}
+              </h1>
+              <p className="text-slateText-secondary text-sm leading-relaxed">{product.subtitle[currentLang]}</p>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs text-emerald-700 font-semibold bg-emerald-50 px-3 py-2 rounded-full border border-emerald-100 w-fit">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>{isAr ? 'جودة سويسرية مضمونة' : 'Swiss Quality Guaranteed'}</span>
+            </div>
+
             <StickyPurchasePanel product={product} lang={currentLang} />
+
             <DeliveryEstimator lang={currentLang} />
           </div>
         </div>
 
-        {/* You May Also Like Section */}
-        <section className="pt-10 border-t border-gold-hairline">
-          <div className="text-center mb-8">
-            <span className="text-xs font-bold text-coral-ink uppercase tracking-wider">
-              {isAr ? 'تشكيلات مكملة' : 'Curated For You'}
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-burgundy font-display mt-1">
-              {dict.product.similarProducts}
-            </h2>
-          </div>
+        {/* Product Details Accordion */}
+        <div className="max-w-5xl mx-auto w-full">
+          <h2 className="text-xl font-bold text-burgundy font-display mb-4 flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-gold-line" />
+            {isAr ? 'مواصفات المنشأ والتفصيل اليدوي' : 'Heritage & Craft Details'}
+          </h2>
+          <Accordion items={accordionItems} />
+        </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-            {recommendations.map((rec) => (
-              <ProductCard
-                key={rec.id}
-                product={rec}
-                lang={currentLang}
-              />
-            ))}
+        {/* Similar Recommendations */}
+        {recommendations.length > 0 && (
+          <div className="space-y-6 pt-6 border-t border-gold-hairline">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-burgundy font-display">
+                {dict.product.similarProducts}
+              </h2>
+              <Link
+                href={`/${currentLang}/shop`}
+                className="text-xs font-bold text-burgundy hover:underline flex items-center gap-1"
+              >
+                {isAr ? 'عرض المتجر كاملاً' : 'View Full Boutique'}
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
+              {recommendations.map((item) => (
+                <ProductCard key={item.id} product={item} lang={currentLang} />
+              ))}
+            </div>
           </div>
-        </section>
+        )}
+
+        {/* Trust & Guarantee Horizontal Bar */}
+        <div className="bg-white rounded-3xl border border-gold-hairline p-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center text-xs">
+          <div className="flex flex-col items-center gap-2">
+            <RotateCcw className="w-5 h-5 text-burgundy" />
+            <strong className="text-slateText-body">{isAr ? 'استرجاع خلال 14 يوم' : '14-Day Returns'}</strong>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-burgundy" />
+            <strong className="text-slateText-body">{isAr ? 'أصلي مصنوع يدوياً' : 'Authentic Hand-Made'}</strong>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Sparkles className="w-5 h-5 text-burgundy" />
+            <strong className="text-slateText-body">{isAr ? 'ثبات اللون مضمون' : 'Color-Fast Guaranteed'}</strong>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -13,6 +13,10 @@ import {
   OrderDetailAggregate,
   OrderStatus,
   PaymentMethod,
+  Complaint,
+  ComplaintStatus,
+  Review,
+  ReviewStatus,
 } from '../../domain/schema';
 import {
   SEED_CATEGORIES,
@@ -63,6 +67,8 @@ class RelationalDatabaseStore {
   private orders: Map<string, Order> = new Map();
   private orderItems: Map<string, OrderItem> = new Map();
   private payments: Map<string, Payment> = new Map();
+  private complaints: Map<string, Complaint> = new Map();
+  private reviews: Map<string, Review> = new Map();
 
   constructor() {
     this.seed();
@@ -77,6 +83,46 @@ class RelationalDatabaseStore {
     products.forEach((p) => this.products.set(p.id, p));
     variants.forEach((v) => this.variants.set(v.id, v));
     images.forEach((img) => this.images.set(img.id, img));
+
+    this.seedEngagement();
+  }
+
+  /**
+   * Approved, store-curated client testimonials. These are visible on the
+   * homepage immediately (admin can later reject or hide them from the
+   * Atelier portal moderation queue). New submissions land as 'pending'.
+   */
+  private seedEngagement() {
+    const approved: Array<Omit<Review, 'id' | 'approvedAt'>> = [
+      {
+        authorName: 'د. مريم النعيمي',
+        rating: 5,
+        item: 'Royal Swiss Voile Toub',
+        text: 'خامة الفوال السويسري تفوق الوصف في النعومة والانسيابية! وصلني الطلب خلال 24 ساعة فقط في اللؤلؤة مع تغليف قماشي فاخر يحفظ بريق التطريز.',
+        status: 'approved',
+        createdAt: '2026-10-28T10:00:00.000Z',
+      },
+      {
+        authorName: 'أروى عثمان',
+        rating: 5,
+        item: 'Gezira Silk & Linen Dara’a',
+        text: 'كتان بارد ومثالي لأجواء قطر وتطريز الحناء على الأكمام شديد النعومة والدقة. تعامل راقٍ وخدمة كونسيرج متميزة عبر واتساب.',
+        status: 'approved',
+        createdAt: '2026-11-02T10:00:00.000Z',
+      },
+      {
+        authorName: 'فاطمة الكواري',
+        rating: 5,
+        item: 'Hand-Painted Silk Crepe Toub',
+        text: 'ارتديته في حفل زفاف عائلي بالدوحة ونال إعجاب الجميع! دقة التفاصيل النوبية ونقاء الألوان كانت لافتة جداً.',
+        status: 'approved',
+        createdAt: '2026-11-09T10:00:00.000Z',
+      },
+    ];
+    approved.forEach((r) => {
+      const id = `rev-${Date.now().toString(36)}-${Math.floor(Math.random() * 10000)}`;
+      this.reviews.set(id, { ...r, id, approvedAt: r.createdAt });
+    });
   }
 
   // --- CATALOG SEAM ---
@@ -346,6 +392,93 @@ class RelationalDatabaseStore {
       items,
       payments,
     };
+  }
+
+  // --- ENGAGEMENT SEAM (Consumer Complaints & Client Reviews) ---
+
+  public createComplaint(dto: {
+    fullName: string;
+    phone: string;
+    email?: string;
+    orderNumber?: string;
+    complaintType?: string;
+    message: string;
+  }): Complaint {
+    const id = `cmp-${Date.now().toString(36)}-${Math.floor(Math.random() * 1000)}`;
+    const ticketId = `QA-COMP-${Math.floor(100000 + Math.random() * 900000)}`;
+    const now = new Date().toISOString();
+    const complaint: Complaint = {
+      id,
+      ticketId,
+      fullName: dto.fullName.trim(),
+      phone: dto.phone.trim(),
+      email: dto.email?.trim() || undefined,
+      orderNumber: dto.orderNumber?.trim() || undefined,
+      complaintType: (dto.complaintType || 'other').trim().slice(0, 48),
+      message: dto.message.trim().slice(0, 4000),
+      status: 'pending',
+      createdAt: now,
+    };
+    this.complaints.set(id, complaint);
+    return complaint;
+  }
+
+  public listComplaints(): Complaint[] {
+    return Array.from(this.complaints.values()).sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  public updateComplaintStatus(ticketId: string, status: ComplaintStatus): Complaint | null {
+    const found = Array.from(this.complaints.values()).find((c) => c.ticketId === ticketId);
+    if (!found) return null;
+    found.status = status;
+    if (status === 'resolved') found.resolvedAt = new Date().toISOString();
+    this.complaints.set(found.id, found);
+    return found;
+  }
+
+  public createReview(dto: {
+    authorName: string;
+    rating: number;
+    item?: string;
+    text: string;
+  }): Review {
+    const id = `rev-${Date.now().toString(36)}-${Math.floor(Math.random() * 10000)}`;
+    const now = new Date().toISOString();
+    const rating = Math.min(5, Math.max(1, Math.round(Number(dto.rating) || 1)));
+    const review: Review = {
+      id,
+      authorName: dto.authorName.trim().slice(0, 120),
+      rating,
+      item: dto.item?.trim().slice(0, 140) || undefined,
+      text: dto.text.trim().slice(0, 1200),
+      status: 'pending',
+      createdAt: now,
+    };
+    this.reviews.set(id, review);
+    return review;
+  }
+
+  public listApprovedReviews(): Review[] {
+    return Array.from(this.reviews.values())
+      .filter((r) => r.status === 'approved')
+      .sort((a, b) => new Date(b.approvedAt || b.createdAt).getTime() - new Date(a.approvedAt || a.createdAt).getTime());
+  }
+
+  public listAllReviews(): Review[] {
+    return Array.from(this.reviews.values()).sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  public updateReviewStatus(id: string, status: ReviewStatus): Review | null {
+    const found = this.reviews.get(id);
+    if (!found) return null;
+    found.status = status;
+    if (status === 'approved' && !found.approvedAt) found.approvedAt = new Date().toISOString();
+    this.reviews.set(found.id, found);
+    return found;
   }
 }
 
