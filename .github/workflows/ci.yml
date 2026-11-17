@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'redesign/**'
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    name: Test & Build
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: production
+      ADMIN_SECRET_PIN: 'ci_build_dummy_pin_9740'
+      ADMIN_SESSION_SECRET: 'ci_build_dummy_session_secret_32_chars_long'
+      NEXT_PUBLIC_SITE_URL: 'https://burgundy.qa'
+      NEXT_PUBLIC_DEFAULT_LOCALE: 'ar'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript type check
+        run: npx tsc --noEmit
+
+      - name: Run Vitest test suite
+        run: npm test
+
+      - name: Build Next.js application
+        run: npm run build
